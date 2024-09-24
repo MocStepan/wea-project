@@ -1,0 +1,30 @@
+# Use an official Gradle image to build the backend
+FROM gradle:7.5.1-jdk17 AS build
+
+# Set the working directory inside the container
+WORKDIR /
+COPY . . 
+
+# Copy the source code and other project files
+COPY src /src
+
+ENV GRADLE_VERSION 3.2
+RUN apk update && apk add --no-cache libstdc++ && rm -rf /var/cache/apk/*
+# Run the Gradle build to create the application JAR
+RUN gradlew build
+
+# Create a new stage to run the application
+FROM openjdk:11-jre-slim
+
+# Set the working directory in the new stage
+WORKDIR /app
+
+# Copy the JAR file from the build stage
+COPY --from=build /build/libs/*.jar /app.jar
+
+# Expose the port the backend runs on (e.g., 8080)
+EXPOSE 8080
+
+# Run the application JAR
+CMD ["java", "-jar", "/app/app.jar"]
+
