@@ -1,13 +1,11 @@
 package cz.tul.backend
 
-import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import io.kotest.core.spec.style.FeatureSpec
 
-@SpringBootTest
-class BackendApplicationTests {
+class BackendApplicationTests : FeatureSpec({
 
-	@Test
-	fun contextLoads() {
-	}
-
-}
+    feature("Context loads") {
+        scenario("When application is started") {
+        }
+    }
+})
