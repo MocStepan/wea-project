@@ -48,6 +48,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
 	val openapiVersion = "2.6.0"
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion")
 	implementation("org.springdoc:springdoc-openapi-starter-common:$openapiVersion")
@@ -60,8 +62,6 @@ dependencies {
 
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-	implementation("com.github.ProjectMapK:jackson-module-kogera:2.17.1-beta13")
 
 	val jjwtVersion = "0.12.5"
 	implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
