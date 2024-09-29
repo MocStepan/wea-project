@@ -1,13 +1,11 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.6"
 	//id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 	id("jacoco")
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
-	kotlin("plugin.jpa") version "1.9.25"
+	kotlin("jvm") version "1.9.24"
+	kotlin("plugin.spring") version "1.9.24"
+	kotlin("plugin.jpa") version "1.9.24"
 }
 
 group = "cz.tul"
@@ -55,6 +53,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-common:$openapiVersion")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.liquibase:liquibase-core:4.26.0")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
@@ -77,14 +76,6 @@ dependencies {
 	testImplementation("io.kotest:kotest-property:$kotestVersion")
 	testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
-}
-
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs += "-Xjsr305=strict"
-		jvmTarget = "20"
-		verbose = true
-	}
 }
 
 tasks.test {
