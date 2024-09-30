@@ -1,4 +1,7 @@
 # Wea Project
+Start
+- docker compose up
+
 
 
 

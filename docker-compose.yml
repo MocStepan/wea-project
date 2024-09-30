@@ -6,17 +6,42 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4200:4200" # Mapping local port 4200 to container's port 4200
-    #depends_on:
-      #- backend # Ensure the backend starts before the frontend
+    depends_on:
+      - backend # Ensure the backend starts before the frontend
     environment:
       - API_URL=http://backend:8080 # This is the URL the frontend will use to reach the backend
-  
-  #backend:
-    #build:
-      #context: ./backend
-      #dockerfile: Dockerfile
-    #ports:
-      #- "8080:8080"
-    #environment:
-      #- NODE_ENV=production
-
+    networks:
+      space:
+        ipv4_address: 192.168.92.6
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: production  
+    networks:
+      space:
+        ipv4_address: 192.168.92.5
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=wea_project
+    networks:
+      space:
+        ipv4_address: 192.168.92.10
+networks:
+  space:
+   ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
