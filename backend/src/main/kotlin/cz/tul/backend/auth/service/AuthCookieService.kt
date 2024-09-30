@@ -15,8 +15,10 @@ class AuthCookieService(
   private val refreshTokenService: RefreshTokenService,
   private val refreshTokenRepository: RefreshTokenRepository
 ) {
-
-  fun login(authUser: AuthUser, response: HttpServletResponse): Boolean {
+  fun authenticate(
+    authUser: AuthUser,
+    response: HttpServletResponse
+  ): Boolean {
     val claims = accessTokenService.createClaims(authUser)
     val cookie = accessTokenService.createCookie(claims)
     response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -24,7 +26,12 @@ class AuthCookieService(
     return true
   }
 
-  private fun assignRefreshToken(authUser: AuthUser, response: HttpServletResponse) {
+  private fun assignRefreshToken(
+    authUser: AuthUser,
+    response: HttpServletResponse
+  ) {
+    val previousRefreshTokens = refreshTokenRepository.findByAuthUser_Id(authUser.id)
+    refreshTokenRepository.deleteAll(previousRefreshTokens)
     val refreshToken = refreshTokenRepository.save(RefreshToken.from(authUser))
     val claims = refreshTokenService.createClaims(refreshToken)
     val cookie = refreshTokenService.createCookie(claims)

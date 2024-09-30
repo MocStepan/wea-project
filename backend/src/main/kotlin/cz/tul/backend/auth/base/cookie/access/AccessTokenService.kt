@@ -7,11 +7,10 @@ import cz.tul.backend.auth.entity.AuthUser
 
 class AccessTokenService(
   claimsService: JwtClaimsService<AccessTokenClaims>,
-  cookieService: JwtCookieService<AccessTokenClaims>,
+  cookieService: JwtCookieService<AccessTokenClaims>
 ) : JwtClaimsCreatorService<AuthUser, AccessTokenClaims>,
   JwtClaimsService<AccessTokenClaims> by claimsService,
   JwtCookieService<AccessTokenClaims> by cookieService {
-
   override fun createClaims(value: AuthUser): AccessTokenClaims {
     return AccessTokenClaims(value)
   }

@@ -14,7 +14,6 @@ import java.time.LocalDateTime
 
 @Entity
 class AuthUser(
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Long = 0L,
@@ -26,10 +25,13 @@ class AuthUser(
   val role: AuthUserRole,
   @OneToMany(mappedBy = "authUser", orphanRemoval = true)
   val refreshToken: Set<RefreshToken> = mutableSetOf(),
-  val createdDateTime: LocalDateTime = LocalDateTime.now(),
+  val createdDateTime: LocalDateTime = LocalDateTime.now()
 ) {
   companion object {
-    fun from(registerDTO: AuthRegisterDTO, password: String): AuthUser {
+    fun from(
+      registerDTO: AuthRegisterDTO,
+      password: String
+    ): AuthUser {
       return AuthUser(
         firstName = registerDTO.firstName,
         lastName = registerDTO.lastName,

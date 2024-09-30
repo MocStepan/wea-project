@@ -7,7 +7,10 @@ import org.springframework.boot.jackson.JsonComponent
 
 @JsonComponent
 class TrimmingStringDeserializer : StringDeserializer() {
-  override fun deserialize(p: JsonParser, ctxt: DeserializationContext): String {
+  override fun deserialize(
+    p: JsonParser,
+    ctxt: DeserializationContext
+  ): String {
     val value = p.valueAsString
     return value.trim()
   }

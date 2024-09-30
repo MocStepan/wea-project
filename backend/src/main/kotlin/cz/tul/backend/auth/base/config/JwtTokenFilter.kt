@@ -14,8 +14,11 @@ import org.springframework.web.util.WebUtils
 class JwtTokenFilter(
   private val accessTokenService: AccessTokenService
 ) : OncePerRequestFilter() {
-
-  override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+  override fun doFilterInternal(
+    request: HttpServletRequest,
+    response: HttpServletResponse,
+    filterChain: FilterChain
+  ) {
     val cookie = WebUtils.getCookie(request, accessTokenService.cookieName)
 
     if (cookie != null) {

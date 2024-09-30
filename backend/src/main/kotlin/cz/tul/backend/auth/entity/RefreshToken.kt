@@ -14,9 +14,8 @@ class RefreshToken(
   val id: Long = 0L,
   @ManyToOne(optional = false)
   val authUser: AuthUser,
-  val createdDateTime: LocalDateTime = LocalDateTime.now(),
+  val createdDateTime: LocalDateTime = LocalDateTime.now()
 ) {
-
   companion object {
     fun from(authUser: AuthUser): RefreshToken {
       return RefreshToken(

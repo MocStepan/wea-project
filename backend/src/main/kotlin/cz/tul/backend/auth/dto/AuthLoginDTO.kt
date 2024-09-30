@@ -7,7 +7,6 @@ data class AuthLoginDTO(
   val password: String,
   val rememberMe: Boolean
 ) {
-
   fun isValid(): Boolean {
     return email.isValid() && password.isNotBlank()
   }

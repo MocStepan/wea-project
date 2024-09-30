@@ -19,8 +19,6 @@ class AuthController(
   private val authPasswordService: AuthPasswordService,
   private val authCookieService: AuthCookieService
 ) {
-
-
   @PostMapping("/v1/auth/login")
   fun login(
     @RequestBody authLoginDTO: AuthLoginDTO,
@@ -38,7 +36,9 @@ class AuthController(
   }
 
   @PostMapping("/v1/auth/register")
-  fun register(@RequestBody authRegisterDTO: AuthRegisterDTO): ResponseEntity<*> {
+  fun register(
+    @RequestBody authRegisterDTO: AuthRegisterDTO
+  ): ResponseEntity<*> {
     return when (val result = authPasswordService.register(authRegisterDTO)) {
       is ServiceResult.Success -> ResponseEntity(result.data, HttpStatus.OK)
       is ServiceResult.Error -> ResponseEntity(result.error.message, HttpStatus.BAD_REQUEST)
@@ -46,5 +46,4 @@ class AuthController(
   }
 
   // TODO: add invoke refresh token endpoint (login with refresh token)
-
 }
