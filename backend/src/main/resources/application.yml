@@ -5,7 +5,7 @@ logging:
   level:
     root: INFO
   file:
-    name: .tmp/backend.log
+    name: ./tmp/backend.log
 spring:
   application:
     name: backend
