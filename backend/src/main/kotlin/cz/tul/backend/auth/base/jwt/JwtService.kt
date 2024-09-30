@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys
 class JwtService(
   secret: String
 ) {
-
   private val secretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
   fun generateToken(claims: JwtClaims): String {
@@ -35,5 +34,4 @@ class JwtService(
       null
     }
   }
-
 }

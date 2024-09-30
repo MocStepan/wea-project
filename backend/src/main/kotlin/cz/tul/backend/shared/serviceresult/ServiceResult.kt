@@ -12,9 +12,9 @@ import kotlin.contracts.contract
 )
 sealed class ServiceResult<T, out K : ServiceError> {
   data class Success<T>(val data: T) : ServiceResult<T, Nothing>()
+
   data class Error<T, K : ServiceError>(val error: K) : ServiceResult<T, K>()
 }
-
 
 @OptIn(ExperimentalContracts::class)
 fun ServiceResult<*, *>.isSuccess(): Boolean {

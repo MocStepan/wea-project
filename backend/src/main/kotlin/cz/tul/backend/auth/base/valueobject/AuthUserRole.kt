@@ -8,5 +8,4 @@ enum class AuthUserRole : GrantedAuthority {
   override fun getAuthority(): String {
     return name
   }
-
 }

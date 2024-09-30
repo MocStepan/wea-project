@@ -21,15 +21,16 @@ import org.springframework.web.cors.CorsConfigurationSource
 class WebSecurityConfig(
   private val objectMapper: ObjectMapper,
   private val jwtTokenFilter: JwtTokenFilter,
-  @Value("\${spring.security.cors.frontendUrl}") private val frontendUrl: String,
+  @Value("\${spring.auth.cors.frontendUrl}") private val frontendUrl: String
 ) {
-
-  private val unsecuredEndpoints = arrayOf(
-    "/api/v1/welcome/welcome-text",
-    "/api/v1/auth/login",
-    "/api/v1/auth/register",
-    "/api/v1/auth/logout",
-  )
+  private val unsecuredEndpoints =
+    arrayOf(
+      "/api/v1/welcome/welcome-text",
+      "/api/v1/auth/login",
+      "/api/v1/auth/register",
+      "/api/v1/auth/logout",
+      "api/*/docs/**"
+    )
 
   @Bean
   fun securityConfig(http: HttpSecurity): SecurityFilterChain {

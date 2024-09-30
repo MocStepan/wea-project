@@ -8,9 +8,8 @@ open class BaseJwtCookieService<T>(
   private val duration: Duration,
   private val sameSite: String,
   private val secure: Boolean,
-  private val claimsService: JwtClaimsService<T>,
+  private val claimsService: JwtClaimsService<T>
 ) : JwtCookieService<T> {
-
   override fun createCookie(claims: T): ResponseCookie {
     val jwtToken = claimsService.createToken(claims, duration)
     return ResponseCookie.from(cookieName, jwtToken)

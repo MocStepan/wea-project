@@ -13,7 +13,6 @@ private val log = KotlinLogging.logger { }
 @RestController
 @RequestMapping("/api")
 class WelcomeController {
-
   @ApiResponse(description = "Welcome to the backend")
   @GetMapping("/v1/welcome/welcome-text")
   fun welcome(): ResponseEntity<WelcomeDTO> {

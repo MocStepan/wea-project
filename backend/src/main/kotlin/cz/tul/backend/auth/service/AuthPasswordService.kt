@@ -18,10 +18,12 @@ private val log = KotlinLogging.logger { }
 class AuthPasswordService(
   private val authUserRepository: AuthUserRepository,
   private val passwordEncoder: PasswordEncoder,
-  private val authCookieService: AuthCookieService,
+  private val authCookieService: AuthCookieService
 ) {
-
-  fun login(loginDTO: AuthLoginDTO, response: HttpServletResponse): Boolean {
+  fun login(
+    loginDTO: AuthLoginDTO,
+    response: HttpServletResponse
+  ): Boolean {
     if (!loginDTO.isValid()) {
       log.warn { "Invalid login request: $loginDTO" }
       return false
@@ -33,7 +35,7 @@ class AuthPasswordService(
       return false
     }
 
-    return authCookieService.login(authUser, response)
+    return authCookieService.authenticate(authUser, response)
   }
 
   fun register(authRegisterDTO: AuthRegisterDTO): ServiceResult<Boolean, AuthPasswordServiceRegisterError> {
@@ -52,5 +54,4 @@ class AuthPasswordService(
     authUserRepository.save(authUser)
     return ServiceResult.Success(true)
   }
-
 }

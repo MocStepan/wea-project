@@ -9,12 +9,11 @@ data class AuthRegisterDTO(
   val password: String,
   val secondPassword: String
 ) {
-
   fun isValid(): Boolean {
     return email.isValid() &&
-        password.isNotBlank() &&
-        firstName.isNotBlank() &&
-        lastName.isNotBlank() &&
-        password == secondPassword
+      password.isNotBlank() &&
+      firstName.isNotBlank() &&
+      lastName.isNotBlank() &&
+      password == secondPassword
   }
 }
