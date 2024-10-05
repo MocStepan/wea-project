@@ -17,7 +17,7 @@ private val log = KotlinLogging.logger { }
 @Transactional
 class AuthPasswordService(
   private val authUserRepository: AuthUserRepository,
-  private val passwordEncoder: PasswordEncoder,
+  private val authPasswordEncoder: AuthPasswordEncoder,
   private val authCookieService: AuthCookieService
 ) {
   fun login(
@@ -29,13 +29,19 @@ class AuthPasswordService(
       return false
     }
 
-    val authUser = authUserRepository.findByEmail(loginDTO.email.value) ?: return false
-    if (!passwordEncoder.matches(loginDTO.password, authUser.password)) {
+    val authUser = authUserRepository.findByEmail(loginDTO.email.value)
+    if (authUser == null) {
+      log.warn { "User: ${loginDTO.email} not found" }
+      return false
+    }
+
+    if (!authPasswordEncoder.matches(loginDTO.password, authUser.password)) {
       log.warn { "Invalid password for user: ${loginDTO.email}" }
       return false
     }
 
-    return authCookieService.authenticate(authUser, response)
+    authCookieService.loginWithAccessCookie(authUser, response, loginDTO.rememberMe)
+    return true
   }
 
   fun register(authRegisterDTO: AuthRegisterDTO): ServiceResult<Boolean, AuthPasswordServiceRegisterError> {
@@ -49,7 +55,7 @@ class AuthPasswordService(
       return ServiceResult.Error(AuthPasswordServiceRegisterError.USER_ALREADY_EXISTS)
     }
 
-    val hashedPassword = passwordEncoder.encode(authRegisterDTO.password)
+    val hashedPassword = authPasswordEncoder.encode(authRegisterDTO.password)
     val authUser = AuthUser.from(authRegisterDTO, hashedPassword)
     authUserRepository.save(authUser)
     return ServiceResult.Success(true)

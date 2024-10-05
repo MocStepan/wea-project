@@ -22,7 +22,7 @@ class AuthUser(
   val email: EmailAddress,
   val password: String,
   @Enumerated(EnumType.STRING)
-  val role: AuthUserRole,
+  val role: AuthUserRole = AuthUserRole.USER,
   @OneToMany(mappedBy = "authUser", orphanRemoval = true)
   val refreshToken: Set<RefreshToken> = mutableSetOf(),
   val createdDateTime: LocalDateTime = LocalDateTime.now()
@@ -36,8 +36,7 @@ class AuthUser(
         firstName = registerDTO.firstName,
         lastName = registerDTO.lastName,
         email = registerDTO.email,
-        password = password,
-        role = AuthUserRole.USER
+        password = password
       )
     }
   }
