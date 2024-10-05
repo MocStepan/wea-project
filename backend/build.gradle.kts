@@ -49,33 +49,39 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+  // Jackson and logging
   implementation("com.github.ProjectMapK:jackson-module-kogera:2.17.1-beta13")
   implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
 
-  // used for Loki/Prometheus logging
+  // used for Loki/Prometheus logging maybe we will use it in the future
   /*val logbackJsonVersion = "0.1.5"
   implementation("ch.qos.logback.contrib:logback-json-classic:$logbackJsonVersion")
   implementation("ch.qos.logback.contrib:logback-jackson:$logbackJsonVersion")*/
 
+  // Springdoc OpenAPI
   val openapiVersion = "2.6.0"
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion")
   implementation("org.springdoc:springdoc-openapi-starter-common:$openapiVersion")
 
-  implementation("org.liquibase:liquibase-core:4.26.0")
-
+  // Kotlin extra libraries
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
-
-  runtimeOnly("org.postgresql:postgresql")
   annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+  // Database
+  runtimeOnly("org.postgresql:postgresql")
+  implementation("org.liquibase:liquibase-core:4.26.0")
+
+  // Json Web Token
   val jjwtVersion = "0.12.5"
   implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
   runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
   runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
+  // testing
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
+  testImplementation("com.h2database:h2:2.2.224")
 
   val kotestVersion = "5.8.0"
   testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
@@ -83,6 +89,9 @@ dependencies {
   testImplementation("io.kotest:kotest-property:$kotestVersion")
   testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
   testImplementation("com.ninja-squad:springmockk:4.0.2")
+  val logCaptureVersion = "1.3.3" // can listen and assert on log messages
+  testImplementation("org.logcapture:logcapture-core:$logCaptureVersion")
+  testImplementation("org.logcapture:logcapture-kotest:$logCaptureVersion")
 }
 
 tasks.test {

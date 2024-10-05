@@ -42,4 +42,4 @@ out/
 ### custom ###
 config/application.yml
 *.jpb
-/.tmp/
+tmp/

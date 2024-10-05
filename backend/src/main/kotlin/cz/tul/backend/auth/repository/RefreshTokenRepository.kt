@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface RefreshTokenRepository : JpaRepository<RefreshToken, Long> {
-  fun findByAuthUser_Id(id: Long): List<RefreshToken>
+  fun findByAuthUser_Id(id: Long): Set<RefreshToken>
 }

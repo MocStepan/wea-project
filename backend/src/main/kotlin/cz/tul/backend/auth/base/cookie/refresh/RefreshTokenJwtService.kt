@@ -5,7 +5,7 @@ import cz.tul.backend.auth.base.jwt.JwtClaimsService
 import cz.tul.backend.auth.base.jwt.JwtCookieService
 import cz.tul.backend.auth.entity.RefreshToken
 
-class RefreshTokenService(
+class RefreshTokenJwtService(
   claimsService: JwtClaimsService<RefreshTokenClaims>,
   cookieService: JwtCookieService<RefreshTokenClaims>
 ) : JwtClaimsCreatorService<RefreshToken, RefreshTokenClaims>,

@@ -5,7 +5,7 @@ import cz.tul.backend.auth.base.jwt.JwtClaimsService
 import cz.tul.backend.auth.base.jwt.JwtCookieService
 import cz.tul.backend.auth.entity.AuthUser
 
-class AccessTokenService(
+class AccessTokenJwtService(
   claimsService: JwtClaimsService<AccessTokenClaims>,
   cookieService: JwtCookieService<AccessTokenClaims>
 ) : JwtClaimsCreatorService<AuthUser, AccessTokenClaims>,

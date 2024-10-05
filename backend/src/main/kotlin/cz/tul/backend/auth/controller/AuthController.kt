@@ -4,7 +4,12 @@ import cz.tul.backend.auth.dto.AuthLoginDTO
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.service.AuthCookieService
 import cz.tul.backend.auth.service.AuthPasswordService
-import cz.tul.backend.shared.serviceresult.ServiceResult
+import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
+import cz.tul.backend.shared.serviceresult.fold
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,20 +35,41 @@ class AuthController(
   }
 
   @PostMapping("/v1/auth/logout")
-  fun logout(response: HttpServletResponse): ResponseEntity<Any> {
-    authCookieService.logout(response)
+  fun logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<Any> {
+    authCookieService.clearCookies(request, response)
     return ResponseEntity(HttpStatus.OK)
   }
 
+  @Operation(summary = "Endpoint for registering new user")
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "200", description = "User registered successfully"),
+      ApiResponse(responseCode = "400", description = "Invalid data"),
+      ApiResponse(responseCode = "409", description = "User already exists")
+    ]
+  )
   @PostMapping("/v1/auth/register")
   fun register(
     @RequestBody authRegisterDTO: AuthRegisterDTO
   ): ResponseEntity<*> {
-    return when (val result = authPasswordService.register(authRegisterDTO)) {
-      is ServiceResult.Success -> ResponseEntity(result.data, HttpStatus.OK)
-      is ServiceResult.Error -> ResponseEntity(result.error.message, HttpStatus.BAD_REQUEST)
-    }
+    return authPasswordService.register(authRegisterDTO).fold(
+      { ResponseEntity.ok(it) },
+      {
+        when (it) {
+          AuthPasswordServiceRegisterError.INVALID_DATA -> ResponseEntity(it.message, HttpStatus.BAD_REQUEST)
+          AuthPasswordServiceRegisterError.USER_ALREADY_EXISTS -> ResponseEntity(it.message, HttpStatus.CONFLICT)
+        }
+      }
+    )
   }
 
-  // TODO: add invoke refresh token endpoint (login with refresh token)
+  @PostMapping("/v1/auth/invoke-refresh-token")
+  fun invokeRefreshToken(
+    request: HttpServletRequest,
+    response: HttpServletResponse
+  ): ResponseEntity<Any> {
+    val result = authCookieService.loginWithRefreshCookie(request, response)
+    val status = if (result) HttpStatus.OK else HttpStatus.BAD_REQUEST
+    return ResponseEntity(status)
+  }
 }

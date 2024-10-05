@@ -1,46 +1,58 @@
 package cz.tul.backend.auth.service
 
-import cz.tul.backend.auth.base.cookie.access.AccessTokenService
-import cz.tul.backend.auth.base.cookie.refresh.RefreshTokenService
 import cz.tul.backend.auth.entity.AuthUser
-import cz.tul.backend.auth.entity.RefreshToken
-import cz.tul.backend.auth.repository.RefreshTokenRepository
+import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+private val log = KotlinLogging.logger {}
 
 @Service
+@Transactional
 class AuthCookieService(
-  private val accessTokenService: AccessTokenService,
-  private val refreshTokenService: RefreshTokenService,
-  private val refreshTokenRepository: RefreshTokenRepository
+  private val authAccessTokenService: AuthAccessTokenService,
+  private val authRefreshTokenService: AuthRefreshTokenService
 ) {
-  fun authenticate(
+  fun loginWithAccessCookie(
     authUser: AuthUser,
+    response: HttpServletResponse,
+    rememberMe: Boolean
+  ) {
+    val accessCookie = authAccessTokenService.authenticate(authUser)
+    response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString())
+
+    if (rememberMe) {
+      val refreshCookie = authRefreshTokenService.assignRefreshToken(authUser)
+      response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+    }
+  }
+
+  fun loginWithRefreshCookie(
+    request: HttpServletRequest,
     response: HttpServletResponse
   ): Boolean {
-    val claims = accessTokenService.createClaims(authUser)
-    val cookie = accessTokenService.createCookie(claims)
-    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
-    assignRefreshToken(authUser, response)
-    return true
+    return try {
+      val (authUser, refreshCookie) = authRefreshTokenService.authenticate(request) ?: throw IllegalArgumentException(
+        "Invalid refresh token"
+      )
+
+      val accessCookie = authAccessTokenService.authenticate(authUser)
+      response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString())
+      response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+      true
+    } catch (e: Exception) {
+      log.warn(e) { "Failed to authenticate with refresh token" }
+      clearCookies(request, response)
+      false
+    }
   }
 
-  private fun assignRefreshToken(
-    authUser: AuthUser,
-    response: HttpServletResponse
-  ) {
-    val previousRefreshTokens = refreshTokenRepository.findByAuthUser_Id(authUser.id)
-    refreshTokenRepository.deleteAll(previousRefreshTokens)
-    val refreshToken = refreshTokenRepository.save(RefreshToken.from(authUser))
-    val claims = refreshTokenService.createClaims(refreshToken)
-    val cookie = refreshTokenService.createCookie(claims)
-    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
-  }
-
-  fun logout(response: HttpServletResponse) {
-    val accessCookie = accessTokenService.clearCookie()
-    val refreshCookie = refreshTokenService.clearCookie()
+  fun clearCookies(request: HttpServletRequest, response: HttpServletResponse) {
+    val accessCookie = authAccessTokenService.clearCookies()
+    val refreshCookie = authRefreshTokenService.clearCookies(request)
     response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString())
     response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
   }
