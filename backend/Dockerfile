@@ -25,8 +25,5 @@ WORKDIR /app
 # Copy the JAR file from the build stage
 COPY --from=build /app/build/libs/*.jar /app/app.jar
 
-# Expose the port the backend runs on (e.g., 8080)
-EXPOSE 8080
-
 # Run the application JAR
 CMD ["java", "-jar", "/app/app.jar"]

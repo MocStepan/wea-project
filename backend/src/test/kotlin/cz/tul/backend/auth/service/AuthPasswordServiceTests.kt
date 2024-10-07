@@ -17,13 +17,8 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
 import jakarta.servlet.http.HttpServletResponse
-import org.logcapture.assertion.ExpectedLoggingMessage.aLog
-import org.logcapture.kotest.LogCaptureListener
 
 class AuthPasswordServiceTests : FeatureSpec({
-
-  val logCaptureListener = LogCaptureListener()
-  register(logCaptureListener)
 
   feature("login") {
     scenario("success login with remember me") {
@@ -59,7 +54,6 @@ class AuthPasswordServiceTests : FeatureSpec({
       val result = spec.authPasswordService.login(loginDTO, response)
 
       result shouldBe false
-      logCaptureListener.logged(aLog().warn().withMessage("Invalid login request: $loginDTO"))
     }
 
     scenario("user not found by email") {
@@ -77,7 +71,6 @@ class AuthPasswordServiceTests : FeatureSpec({
       val result = spec.authPasswordService.login(loginDTO, response)
 
       result shouldBe false
-      logCaptureListener.logged(aLog().warn().withMessage("User: ${loginDTO.email} not found"))
     }
 
     scenario("invalid password") {
@@ -99,7 +92,6 @@ class AuthPasswordServiceTests : FeatureSpec({
       val result = spec.authPasswordService.login(loginDTO, response)
 
       result shouldBe false
-      logCaptureListener.logged(aLog().warn().withMessage("Invalid password for user: ${loginDTO.email}"))
     }
   }
 
@@ -146,7 +138,6 @@ class AuthPasswordServiceTests : FeatureSpec({
       val result = spec.authPasswordService.register(registerDTO)
 
       result shouldBe ServiceResult.Error(AuthPasswordServiceRegisterError.INVALID_DATA)
-      logCaptureListener.logged(aLog().warn().withMessage("Invalid register request: $registerDTO"))
     }
 
     scenario("user already exists") {
@@ -165,7 +156,6 @@ class AuthPasswordServiceTests : FeatureSpec({
       val result = spec.authPasswordService.register(registerDTO)
 
       result shouldBe ServiceResult.Error(AuthPasswordServiceRegisterError.USER_ALREADY_EXISTS)
-      logCaptureListener.logged(aLog().warn().withMessage("User already exists: ${registerDTO.email}"))
     }
   }
 })

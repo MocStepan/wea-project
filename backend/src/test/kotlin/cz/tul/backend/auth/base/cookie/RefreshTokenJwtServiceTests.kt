@@ -7,12 +7,9 @@ import cz.tul.backend.objectMapper
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import org.logcapture.kotest.LogCaptureListener
 
 class RefreshTokenJwtServiceTests : FeatureSpec({
 
-  val logCaptureListener = LogCaptureListener()
-  register(logCaptureListener)
   val refreshTokenJwtService = TokenConfiguration().getRefreshTokenJwtService(
     objectMapper,
     "743777217A25432A462D4A404E635266556A586E3272357538782F413F442847",

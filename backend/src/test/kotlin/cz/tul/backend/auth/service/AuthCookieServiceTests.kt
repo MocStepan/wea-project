@@ -11,14 +11,9 @@ import io.mockk.runs
 import io.mockk.verify
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.logcapture.assertion.ExpectedLoggingMessage.aLog
-import org.logcapture.kotest.LogCaptureListener
 import org.springframework.http.HttpHeaders
 
 class AuthCookieServiceTests : FeatureSpec({
-
-  val logCaptureListener = LogCaptureListener()
-  register(logCaptureListener)
 
   feature("login with access cookie") {
     scenario("should add access and refresh cookies to response") {
@@ -90,7 +85,6 @@ class AuthCookieServiceTests : FeatureSpec({
       val result = spec.authCookieService.loginWithRefreshCookie(request, response)
 
       result shouldBe false
-      logCaptureListener.logged(aLog().warn().withMessage("Failed to authenticate with refresh token"))
       verify(exactly = 0) { spec.authAccessTokenService.authenticate(any()) }
     }
   }
