@@ -12,7 +12,7 @@ export class NotificationService {
       icon: 'success',
       title: successMessage,
       showConfirmButton: false,
-      timer: 5000,
+      timer: 3000,
       toast: true,
     });
   }
@@ -23,7 +23,7 @@ export class NotificationService {
       icon: 'error',
       title: errorMessage,
       showConfirmButton: false,
-      timer: 5000,
+      timer: 3000,
       toast: true,
     });
   }

@@ -1,0 +1,30 @@
+<mat-toolbar class="menu">
+  <a [routerLink]="'/'">
+    <li [class.selected]="isSelected('/')" class="page-body-text">
+      <mat-icon>home</mat-icon>
+    </li>
+  </a>
+
+  <a [routerLink]="'/book-list'">
+    <li [class.selected]="isSelected('/book-list')" class="page-body-text">
+      <span>Favorite</span>
+    </li>
+  </a>
+
+  <span class="fill-space"></span>
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/sing-in'">
+    <li [class.selected]="isSelected('/sing-in')" class="page-body-text">
+      <span>Sign in</span>
+    </li>
+  </a>
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/sing-up'">
+    <li [class.selected]="isSelected('/sing-up')" class="page-body-text">
+      <span>Sign up</span>
+    </li>
+  </a>
+  <a *ngIf="isUserSignedIn()">
+    <li (click)="signOut()" class="page-body-text">
+      <span>Sign out</span>
+    </li>
+  </a>
+</mat-toolbar>

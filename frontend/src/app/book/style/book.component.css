@@ -1,0 +1,18 @@
+.book-list-item {
+  max-width: 400px;
+  padding: 1rem;
+  color: white;
+}
+
+.book-list-item-text {
+  padding: 1rem;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.book-list-view {
+  padding: 2rem;
+}
