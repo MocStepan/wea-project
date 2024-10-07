@@ -1,0 +1,48 @@
+server:
+  port: 80
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: backend
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
+  datasource:
+    driverClassName: org.postgresql.Driver
+  jackson:
+    default-property-inclusion: non_null
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.lob.non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        use_nationalized_character_data: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        show_sql: false
+        default_schema: public
+auth:
+  cors:
+    frontendUrl: "localhost:4200"
+  jwt:
+    access:
+      secret: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+      duration: 600000
+      sameSite: "Lax"
+      secure: false
+    refresh:
+      secret: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+      duration: 1800000
+      sameSite: "Lax"
+      secure: false
+springdoc:
+  api-docs:
+    path: "api/v1/docs/api"
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: "/api/v1/docs/index.html" # available at /api/v1/docs/swagger-ui/index.html
+    config-url: "/api/v1/docs/api/swagger-config"
+    url: "/api/v1/docs/api"
