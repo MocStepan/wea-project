@@ -7,6 +7,13 @@ import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-brow
 import {HTTP_INTERCEPTORS, provideHttpClient} from '@angular/common/http';
 import {AppRoutingModule} from './app.routing-module';
 import {HttpErrorInterceptor} from './shared/http/interceptor/http-error.interceptor';
+import {WelcomeComponent} from './welcome/components/welcome.component';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import {NavigationComponent} from './shared/navigation/navigation.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {HttpHeaderInterceptor} from './shared/http/interceptor/http-header.interceptor';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -19,13 +26,24 @@ import {HttpErrorInterceptor} from './shared/http/interceptor/http-error.interce
     RouterModule,
     BrowserAnimationsModule,
     FormsModule,
+    WelcomeComponent,
+    NavigationComponent,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [
     provideAnimations(),
     provideHttpClient(),
+    provideAnimationsAsync(),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpHeaderInterceptor,
       multi: true
     },
   ],
