@@ -5,31 +5,32 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "4200:4200" # Mapping local port 4200 to container's port 4200
+      - "3000:4200"
     depends_on:
-      - backend # Ensure the backend starts before the frontend
+      - sk01-web
     environment:
-      - API_URL=http://backend:8080 # This is the URL the frontend will use to reach the backend
+      - API_URL=http://sk01-web:80
     networks:
-      space:
-        ipv4_address: 192.168.92.6
-  backend:
+      - cbd-network
+  sk01-web:
+    container_name: sk01-web
     build:
       context: ./backend
       dockerfile: Dockerfile
+    volumes:
+      - "/home/cerny/logs/sk01-web:/var/logs/"
     ports:
-      - "8080:8080"
+      - "8000:80"
     depends_on:
       - postgres
     environment:
-      NODE_ENV: production  
+      NODE_ENV: production
     networks:
-      space:
-        ipv4_address: 192.168.92.5
+      - cbd-network
   postgres:
     image: postgres:14-alpine
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
@@ -37,11 +38,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=wea_project
     networks:
-      space:
-        ipv4_address: 192.168.92.10
+      - cbd-network
 networks:
-  space:
-   ipam:
-      driver: default
-      config:
-        - subnet: "192.168.92.0/24"
+  cbd-network:
+    driver: bridge
+    external: true

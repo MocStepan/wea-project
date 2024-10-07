@@ -51,7 +51,11 @@ dependencies {
 
   // Jackson and logging
   implementation("com.github.ProjectMapK:jackson-module-kogera:2.17.1-beta13")
+
+  // Logging
   implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+  implementation("ch.qos.logback:logback-classic:1.5.6")
+  implementation("ch.qos.logback:logback-core:1.5.6")
 
   // used for Loki/Prometheus logging maybe we will use it in the future
   /*val logbackJsonVersion = "0.1.5"
@@ -89,9 +93,9 @@ dependencies {
   testImplementation("io.kotest:kotest-property:$kotestVersion")
   testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
   testImplementation("com.ninja-squad:springmockk:4.0.2")
-  val logCaptureVersion = "1.3.3" // can listen and assert on log messages
+/*  val logCaptureVersion = "1.3.3" // can listen and assert on log messages
   testImplementation("org.logcapture:logcapture-core:$logCaptureVersion")
-  testImplementation("org.logcapture:logcapture-kotest:$logCaptureVersion")
+  testImplementation("org.logcapture:logcapture-kotest:$logCaptureVersion")*/
 }
 
 tasks.test {

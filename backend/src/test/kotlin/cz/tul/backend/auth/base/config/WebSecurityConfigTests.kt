@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @SpringBootTest(classes = [IntegrationTestApplication::class])
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class WebSecurityConfigTest @Autowired constructor(
+class WebSecurityConfigTests @Autowired constructor(
   private val mockMvc: MockMvc
 ) {
 

@@ -21,10 +21,10 @@ class TokenConfiguration {
   @Bean
   fun getRefreshTokenJwtService(
     objectMapper: ObjectMapper,
-    @Value("\${spring.auth.jwt.refresh.secret}") secret: String,
-    @Value("\${spring.auth.jwt.refresh.duration}") duration: Long,
-    @Value("\${spring.auth.jwt.refresh.sameSite}") sameSite: String,
-    @Value("\${spring.auth.jwt.refresh.secure}") secure: Boolean
+    @Value("\${auth.jwt.refresh.secret}") secret: String,
+    @Value("\${auth.jwt.refresh.duration}") duration: Long,
+    @Value("\${auth.jwt.refresh.sameSite}") sameSite: String,
+    @Value("\${auth.jwt.refresh.secure}") secure: Boolean
   ): RefreshTokenJwtService {
     val claimsService = BaseJwtClaimsService(objectMapper, RefreshTokenClaims::class.java, secret)
     val cookieService =
@@ -38,10 +38,10 @@ class TokenConfiguration {
   @Bean
   fun getAccessTokenJwtService(
     objectMapper: ObjectMapper,
-    @Value("\${spring.auth.jwt.access.secret}") secret: String,
-    @Value("\${spring.auth.jwt.access.duration}") duration: Long,
-    @Value("\${spring.auth.jwt.access.sameSite}") sameSite: String,
-    @Value("\${spring.auth.jwt.access.secure}") secure: Boolean
+    @Value("\${auth.jwt.access.secret}") secret: String,
+    @Value("\${auth.jwt.access.duration}") duration: Long,
+    @Value("\${auth.jwt.access.sameSite}") sameSite: String,
+    @Value("\${auth.jwt.access.secure}") secure: Boolean
   ): AccessTokenJwtService {
     val claimsService = BaseJwtClaimsService(objectMapper, AccessTokenClaims::class.java, secret)
     val cookieService = BaseJwtCookieService(ACCESS_COOKIE_NAME, duration.milliseconds, sameSite, secure, claimsService)

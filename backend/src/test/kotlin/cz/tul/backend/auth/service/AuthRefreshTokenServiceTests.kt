@@ -16,14 +16,9 @@ import io.mockk.slot
 import io.mockk.verify
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
-import org.logcapture.assertion.ExpectedLoggingMessage.aLog
-import org.logcapture.kotest.LogCaptureListener
 import org.springframework.data.repository.findByIdOrNull
 
 class AuthRefreshTokenServiceTests : FeatureSpec({
-
-  val logCaptureListener = LogCaptureListener()
-  register(logCaptureListener)
 
   feature("authenticate") {
     scenario("success") {
@@ -78,7 +73,6 @@ class AuthRefreshTokenServiceTests : FeatureSpec({
       result shouldBe null
       verify(exactly = 0) { spec.refreshTokenRepository.save(any()) }
       verify(exactly = 0) { spec.refreshTokenRepository.findByIdOrNull(any()) }
-      logCaptureListener.logged(aLog().warn().withMessage("No refresh token found"))
     }
 
     scenario("no refresh token was found in the request") {

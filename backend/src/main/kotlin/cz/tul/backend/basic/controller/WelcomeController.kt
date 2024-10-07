@@ -16,7 +16,11 @@ class WelcomeController {
   @ApiResponse(description = "Welcome to the backend")
   @GetMapping("/v1/welcome/welcome-text")
   fun welcome(): ResponseEntity<WelcomeDTO> {
+    log.trace { "Welcome to the wea application" }
+    log.debug { "Welcome to the wea application" }
     log.info { "Welcome to the wea application" }
+    log.warn { "Welcome to the wea application" }
+    log.error { "Welcome to the wea application" }
     return ResponseEntity.ok(WelcomeDTO("Welcome to the wea application"))
   }
 }
