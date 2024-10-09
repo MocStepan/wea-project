@@ -15,10 +15,6 @@ RUN ./gradlew build
 
 # Create a new stage to run the application
 FROM openjdk:20-jdk-slim
-ENV SPRING_PROFILES_ACTIVE=localDev
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/wea_project
-ENV SPRING_DATASOURCE_USERNAME=postgres
-ENV SPRING_DATASOURCE_PASSWORD=postgres
 # Set the working directory in the new stage
 WORKDIR /app
 
@@ -26,4 +22,4 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*.jar /app/app.jar
 
 # Run the application JAR
-CMD ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar","--spring.profiles.active=prod"]

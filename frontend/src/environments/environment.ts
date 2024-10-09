@@ -1,5 +1,5 @@
 export const environment = {
-  baseUrl: '',
+  BASE_URL: '',
   production: false,
   version: '1.0.0'
 };
