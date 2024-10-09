@@ -8,8 +8,7 @@ import {BASE_API_URL} from "../../../config";
 export class WelcomeService {
 
   private httpService: HttpService = inject(HttpService);
-
   getWelcomeText(): Observable<WelcomeModel> {
-    return this.httpService.get(`${BASE_API_URL}welcome/welcome-text`);
+    return this.httpService.get(BASE_API_URL+`welcome/welcome-text`);
   }
 }
