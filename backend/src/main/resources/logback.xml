@@ -50,6 +50,10 @@
     </filter>
   </appender>
 
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+  </root>
+  
   <logger name="cz.tul.backend" level="trace" additivity="false">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="INFO-FILE"/>
