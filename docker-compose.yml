@@ -49,7 +49,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "10000:5433"
+      - "10000:10000"
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
