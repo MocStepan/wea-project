@@ -1,4 +1,4 @@
-package cz.tul.backend.shared.serviceresult
+package cz.tul.backend.common.serviceresult
 
 interface ServiceError {
   val name: String

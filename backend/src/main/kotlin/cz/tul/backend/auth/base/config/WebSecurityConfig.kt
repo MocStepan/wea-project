@@ -30,7 +30,9 @@ class WebSecurityConfig(
       "/api/v1/auth/register",
       "/api/v1/auth/logout",
       "/api/v1/auth/invoke-refresh-token",
-      "api/*/docs/**"
+      "api/*/docs/**",
+      "api/v1/book/filter",
+      "api/v1/book/import"
     )
 
   @Bean

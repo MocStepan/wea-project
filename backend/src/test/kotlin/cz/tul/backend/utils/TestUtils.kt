@@ -1,4 +1,4 @@
-package cz.tul.backend
+package cz.tul.backend.utils
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -9,7 +9,9 @@ import cz.tul.backend.auth.base.valueobject.AuthUserRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.entity.RefreshToken
-import cz.tul.backend.shared.jackson.TrimmingStringDeserializer
+import cz.tul.backend.book.entity.Book
+import cz.tul.backend.common.filter.dto.PageResponseDTO
+import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
 import org.springframework.http.ResponseCookie
 import java.time.Duration
@@ -56,4 +58,48 @@ fun createResponseCookie(
     .sameSite(sameSite)
     .maxAge(maxAxe)
     .build()
+}
+
+fun <T> createPageResponseDTO(
+  content: List<T> = emptyList(),
+  page: Int = 0,
+  size: Int = 0,
+  totalPages: Int = 0,
+  isEmpty: Boolean = true
+): PageResponseDTO<T> {
+  return PageResponseDTO(
+    content = content,
+    page = page,
+    size = size,
+    totalPages = totalPages,
+    isEmpty = isEmpty
+  )
+}
+
+fun createBook(
+  id: Long = 0L,
+  isbn13: String = "isbn13",
+  isbn10: String = "isbn10",
+  title: String = "title",
+  subtitle: String? = null,
+  thumbnail: String? = null,
+  description: String? = null,
+  publishedYear: Int? = null,
+  averageRating: Double? = null,
+  numPages: Int? = null,
+  ratingsCount: Int? = null
+): Book {
+  return Book(
+    id = id,
+    title = title,
+    isbn13 = isbn13,
+    isbn10 = isbn10,
+    subtitle = subtitle,
+    thumbnail = thumbnail,
+    description = description,
+    publishedYear = publishedYear,
+    averageRating = averageRating,
+    numPages = numPages,
+    ratingsCount = ratingsCount
+  )
 }

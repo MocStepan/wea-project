@@ -43,3 +43,8 @@ springdoc:
     path: "/api/v1/docs/index.html" # available at /api/v1/docs/swagger-ui/index.html
     config-url: "/api/v1/docs/api/swagger-config"
     url: "/api/v1/docs/api"
+scheduler:
+  book:
+    import:
+      cron: "0 */5 * * * *"
+      enabled: true

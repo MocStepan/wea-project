@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+  <changeSet id="1728851559628-1" author="stepan.moc">
+    <createTable tableName="book_author">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bookauthor"/>
+      </column>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="book_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book_author"
+                             constraintName="FK_BOOKAUTHOR_ON_BOOK" referencedColumnNames="id"
+                             referencedTableName="book" onDelete="CASCADE"/>
+
+    <createTable tableName="book_category">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bookcategory"/>
+      </column>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="book_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book_category"
+                             constraintName="FK_BOOKCATEGORY_ON_BOOK" referencedColumnNames="id"
+                             referencedTableName="book" onDelete="CASCADE"/>
+  </changeSet>
+</databaseChangeLog>

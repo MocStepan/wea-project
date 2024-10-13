@@ -2,7 +2,7 @@ package cz.tul.backend.auth.base.config
 
 import cz.tul.backend.auth.base.cookie.access.AccessTokenClaims
 import cz.tul.backend.auth.base.cookie.access.AccessTokenJwtService
-import cz.tul.backend.createAuthUser
+import cz.tul.backend.utils.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

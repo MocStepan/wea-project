@@ -2,8 +2,8 @@ package cz.tul.backend.auth.base.cookie
 
 import cz.tul.backend.auth.base.cookie.refresh.RefreshTokenClaims
 import cz.tul.backend.auth.entity.RefreshToken
-import cz.tul.backend.createAuthUser
-import cz.tul.backend.objectMapper
+import cz.tul.backend.utils.createAuthUser
+import cz.tul.backend.utils.objectMapper
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain

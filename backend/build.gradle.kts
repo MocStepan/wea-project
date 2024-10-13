@@ -5,9 +5,11 @@ plugins {
   id("io.spring.dependency-management") version "1.1.6"
   id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
   id("jacoco")
-  kotlin("jvm") version "1.9.25"
-  kotlin("plugin.spring") version "1.9.25"
-  kotlin("plugin.jpa") version "1.9.25"
+  val kotlinVersion = "1.9.25"
+  kotlin("jvm") version kotlinVersion
+  kotlin("plugin.spring") version kotlinVersion
+  kotlin("plugin.jpa") version kotlinVersion
+  kotlin("kapt") version kotlinVersion
 }
 
 group = "cz.tul"
@@ -49,18 +51,13 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
 
-  // Jackson and logging
+  // Jackson's serialization and deserialization for Kotlin
   implementation("com.github.ProjectMapK:jackson-module-kogera:2.17.1-beta13")
 
   // Logging
   implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
   implementation("ch.qos.logback:logback-classic:1.5.6")
   implementation("ch.qos.logback:logback-core:1.5.6")
-
-  // used for Loki/Prometheus logging maybe we will use it in the future
-  /*val logbackJsonVersion = "0.1.5"
-  implementation("ch.qos.logback.contrib:logback-json-classic:$logbackJsonVersion")
-  implementation("ch.qos.logback.contrib:logback-jackson:$logbackJsonVersion")*/
 
   // Springdoc OpenAPI
   val openapiVersion = "2.6.0"
@@ -82,20 +79,33 @@ dependencies {
   runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
   runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
+  // Blaze persistence for filtering
+  val blazeVersion = "1.6.12"
+  implementation("com.blazebit:blaze-persistence-entity-view-api-jakarta:$blazeVersion")
+  implementation("com.blazebit:blaze-persistence-entity-view-impl-jakarta:$blazeVersion")
+  implementation("com.blazebit:blaze-persistence-core-api-jakarta:$blazeVersion")
+  implementation("com.blazebit:blaze-persistence-core-impl-jakarta:$blazeVersion")
+  implementation("com.blazebit:blaze-persistence-integration-hibernate-6.2:$blazeVersion")
+  implementation("com.blazebit:blaze-persistence-integration-entity-view-spring-6.0:$blazeVersion")
+
+  // Java model generation
+  val jpaModelGenVersion = "6.5.2.Final"
+  compileOnly("org.hibernate.orm:hibernate-jpamodelgen:$jpaModelGenVersion")
+  kapt("org.hibernate.orm:hibernate-jpamodelgen:$jpaModelGenVersion")
+
+  // Database for testing (integration tests)
+  testImplementation("com.h2database:h2:2.3.232")
+
   // testing
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
   testImplementation("com.h2database:h2:2.2.224")
-
   val kotestVersion = "5.8.0"
   testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
   testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
   testImplementation("io.kotest:kotest-property:$kotestVersion")
   testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
   testImplementation("com.ninja-squad:springmockk:4.0.2")
-/*  val logCaptureVersion = "1.3.3" // can listen and assert on log messages
-  testImplementation("org.logcapture:logcapture-core:$logCaptureVersion")
-  testImplementation("org.logcapture:logcapture-kotest:$logCaptureVersion")*/
 }
 
 tasks.test {
@@ -104,9 +114,6 @@ tasks.test {
 }
 
 tasks.jacocoTestReport {
-  reports {
-    xml.required = true
-  }
   dependsOn(tasks.test)
 }
 
@@ -119,11 +126,3 @@ tasks.jacocoTestCoverageVerification {
     }
   }
 }
-
-tasks.register("deleteTemp") {
-  delete {
-    delete("$projectDir/.tmp")
-  }
-}
-
-tasks["clean"].dependsOn("deleteTemp")

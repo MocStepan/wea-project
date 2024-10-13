@@ -4,8 +4,8 @@ import cz.tul.backend.auth.base.cookie.refresh.RefreshTokenClaims
 import cz.tul.backend.auth.base.cookie.refresh.RefreshTokenJwtService
 import cz.tul.backend.auth.entity.RefreshToken
 import cz.tul.backend.auth.repository.RefreshTokenRepository
-import cz.tul.backend.createAuthUser
-import cz.tul.backend.createResponseCookie
+import cz.tul.backend.utils.createAuthUser
+import cz.tul.backend.utils.createResponseCookie
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

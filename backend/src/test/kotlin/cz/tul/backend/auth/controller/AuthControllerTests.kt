@@ -5,7 +5,7 @@ import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.service.AuthCookieService
 import cz.tul.backend.auth.service.AuthPasswordService
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
-import cz.tul.backend.shared.serviceresult.ServiceResult
+import cz.tul.backend.common.serviceresult.ServiceResult
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
