@@ -2,20 +2,22 @@ spring:
   config:
     activate:
       on-profile: test
+  liquibase:
+    enabled: false
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:db
+    url: jdbc:h2:mem:public;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS PUBLIC
+    driverClassName: org.h2.Driver
     username: sa
     password:
   jpa:
+    defer-datasource-initialization: true
+    show-sql: false
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
-    defer-datasource-initialization: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
-        globally_quoted_identifiers: true
-  liquibase:
-    enabled: false
+        globally_quoted_identifiers: false
+        show_sql: false
+        default_schema: PUBLIC

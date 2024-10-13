@@ -5,7 +5,7 @@ import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
-import cz.tul.backend.shared.serviceresult.ServiceResult
+import cz.tul.backend.common.serviceresult.ServiceResult
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Service

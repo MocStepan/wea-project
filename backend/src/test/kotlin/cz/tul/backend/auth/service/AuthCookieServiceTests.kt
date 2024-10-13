@@ -1,7 +1,7 @@
 package cz.tul.backend.auth.service
 
-import cz.tul.backend.createAuthUser
-import cz.tul.backend.createResponseCookie
+import cz.tul.backend.utils.createAuthUser
+import cz.tul.backend.utils.createResponseCookie
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

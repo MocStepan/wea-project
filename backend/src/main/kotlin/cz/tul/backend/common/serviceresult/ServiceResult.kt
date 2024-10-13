@@ -1,4 +1,4 @@
-package cz.tul.backend.shared.serviceresult
+package cz.tul.backend.common.serviceresult
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo

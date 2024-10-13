@@ -7,8 +7,8 @@ import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
-import cz.tul.backend.createAuthUser
-import cz.tul.backend.shared.serviceresult.ServiceResult
+import cz.tul.backend.common.serviceresult.ServiceResult
+import cz.tul.backend.utils.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

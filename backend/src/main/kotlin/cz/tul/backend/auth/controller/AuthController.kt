@@ -5,7 +5,7 @@ import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.service.AuthCookieService
 import cz.tul.backend.auth.service.AuthPasswordService
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
-import cz.tul.backend.shared.serviceresult.fold
+import cz.tul.backend.common.serviceresult.fold
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
