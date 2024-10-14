@@ -14,6 +14,7 @@ interface BookTableDTO {
   val title: String
   val subtitle: String?
   val thumbnail: String?
+  val description: String?
 
   @get:Mapping("authors.name")
   val authors: Set<String>

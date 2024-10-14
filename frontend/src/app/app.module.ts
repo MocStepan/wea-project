@@ -7,7 +7,6 @@ import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-brow
 import {HTTP_INTERCEPTORS, provideHttpClient} from '@angular/common/http';
 import {AppRoutingModule} from './app.routing-module';
 import {HttpErrorInterceptor} from './shared/http/interceptor/http-error.interceptor';
-import {WelcomeComponent} from './welcome/components/welcome.component';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {NavigationComponent} from './shared/navigation/navigation.component';
 import {MatButtonModule} from '@angular/material/button';
@@ -26,11 +25,10 @@ import {MatIconModule} from '@angular/material/icon';
     RouterModule,
     BrowserAnimationsModule,
     FormsModule,
-    WelcomeComponent,
     NavigationComponent,
     MatCardModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   providers: [
     provideAnimations(),
