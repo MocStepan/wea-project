@@ -47,4 +47,4 @@ scheduler:
   book:
     import:
       cron: "0 */5 * * * *"
-      enabled: true
+      enabled: false

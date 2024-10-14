@@ -52,7 +52,6 @@ class BlazeFilterComponent(
   ): PaginatedCriteriaBuilder<T> {
     filterCriteria.forEach {
       val joinedKeys = createJoinedKeys(*it.joinsKeys.toTypedArray(), it.key)
-      print("joinedKeys: $joinedKeys")
       operatorCriteriaBuilder.buildOperatorCriteria(
         criteriaBuilder,
         joinedKeys,

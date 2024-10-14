@@ -25,7 +25,6 @@ class WebSecurityConfig(
 ) {
   private val unsecuredEndpoints =
     arrayOf(
-      "/api/v1/welcome/welcome-text",
       "/api/v1/auth/login",
       "/api/v1/auth/register",
       "/api/v1/auth/logout",

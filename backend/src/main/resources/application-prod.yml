@@ -20,5 +20,5 @@ auth:
 scheduler:
   book:
     import:
-      cron: "0 */5 * * * *"
+      cron: "0 */30 * * * *"
       enabled: true
