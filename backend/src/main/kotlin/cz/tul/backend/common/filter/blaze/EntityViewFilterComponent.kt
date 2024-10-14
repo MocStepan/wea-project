@@ -9,6 +9,6 @@ interface EntityViewFilterComponent {
     filterDTO: FilterDTO,
     entityViewClass: Class<T>,
     rootEntity: Class<*>,
-    orderCriteria: FilterCriteria
+    orderCriteria: FilterCriteria<Any>
   ): PageResponseDTO<T>
 }

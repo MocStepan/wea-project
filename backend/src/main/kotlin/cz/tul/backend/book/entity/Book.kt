@@ -16,10 +16,10 @@ class Book(
   val isbn10: String,
   val title: String,
   @OneToMany(mappedBy = "book", orphanRemoval = true)
-  val categories: Set<BookCategory> = mutableSetOf(),
+  val categories: Set<BookCategoryLink> = mutableSetOf(),
   val subtitle: String? = null,
   @OneToMany(mappedBy = "book", orphanRemoval = true)
-  val authors: Set<BookAuthor> = mutableSetOf(),
+  val authors: Set<BookAuthorLink> = mutableSetOf(),
   val thumbnail: String? = null,
   val description: String? = null,
   val publishedYear: Int? = null,

@@ -9,18 +9,30 @@ import cz.tul.backend.auth.base.valueobject.AuthUserRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.entity.RefreshToken
+import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
+import io.mockk.every
+import io.mockk.mockk
 import org.springframework.http.ResponseCookie
+import org.springframework.transaction.TransactionStatus
+import org.springframework.transaction.support.TransactionTemplate
 import java.time.Duration
+import java.util.function.Consumer
 
 val objectMapper: ObjectMapper = jacksonObjectMapper()
   .registerModule(JavaTimeModule())
   .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
   .setSerializationInclusion(JsonInclude.Include.NON_NULL)
   .registerModule(SimpleModule().addDeserializer(String::class.java, TrimmingStringDeserializer()))
+
+fun processTransaction(transactionTemplate: TransactionTemplate) {
+  every { transactionTemplate.executeWithoutResult(any()) } answers {
+    (firstArg() as Consumer<TransactionStatus>).accept(mockk())
+  }
+}
 
 fun createAuthUser(
   id: Long = 0L,
@@ -95,6 +107,36 @@ fun createBook(
     isbn13 = isbn13,
     isbn10 = isbn10,
     subtitle = subtitle,
+    thumbnail = thumbnail,
+    description = description,
+    publishedYear = publishedYear,
+    averageRating = averageRating,
+    numPages = numPages,
+    ratingsCount = ratingsCount
+  )
+}
+
+fun createBookImportDTO(
+  isbn13: String = "978-1-56619-909-4",
+  isbn10: String = "156619909X",
+  title: String = "The Art of War",
+  categories: String? = "Philosophy",
+  subtitle: String? = "The Ancient Classic",
+  authors: String? = "Sun Tzu",
+  thumbnail: String? = "http://books.google.com/books/content?id=1-56619-909-4&printsec=frontcover&img=1&zoom",
+  description: String? = "The Art of War is an ancient Chinese military treatise dating from the Late Spring.",
+  publishedYear: Int? = -500,
+  averageRating: Double? = 4.5,
+  numPages: Int? = 48,
+  ratingsCount: Int? = 3
+): BookImportDTO {
+  return BookImportDTO(
+    isbn13 = isbn13,
+    isbn10 = isbn10,
+    title = title,
+    categories = categories,
+    subtitle = subtitle,
+    authors = authors,
     thumbnail = thumbnail,
     description = description,
     publishedYear = publishedYear,
