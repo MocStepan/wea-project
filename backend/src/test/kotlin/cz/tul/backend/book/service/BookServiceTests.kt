@@ -3,6 +3,8 @@ package cz.tul.backend.book.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.BookImport
+import cz.tul.backend.book.repository.BookAuthorRepository
+import cz.tul.backend.book.repository.BookCategoryRepository
 import cz.tul.backend.book.repository.BookImportRepository
 import cz.tul.backend.utils.objectMapper
 import io.kotest.core.spec.style.FeatureSpec
@@ -41,17 +43,53 @@ class BookServiceTests : FeatureSpec({
       spec.bookService.saveImportedBooks(importDTOs)
 
       val captured = slot.captured
-      captured.content shouldBe objectMapper.writeValueAsString(importDTOs)
+      captured.content shouldBe objectMapper.writeValueAsBytes(importDTOs)
+    }
+  }
+
+  feature("get all categories") {
+    scenario("success") {
+      val spec = getSpec()
+
+      every { spec.bookCategoryRepository.findAll() } returns listOf(
+        mockk { every { name } returns "Philosophy" },
+        mockk { every { name } returns "Science" }
+      )
+
+      val result = spec.bookService.getAllCategories()
+
+      result shouldBe setOf("Philosophy", "Science")
+    }
+  }
+
+  feature("get all authors") {
+    scenario("success") {
+      val spec = getSpec()
+
+      every { spec.bookAuthorRepository.findAll() } returns listOf(
+        mockk { every { name } returns "Plato" }
+      )
+
+      val result = spec.bookService.getAllAuthors()
+
+      result shouldBe setOf("Plato")
     }
   }
 })
 
 private class BookServiceSpecWrapper(
   val objectMapper: ObjectMapper,
-  val bookImportRepository: BookImportRepository
+  val bookImportRepository: BookImportRepository,
+  val bookCategoryRepository: BookCategoryRepository,
+  val bookAuthorRepository: BookAuthorRepository
 ) {
 
-  val bookService: BookService = BookService(objectMapper, bookImportRepository)
+  val bookService: BookService = BookService(
+    objectMapper,
+    bookImportRepository,
+    bookCategoryRepository,
+    bookAuthorRepository
+  )
 }
 
-private fun getSpec() = BookServiceSpecWrapper(objectMapper, mockk())
+private fun getSpec() = BookServiceSpecWrapper(objectMapper, mockk(), mockk(), mockk())

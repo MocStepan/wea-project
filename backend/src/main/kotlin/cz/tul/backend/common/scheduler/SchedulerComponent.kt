@@ -11,12 +11,12 @@ private val log = KotlinLogging.logger {}
 
 @Component
 class SchedulerComponent(
-  @Value("\${scheduler.book.import.enabled}") private val bookImportEnabled: Boolean,
+  @Value("\${synchronization.book.import.enabled}") private val bookImportEnabled: Boolean,
   private val bookImportSynchronizationService: BookImportSynchronizationService
 ) {
 
   @Scheduled(
-    cron = "\${scheduler.book.import.cron}",
+    cron = "\${synchronization.book.import.cron}",
     zone = "CET"
   )
   @Async
@@ -25,7 +25,7 @@ class SchedulerComponent(
       log.debug { "Synchronizing books from import table" }
       bookImportSynchronizationService.synchronizeBooks()
     } else {
-      log.debug { "Book import scheduler is disabled" }
+      log.debug { "Book import synchronization would run by now" }
     }
   }
 }

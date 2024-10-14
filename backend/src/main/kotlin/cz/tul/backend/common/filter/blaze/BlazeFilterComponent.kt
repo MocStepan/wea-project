@@ -20,11 +20,12 @@ class BlazeFilterComponent(
   private val operatorCriteriaBuilder: BlazeOperatorCriteriaBuilder,
   private val sortCriteriaBuilder: BlazeSortCriteriaBuilder
 ) : EntityViewFilterComponent {
+
   override fun <T> filterEntityView(
     filterDTO: FilterDTO,
     entityViewClass: Class<T>,
     rootEntity: Class<*>,
-    orderCriteria: FilterCriteria
+    orderCriteria: FilterCriteria<Any>
   ): PageResponseDTO<T> {
     val filterCriteria = filterDTO.toFilterCriteria()
     filterCriteria.add(orderCriteria)
@@ -47,7 +48,7 @@ class BlazeFilterComponent(
   }
 
   private fun <T> applyFilterCriteria(
-    filterCriteria: List<FilterCriteria>,
+    filterCriteria: List<FilterCriteria<Any>>,
     criteriaBuilder: PaginatedCriteriaBuilder<T>
   ): PaginatedCriteriaBuilder<T> {
     filterCriteria.forEach {

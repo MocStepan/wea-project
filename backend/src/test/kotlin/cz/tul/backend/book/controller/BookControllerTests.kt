@@ -45,6 +45,36 @@ class BookControllerTests : FeatureSpec({
       response.statusCode shouldBe HttpStatus.OK
     }
   }
+
+  feature("get all categories") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val categories = setOf("Philosophy", "Science")
+
+      every { spec.bookService.getAllCategories() } returns categories
+
+      val response = spec.bookController.getAllCategories()
+
+      response.statusCode shouldBe HttpStatus.OK
+      response.body shouldBe categories
+    }
+  }
+
+  feature("get all authors") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val authors = setOf("Sun Tzu")
+
+      every { spec.bookService.getAllAuthors() } returns authors
+
+      val response = spec.bookController.getAllAuthors()
+
+      response.statusCode shouldBe HttpStatus.OK
+      response.body shouldBe authors
+    }
+  }
 })
 
 private class BookControllerSpecWrapper(

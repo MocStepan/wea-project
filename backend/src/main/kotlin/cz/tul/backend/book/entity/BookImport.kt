@@ -7,9 +7,8 @@ import jakarta.persistence.Id
 
 @Entity
 class BookImport(
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Long = 0,
-  val content: String
+  val content: ByteArray
 )

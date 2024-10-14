@@ -8,5 +8,5 @@ interface FilterDTO {
     return page * size
   }
 
-  fun toFilterCriteria(): MutableList<FilterCriteria>
+  fun toFilterCriteria(): MutableList<FilterCriteria<Any>>
 }
