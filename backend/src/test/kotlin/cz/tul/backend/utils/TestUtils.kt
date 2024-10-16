@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import cz.tul.backend.auth.base.cookie.access.AccessTokenClaims
+import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import cz.tul.backend.auth.base.valueobject.AuthUserRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.entity.AuthUser
@@ -143,5 +145,17 @@ fun createBookImportDTO(
     averageRating = averageRating,
     numPages = numPages,
     ratingsCount = ratingsCount
+  )
+}
+
+fun createUserClaims(
+  id: Long = 0L,
+  role: AuthUserRole = AuthUserRole.USER,
+  email: String = "user@user.com"
+): AuthJwtClaims {
+  return AccessTokenClaims(
+    authUserId = id,
+    authUserRole = role,
+    email = email
   )
 }
