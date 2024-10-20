@@ -9,12 +9,18 @@ import org.springframework.stereotype.Component
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Component that schedules the synchronizations.
+ */
 @Component
 class SchedulerComponent(
   @Value("\${synchronization.book.import.enabled}") private val bookImportEnabled: Boolean,
   private val bookImportSynchronizationService: BookImportSynchronizationService
 ) {
 
+  /**
+   * Synchronizes the books from the import table.
+   */
   @Scheduled(
     cron = "\${synchronization.book.import.cron}",
     zone = "CET"

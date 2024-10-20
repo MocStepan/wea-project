@@ -28,7 +28,7 @@ class JwtTokenFilterTests : FeatureSpec({
       val claims = AccessTokenClaims(createAuthUser())
       SecurityContextHolder.getContext().authentication = null
 
-      every { spec.tokenFilter.filter(request, response) } returns claims
+      every { spec.tokenFilterComponent.filter(request, response) } returns claims
       every { filterChain.doFilter(request, response) } just Runs
 
       spec.doFilterInternal(request, response, filterChain)
@@ -45,7 +45,7 @@ class JwtTokenFilterTests : FeatureSpec({
       val filterChain = mockk<FilterChain>()
       SecurityContextHolder.getContext().authentication = null
 
-      every { spec.tokenFilter.filter(request, response) } returns null
+      every { spec.tokenFilterComponent.filter(request, response) } returns null
       every { filterChain.doFilter(request, response) } just Runs
 
       spec.doFilterInternal(request, response, filterChain)
@@ -57,7 +57,7 @@ class JwtTokenFilterTests : FeatureSpec({
 })
 
 private val doFilterInternalMethod = ReflectionUtils.findMethod(
-  JwtTokenFilter::class.java,
+  JwtTokenFilterService::class.java,
   "doFilterInternal",
   HttpServletRequest::class.java,
   HttpServletResponse::class.java,
@@ -65,10 +65,10 @@ private val doFilterInternalMethod = ReflectionUtils.findMethod(
 ).get()
 
 private class JwtTokenFilterSpecWrapper(
-  val tokenFilter: TokenFilter
+  val tokenFilterComponent: TokenFilterComponent
 ) {
-  val jwtTokenFilter = JwtTokenFilter(
-    tokenFilter
+  val jwtTokenFilterService = JwtTokenFilterService(
+    tokenFilterComponent
   )
 
   fun doFilterInternal(
@@ -77,7 +77,7 @@ private class JwtTokenFilterSpecWrapper(
     filterChain: FilterChain
   ) = ReflectionUtils.invokeMethod(
     doFilterInternalMethod,
-    jwtTokenFilter,
+    jwtTokenFilterService,
     request,
     response,
     filterChain

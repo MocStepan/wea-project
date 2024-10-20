@@ -51,7 +51,7 @@ class AccessTokenServiceJwtTests : FeatureSpec({
     }
 
     scenario("clear cookie") {
-      val emptyCookie = accessTokenJwtService.clearCookie()
+      val emptyCookie = accessTokenJwtService.createEmptyCookie()
 
       val header = emptyCookie.toString()
       header shouldContain "access_token="

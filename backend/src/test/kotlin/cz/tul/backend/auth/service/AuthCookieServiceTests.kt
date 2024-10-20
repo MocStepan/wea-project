@@ -29,7 +29,7 @@ class AuthCookieServiceTests : FeatureSpec({
       every { response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString()) } just runs
       every { response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString()) } just runs
 
-      spec.authCookieService.loginWithAccessCookie(authUser, response, true)
+      spec.authCookieService.setAccessCookie(authUser, response, true)
     }
 
     scenario("should add only access cookie to response") {
@@ -42,7 +42,7 @@ class AuthCookieServiceTests : FeatureSpec({
       every { spec.authAccessTokenService.authenticate(authUser) } returns accessCookie
       every { response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString()) } just runs
 
-      spec.authCookieService.loginWithAccessCookie(authUser, response, false)
+      spec.authCookieService.setAccessCookie(authUser, response, false)
 
       verify(exactly = 0) { spec.authRefreshTokenService.assignRefreshToken(any()) }
     }

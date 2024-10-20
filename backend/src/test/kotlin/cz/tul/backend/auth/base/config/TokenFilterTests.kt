@@ -27,7 +27,7 @@ class TokenFilterTests : FeatureSpec({
       every { request.cookies } returns arrayOf(accessToken)
       every { spec.accessTokenService.extractClaims(accessToken.toString()) } returns claims
 
-      val result = spec.tokenFilter.filter(request, response)!!
+      val result = spec.tokenFilterComponent.filter(request, response)!!
 
       result shouldBe claims
     }
@@ -40,7 +40,7 @@ class TokenFilterTests : FeatureSpec({
       every { spec.accessTokenService.cookieName } returns "name"
       every { request.cookies } returns arrayOf()
 
-      val result = spec.tokenFilter.filter(request, response)
+      val result = spec.tokenFilterComponent.filter(request, response)
 
       result shouldBe null
     }
@@ -57,7 +57,7 @@ class TokenFilterTests : FeatureSpec({
       every { spec.accessTokenService.cookieName } returns "name"
       every { spec.accessTokenService.extractClaims("token") } returns null
 
-      val result = spec.tokenFilter.filter(request, response)
+      val result = spec.tokenFilterComponent.filter(request, response)
 
       result shouldBe null
     }
@@ -74,7 +74,7 @@ class TokenFilterTests : FeatureSpec({
       every { request.cookies } returns arrayOf()
       every { spec.accessTokenService.cookieName } returns "accessToken"
 
-      val result = spec.tokenFilter.filter(request, response)
+      val result = spec.tokenFilterComponent.filter(request, response)
 
       result shouldBe null
     }
@@ -84,7 +84,7 @@ class TokenFilterTests : FeatureSpec({
 private class TokenFilterSpecWrapper(
   val accessTokenService: AccessTokenJwtService
 ) {
-  val tokenFilter: TokenFilter = TokenFilter(
+  val tokenFilterComponent: TokenFilterComponent = TokenFilterComponent(
     accessTokenService
   )
 }

@@ -21,6 +21,9 @@ import org.springframework.transaction.support.TransactionTemplate
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Service for synchronizing books from import table to book table.
+ */
 @Service
 class BookImportSynchronizationService(
   private val bookImportRepository: BookImportRepository,
@@ -34,10 +37,14 @@ class BookImportSynchronizationService(
   private val transactionTemplate: TransactionTemplate
 ) : BookSynchronizationService {
 
+  /**
+   * Synchronize books from import book table to book table by parsing import book content to list of BookImportDTO.
+   * After parsing, process books in chunks and save them to database. Finally, delete all import books.
+   */
   override fun synchronizeBooks() {
     val importBooks = bookImportRepository.findAll()
     if (importBooks.isEmpty()) {
-      log.warn { "No import books to synchronize" }
+      log.debug { "No import books to synchronize" }
       return
     }
 
@@ -49,24 +56,30 @@ class BookImportSynchronizationService(
     bookImportRepository.deleteAll()
   }
 
+  /**
+   * Process chunks of import books with transaction.
+   * Save books, authors and categories to database.
+   *
+   * @param books list of books to process
+   */
   private fun processBooksInBatch(books: List<BookImportDTO>) {
     books.chunked(chunkSize).forEach { bookChunk ->
       transactionTemplate.executeWithoutResult {
-        bookChunk.forEach { processBook(it) }
+        bookChunk.forEach { importDTO ->
+          val book = bookRepository.save(Book.from(importDTO))
+          saveBookCategories(importDTO.categories, book)
+          saveBookAuthors(importDTO.authors, book)
+        }
       }
     }
   }
 
-  private fun processBook(importDTO: BookImportDTO) {
-    try {
-      val book = bookRepository.save(Book.from(importDTO))
-      saveBookCategories(importDTO.categories, book)
-      saveBookAuthors(importDTO.authors, book)
-    } catch (e: Exception) {
-      log.error(e) { "Error synchronizing bookImportDTO: $importDTO" }
-    }
-  }
-
+  /**
+   * Save book categories to database. If category does not exist, create new category and link it to book.
+   *
+   * @param categories string with categories separated by comma
+   * @param book book to save categories for
+   */
   private fun saveBookCategories(categories: String?, book: Book) {
     if (categories == null) {
       return
@@ -82,6 +95,12 @@ class BookImportSynchronizationService(
     }
   }
 
+  /**
+   * Save book authors to database. If author does not exist, create new author and link it to book.
+   *
+   * @param authors string with authors separated by semicolon
+   * @param book book to save authors for
+   */
   private fun saveBookAuthors(authors: String?, book: Book) {
     if (authors == null) {
       return
@@ -97,14 +116,30 @@ class BookImportSynchronizationService(
     }
   }
 
+  /**
+   * Special method that can be used by string to get list of categories from string separated by comma.
+   *
+   * @return list of categories
+   */
   private fun String.getCategories(): List<String> {
     return this.split(",").map { it.trim() }
   }
 
+  /**
+   * Special method that can be used by string to get list of authors from string separated by semicolon.
+   *
+   * @return list of authors
+   */
   private fun String.getAuthors(): List<String> {
     return this.split(";").map { it.trim() }
   }
 
+  /**
+   * Parse import book content to list of BookImportDTO. If error occurs, log error and return null.
+   *
+   * @param content import book content
+   * @return list of [BookImportDTO] or null if parsing failed
+   */
   private fun parseBooks(content: ByteArray): List<BookImportDTO>? {
     return try {
       objectMapper.readValue(content, object : TypeReference<List<BookImportDTO>>() {})

@@ -10,11 +10,20 @@ import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.filter.valueobject.FilterSort
 import org.springframework.stereotype.Service
 
+/**
+ * Service for filtering books.
+ */
 @Service
 class BookFilterService(
   private val entityViewFilterComponent: EntityViewFilterComponent
 ) {
 
+  /**
+   * Filters books with given filter data by using [EntityViewFilterComponent].
+   *
+   * @param filterDTO filter data
+   * @return page response with filtered books
+   */
   fun filterBooks(filterDTO: FilterDTO): PageResponseDTO<BookTableDTO> {
     return entityViewFilterComponent.filterEntityView(
       filterDTO,

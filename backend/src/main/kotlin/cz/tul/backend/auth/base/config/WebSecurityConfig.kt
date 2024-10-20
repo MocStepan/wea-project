@@ -16,13 +16,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 
+/**
+ * Configuration class for Spring Security (cors, csrf, session management, etc.).
+ */
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
   private val objectMapper: ObjectMapper,
-  private val jwtTokenFilter: JwtTokenFilter,
+  private val jwtTokenFilterService: JwtTokenFilterService,
   @Value("\${auth.cors.frontendUrl}") private val frontendUrl: String
 ) {
+
+  /**
+   * List of unsecured endpoints.
+   */
   private val unsecuredEndpoints =
     arrayOf(
       "/api/v1/auth/login",
@@ -36,6 +43,11 @@ class WebSecurityConfig(
       "api/v1/book/authors"
     )
 
+  /**
+   * Security configuration.
+   *
+   * @param http HttpSecurity
+   */
   @Bean
   fun securityConfig(http: HttpSecurity): SecurityFilterChain {
     return http
@@ -54,10 +66,15 @@ class WebSecurityConfig(
       .exceptionHandling {
         it.authenticationEntryPoint(authenticationExceptionHandler)
       }
-      .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
+      .addFilterBefore(jwtTokenFilterService, UsernamePasswordAuthenticationFilter::class.java)
       .build()
   }
 
+  /**
+   * Exception handler for authentication exceptions.
+   *
+   * @return message with exception
+   */
   private val authenticationExceptionHandler =
     { _: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException ->
       response.contentType = MediaType.APPLICATION_JSON_VALUE
@@ -65,6 +82,9 @@ class WebSecurityConfig(
       objectMapper.writeValue(response.writer, "${authException.message}")
     }
 
+  /**
+   * Configuration source for CORS.
+   */
   private fun corsConfigurationSource(): CorsConfigurationSource {
     return CorsConfigurationSource {
       CorsConfiguration().apply {

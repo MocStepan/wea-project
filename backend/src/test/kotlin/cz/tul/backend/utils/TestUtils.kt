@@ -10,7 +10,9 @@ import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import cz.tul.backend.auth.base.valueobject.AuthUserRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.entity.AuthUser
+import cz.tul.backend.auth.entity.AuthUser_.role
 import cz.tul.backend.auth.entity.RefreshToken
+import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.common.filter.dto.PageResponseDTO
@@ -41,7 +43,7 @@ fun createAuthUser(
   firstName: String = "firstName",
   lastName: String = "lastName",
   email: EmailAddress = EmailAddress("example@example.com"),
-  password: String = "password",
+  password: Hashed = Hashed("password"),
   role: AuthUserRole = AuthUserRole.USER,
   refreshToken: Set<RefreshToken> = emptySet()
 ): AuthUser {

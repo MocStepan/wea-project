@@ -163,7 +163,7 @@ class AuthRefreshTokenServiceTests : FeatureSpec({
       every { spec.refreshTokenJwtService.extractClaims(cookieValue) } returns refreshClaims
       every { spec.refreshTokenRepository.findByIdOrNull(0L) } returns refreshToken
       every { spec.refreshTokenRepository.delete(refreshToken) } just runs
-      every { spec.refreshTokenJwtService.clearCookie() } returns responseCookie
+      every { spec.refreshTokenJwtService.createEmptyCookie() } returns responseCookie
 
       val result = spec.authRefreshTokenService.clearCookies(request)
 
@@ -182,7 +182,7 @@ class AuthRefreshTokenServiceTests : FeatureSpec({
 
       every { spec.refreshTokenJwtService.cookieName } returns cookieName
       every { request.cookies } returns emptyArray()
-      every { spec.refreshTokenJwtService.clearCookie() } returns responseCookie
+      every { spec.refreshTokenJwtService.createEmptyCookie() } returns responseCookie
 
       val result = spec.authRefreshTokenService.clearCookies(request)
 

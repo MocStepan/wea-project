@@ -10,12 +10,21 @@ import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Service for handling AuthUser entities.
+ */
 @Service
 @Transactional
 class AuthUserService(
   private val authUserRepository: AuthUserRepository
 ) {
 
+  /**
+   * Gets the authenticated user from the database.
+   *
+   * @param claims Claims of the authenticated user.
+   * @return [AuthUserDTO] of the authenticated user or null if the user was not found.
+   */
   fun getAuthUser(claims: AuthJwtClaims): AuthUserDTO? {
     val authUser = authUserRepository.findByIdOrNull(claims.authUserId)
     if (authUser == null) {

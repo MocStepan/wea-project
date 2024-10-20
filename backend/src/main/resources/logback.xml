@@ -10,7 +10,7 @@
   </appender>
 
   <appender name="INFO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOGS_DIR}/info.logs</file>
+    <file>${LOGS_DIR}/info.log</file>
 
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>
@@ -41,7 +41,7 @@
     </encoder>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOGS_DIR}/error.%d{yyyy-MM-dd}.logs</fileNamePattern>
+      <fileNamePattern>${LOGS_DIR}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
       <maxHistory>31</maxHistory>
     </rollingPolicy>
 

@@ -9,6 +9,9 @@ import cz.tul.backend.common.filter.dto.FilterCriteria
 import cz.tul.backend.common.filter.dto.FilterCriteriaDTO
 import cz.tul.backend.common.filter.dto.FilterDTO
 
+/**
+ * Data transfer object for filtering books. Contains filter criteria for ISBN13, ISBN10, title, authors and categories.
+ */
 data class BookFilterDTO(
   override val size: Int = 20,
   override val page: Int = 0,
@@ -19,6 +22,11 @@ data class BookFilterDTO(
   val categories: FilterCriteriaDTO? = null
 ) : FilterDTO {
 
+  /**
+   * Converts [FilterCriteriaDTO] of this object to a list of [FilterCriteria].
+   *
+   * @return list of filter criteria
+   */
   override fun toFilterCriteria(): MutableList<FilterCriteria<Any>> {
     val list = mutableListOf<FilterCriteria<Any>>()
 

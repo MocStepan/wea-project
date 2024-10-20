@@ -3,6 +3,7 @@ package cz.tul.backend.auth.entity
 import cz.tul.backend.auth.base.valueobject.AuthUserRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.dto.AuthRegisterDTO
+import cz.tul.backend.auth.valueobject.Hashed
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -20,7 +21,7 @@ class AuthUser(
   val firstName: String,
   val lastName: String,
   val email: EmailAddress,
-  val password: String,
+  val password: Hashed,
   @Enumerated(EnumType.STRING)
   val role: AuthUserRole = AuthUserRole.USER,
   @OneToMany(mappedBy = "authUser", orphanRemoval = true)
@@ -30,7 +31,7 @@ class AuthUser(
   companion object {
     fun from(
       registerDTO: AuthRegisterDTO,
-      password: String
+      password: Hashed
     ): AuthUser {
       return AuthUser(
         firstName = registerDTO.firstName,

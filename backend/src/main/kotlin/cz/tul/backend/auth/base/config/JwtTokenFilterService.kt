@@ -8,13 +8,23 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Filter jwt token from the request once per request.
+ */
 @Service
-class JwtTokenFilter(
-  private val tokenFilter: TokenFilter
+class JwtTokenFilterService(
+  private val tokenFilterComponent: TokenFilterComponent
 ) : OncePerRequestFilter() {
 
+  /**
+   * Filter the access token from the request. If the access token is valid, set the authentication context.
+   *
+   * @param request The HTTP request
+   * @param response The HTTP response
+   * @param filterChain The filter chain
+   */
   override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-    val validClaims = tokenFilter.filter(request, response)
+    val validClaims = tokenFilterComponent.filter(request, response)
 
     if (validClaims != null) {
       val authToken = UsernamePasswordAuthenticationToken(validClaims, null, listOf(validClaims.authUserRole))

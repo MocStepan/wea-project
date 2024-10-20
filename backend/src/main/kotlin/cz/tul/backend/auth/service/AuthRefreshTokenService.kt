@@ -14,6 +14,9 @@ import org.springframework.web.util.WebUtils
 
 private val log = KotlinLogging.logger { }
 
+/**
+ * Service for handling refresh token cookies
+ */
 @Service
 @Transactional
 class AuthRefreshTokenService(
@@ -21,6 +24,12 @@ class AuthRefreshTokenService(
   private val refreshTokenJwtService: RefreshTokenJwtService
 ) {
 
+  /**
+   * Try to authenticate with the refresh token cookie. If successful, assign a new refresh token and return it.
+   *
+   * @param request the request to get the cookie from
+   * @return the authenticated user and the new refresh cookie or null if the user is not authenticated
+   */
   fun authenticate(request: HttpServletRequest): Pair<AuthUser, ResponseCookie>? {
     return getToken(request)?.let { token ->
       val refreshCookie = assignRefreshToken(token.authUser)
@@ -28,6 +37,12 @@ class AuthRefreshTokenService(
     }
   }
 
+  /**
+   * Assign a new refresh token to the user. If the user already has a refresh token, delete it.
+   *
+   * @param authUser the user to assign the refresh token to
+   * @return [ResponseCookie] with the new refresh token
+   */
   fun assignRefreshToken(authUser: AuthUser): ResponseCookie {
     refreshTokenRepository.findByAuthUser_Id(authUser.id).takeIf {
       it.isNotEmpty()
@@ -40,14 +55,26 @@ class AuthRefreshTokenService(
     return refreshTokenJwtService.createCookie(claims)
   }
 
+  /**
+   * Clear the refresh token cookie and delete the refresh token from the repository.
+   *
+   * @param request the request to get the cookie from
+   * @return [ResponseCookie] with the cleared refresh token
+   */
   fun clearCookies(request: HttpServletRequest): ResponseCookie {
     val token = getToken(request)
     if (token != null) {
       refreshTokenRepository.delete(token)
     }
-    return refreshTokenJwtService.clearCookie()
+    return refreshTokenJwtService.createEmptyCookie()
   }
 
+  /**
+   * Get the refresh token from the request.
+   *
+   * @param request the request to get the cookie from
+   * @return the refresh token or null if not found
+   */
   private fun getToken(request: HttpServletRequest): RefreshToken? {
     val token = WebUtils.getCookie(request, refreshTokenJwtService.cookieName)?.let { cookie ->
       refreshTokenJwtService.extractClaims(cookie.value)?.let { claims ->

@@ -10,11 +10,22 @@ import org.springframework.web.util.WebUtils
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Component for filtering the [AuthJwtClaims] from the request.
+ */
 @Component
-class TokenFilter(
+class TokenFilterComponent(
   private val accessTokenJwtService: AccessTokenJwtService
 ) {
 
+  /**
+   * Filter the access token from the request. If the access token is valid, return the [AuthJwtClaims].
+   *
+   * @param request The HTTP request
+   * @param response The HTTP response
+   * @return The claims if the token is valid, null otherwise
+   * @see AuthJwtClaims
+   */
   fun filter(request: HttpServletRequest, response: HttpServletResponse): AuthJwtClaims? {
     var validClaims: AuthJwtClaims? = null
 
