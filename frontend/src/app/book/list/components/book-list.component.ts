@@ -19,7 +19,6 @@ import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
 import {MatPaginator, PageEvent} from '@angular/material/paginator'
 import {MatSelect} from '@angular/material/select'
-import {TranslateModule} from '@ngx-translate/core'
 
 import {FilterCriteriaModel} from '../../../shared/filter/model/filter-criteria.model'
 import {PageResponseModel} from '../../../shared/filter/model/page-response.model'
@@ -27,6 +26,7 @@ import {FilterOperatorEnum} from '../../../shared/filter/valueobject/filter-oper
 import {BookService} from '../../service/book.service'
 import {BookFilterModel} from '../model/book-filter.model'
 import {BookTableModel} from '../model/book-table.model'
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-book-list',

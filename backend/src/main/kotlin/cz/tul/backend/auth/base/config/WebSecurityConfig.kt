@@ -1,6 +1,7 @@
 package cz.tul.backend.auth.base.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import cz.tul.backend.auth.base.valueobject.AuthRole
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.RequestCac
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -66,12 +68,12 @@ class WebSecurityConfig(
       .authorizeHttpRequests {
         it
           .requestMatchers(*unsecuredEndpoints).permitAll()
-          .anyRequest().authenticated()
+          .anyRequest().hasAnyAuthority(*AuthRole.allAuthorities.toTypedArray())
       }
       .exceptionHandling {
         it.authenticationEntryPoint(authenticationExceptionHandler)
       }
-      .addFilterAfter(jwtTokenFilterService, LogoutFilter::class.java)
+      .addFilterBefore(jwtTokenFilterService, UsernamePasswordAuthenticationFilter::class.java)
       .build()
   }
 

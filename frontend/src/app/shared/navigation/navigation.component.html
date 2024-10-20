@@ -13,12 +13,11 @@
 
   <span class="fill-space"></span>
 
-  <mat-form-field appearance="outline">
-    <mat-select (selectionChange)="changeLanguage($event.value)" [formControl]="langFormControl">
-      <mat-option value="en">{{"ENGLISH" | translate}}</mat-option>
-      <mat-option value="cz">{{"CZECH" | translate}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <span *ngIf="user() as userData">{{userData.firstName}} {{userData.lastName}}</span>
+
+  <span class="fill-space"></span>
+
+  <mat-slide-toggle labelPosition="before" [(ngModel)]="isChecked" (click)="getLang(isChecked)">{{lang}}</mat-slide-toggle>
 
   <a *ngIf="!isUserSignedIn()" [routerLink]="'/sign-in'">
     <li [class.selected]="isSelected('/sign-in')" class="page-body-text">
@@ -33,7 +32,7 @@
   </a>
 
   <a *ngIf="isUserSignedIn()">
-    <li [class.selected]="isSelected('/sign-out')" class="page-body-text">
+    <li (click)="signOut()" class="page-body-text">
       <span>{{'SIGN_OUT' | translate}}</span>
     </li>
   </a>
