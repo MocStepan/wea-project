@@ -7,24 +7,34 @@
 
   <a [routerLink]="'/favorite'">
     <li [class.selected]="isSelected('/favorite')" class="page-body-text">
-      <span>Favorite</span>
+      <span>{{'FAVORITE' | translate}}</span>
     </li>
   </a>
 
   <span class="fill-space"></span>
-  <a *ngIf="!isUserSignedIn()" [routerLink]="'/sing-in'">
-    <li [class.selected]="isSelected('/sing-in')" class="page-body-text">
-      <span>Sign in</span>
+
+  <mat-form-field appearance="outline">
+    <mat-select (selectionChange)="changeLanguage($event.value)" [formControl]="langFormControl">
+      <mat-option value="en">{{"ENGLISH" | translate}}</mat-option>
+      <mat-option value="cz">{{"CZECH" | translate}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/sign-in'">
+    <li [class.selected]="isSelected('/sign-in')" class="page-body-text">
+      <span>{{'SIGN_IN' | translate}}</span>
     </li>
   </a>
-  <a *ngIf="!isUserSignedIn()" [routerLink]="'/sing-up'">
-    <li [class.selected]="isSelected('/sing-up')" class="page-body-text">
-      <span>Sign up</span>
+
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/sign-up'">
+    <li [class.selected]="isSelected('/sign-up')" class="page-body-text">
+      <span>{{'SIGN_UP' | translate}}</span>
     </li>
   </a>
+
   <a *ngIf="isUserSignedIn()">
-    <li class="page-body-text">
-      <span>Sign out</span>
+    <li [class.selected]="isSelected('/sign-out')" class="page-body-text">
+      <span>{{'SIGN_OUT' | translate}}</span>
     </li>
   </a>
 </mat-toolbar>

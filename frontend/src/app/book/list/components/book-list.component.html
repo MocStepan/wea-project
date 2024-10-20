@@ -1,7 +1,7 @@
 <div class="flex-row">
   <mat-form-field>
-    <mat-label>Category filter</mat-label>
-    <input (change)="onChangeGenre()" [(ngModel)]="value" matInput placeholder="Search category..." type="text">
+    <mat-label>{{"CATEGORY FILTER" | translate}}</mat-label>
+    <input (change)="onChangeGenre()" [(ngModel)]="value" matInput placeholder='{{"SEARCH_CATEGORY" | translate}}' type="text">
     <button (click)="value=''" *ngIf="value" aria-label="Clear" mat-icon-button matSuffix>
       <mat-icon>close</mat-icon>
     </button>

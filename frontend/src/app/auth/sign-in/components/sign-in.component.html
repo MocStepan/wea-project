@@ -1,1 +1,29 @@
-<span>Sign in form</span>
+  <div>
+    <form #formDirective="ngForm" (ngSubmit)="onSubmit()"
+          *ngIf="formGroup"
+          [formGroup]="formGroup">
+      <div class="container">
+        <div class="content">
+          <mat-card>
+
+            <mat-form-field>
+              <mat-icon matPrefix>alternate_email</mat-icon>
+              <input [formControlName]="'email'" matInput placeholder='{{"EMAIL" | translate}}' type="text">
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input [formControlName]="'password'" matInput placeholder='{{"PASSWORD" | translate}}' type="password">
+            </mat-form-field>
+
+            <mat-checkbox [formControlName]="'rememberMe'">{{"REMEMBER_ME" | translate}}</mat-checkbox>
+
+            <button color="primary" mat-raised-button type="submit">{{"SIGN_IN" | translate}}</button>
+            <br>
+            <button (click)="openSignUpForm()" color="basic" mat-raised-button type="button">{{"SIGN_UP" | translate}}</button>
+            <br>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+  </div>

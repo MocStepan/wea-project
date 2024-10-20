@@ -9,8 +9,8 @@ import {BookListComponent} from './book/list/components/book-list.component'
 const routes: Routes = [
   {path: '', component: BookListComponent},
   {path: 'favorite', component: BookListComponent},
-  {path: 'sing-in', component: SignInComponent},
-  {path: 'sing-up', component: SignUpComponent},
+  {path: 'sign-in', component: SignInComponent},
+  {path: 'sign-up', component: SignUpComponent},
   {path: 'book-list/:id', component: BookDetailComponent},
   {path: '**', redirectTo: ''}
 ]
