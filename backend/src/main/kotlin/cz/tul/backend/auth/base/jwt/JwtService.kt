@@ -5,11 +5,20 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 
+/**
+ * JWT service for generating and extracting JWT tokens.
+ */
 class JwtService(
   secret: String
 ) {
   private val secretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
+  /**
+   * Generates JWT token from [JwtClaims].
+   *
+   * @param claims claims
+   * @return JWT token
+   */
   fun generateToken(claims: JwtClaims): String {
     return Jwts
       .builder()
@@ -22,6 +31,12 @@ class JwtService(
       .compact()
   }
 
+  /**
+   * Extracts [Claims] from token. If token is invalid or throws an exception, returns null.
+   *
+   * @param token JWT token
+   * @return [Claims] or null
+   */
   fun extractToken(token: String): Claims? {
     return try {
       return Jwts

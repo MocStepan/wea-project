@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger { }
 
+/**
+ * Service for handling login and registration of users with password authentication.
+ */
 @Service
 @Transactional
 class AuthPasswordService(
@@ -20,10 +23,15 @@ class AuthPasswordService(
   private val authPasswordEncoder: AuthPasswordEncoder,
   private val authCookieService: AuthCookieService
 ) {
-  fun login(
-    loginDTO: AuthLoginDTO,
-    response: HttpServletResponse
-  ): Boolean {
+
+  /**
+   * Try to log in with the given login data. If successful, set the access cookie to the response.
+   *
+   * @param loginDTO the login data
+   * @param response the response to set the cookie to
+   * @return true if the login was successful, false otherwise
+   */
+  fun login(loginDTO: AuthLoginDTO, response: HttpServletResponse): Boolean {
     if (!loginDTO.isValid()) {
       log.warn { "Invalid login request: $loginDTO" }
       return false
@@ -40,10 +48,16 @@ class AuthPasswordService(
       return false
     }
 
-    authCookieService.loginWithAccessCookie(authUser, response, loginDTO.rememberMe)
+    authCookieService.setAccessCookie(authUser, response, loginDTO.rememberMe)
     return true
   }
 
+  /**
+   * Register a new user with the given data, if the data is valid and the user does not already exist.
+   *
+   * @param authRegisterDTO the register data
+   * @return true if the registration was successful, false otherwise
+   */
   fun register(authRegisterDTO: AuthRegisterDTO): ServiceResult<Boolean, AuthPasswordServiceRegisterError> {
     if (!authRegisterDTO.isValid()) {
       log.warn { "Invalid register request: $authRegisterDTO" }

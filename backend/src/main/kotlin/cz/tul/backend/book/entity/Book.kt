@@ -11,7 +11,7 @@ import jakarta.persistence.OneToMany
 class Book(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val id: Long = 0,
+  val id: Long = 0L,
   val isbn13: String,
   val isbn10: String,
   val title: String,

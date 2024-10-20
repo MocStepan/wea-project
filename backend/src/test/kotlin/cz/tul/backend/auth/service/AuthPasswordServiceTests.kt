@@ -7,6 +7,7 @@ import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
+import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.common.serviceresult.ServiceResult
 import cz.tul.backend.utils.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
@@ -36,7 +37,7 @@ class AuthPasswordServiceTests : FeatureSpec({
 
       every { spec.authUserRepository.findByEmail(loginDTO.email.value) } returns authUser
       every { spec.authPasswordEncoder.matches(loginDTO.password, authUser.password) } returns true
-      every { spec.authCookieService.loginWithAccessCookie(authUser, response, true) } just runs
+      every { spec.authCookieService.setAccessCookie(authUser, response, true) } just runs
 
       val result = spec.authPasswordService.login(loginDTO, response)
 
@@ -110,7 +111,7 @@ class AuthPasswordServiceTests : FeatureSpec({
       val authUserSlot = slot<AuthUser>()
 
       every { spec.authUserRepository.existsByEmail(registerDTO.email.value) } returns false
-      every { spec.authPasswordEncoder.encode(registerDTO.password) } returns "hashedPassword"
+      every { spec.authPasswordEncoder.encode(registerDTO.password) } returns Hashed("hashedPassword")
       every { spec.authUserRepository.save(capture(authUserSlot)) } answers { firstArg() }
 
       val result = spec.authPasswordService.register(registerDTO)
@@ -120,7 +121,7 @@ class AuthPasswordServiceTests : FeatureSpec({
       captured.firstName shouldBe registerDTO.firstName
       captured.lastName shouldBe registerDTO.lastName
       captured.email shouldBe registerDTO.email
-      captured.password shouldBe "hashedPassword"
+      captured.password shouldBe Hashed("hashedPassword")
       captured.role shouldBe AuthUserRole.USER
     }
 

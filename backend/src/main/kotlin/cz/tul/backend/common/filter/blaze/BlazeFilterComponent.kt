@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component
 
 private const val BASE_ROOT_ALIAS = "rootAlias"
 
+/**
+ * Implementation of [EntityViewFilterComponent] that uses Blaze-Persistence for filtering entity views.
+ */
 @Component
 class BlazeFilterComponent(
   private val entityManager: EntityManager,
@@ -21,6 +24,16 @@ class BlazeFilterComponent(
   private val sortCriteriaBuilder: BlazeSortCriteriaBuilder
 ) : EntityViewFilterComponent {
 
+  /**
+   * Filters entity view by given [filterDTO] and [orderCriteria].
+   *
+   * @param filterDTO DTO with filter criteria
+   * @param entityViewClass class of entity view
+   * @param rootEntity class of root entity
+   * @param orderCriteria criteria for ordering
+   * @return [PageResponseDTO] with filtered entity views
+   * @see EntityViewFilterComponent.filterEntityView
+   */
   override fun <T> filterEntityView(
     filterDTO: FilterDTO,
     entityViewClass: Class<T>,
@@ -47,6 +60,13 @@ class BlazeFilterComponent(
     )
   }
 
+  /**
+   * Applies filter criteria to [PaginatedCriteriaBuilder].
+   *
+   * @param filterCriteria list of filter criteria
+   * @param criteriaBuilder [PaginatedCriteriaBuilder] to apply filter criteria
+   * @return [PaginatedCriteriaBuilder] with applied filter criteria
+   */
   private fun <T> applyFilterCriteria(
     filterCriteria: List<FilterCriteria<Any>>,
     criteriaBuilder: PaginatedCriteriaBuilder<T>
@@ -68,7 +88,13 @@ class BlazeFilterComponent(
     return criteriaBuilder
   }
 
-  private fun createJoinedKeys(vararg key: String): String {
-    return key.joinToString(separator = ".")
+  /**
+   * Creates joined keys from given keys.
+   *
+   * @param keys list of keys
+   * @return joined keys
+   */
+  private fun createJoinedKeys(vararg keys: String): String {
+    return keys.joinToString(separator = ".")
   }
 }

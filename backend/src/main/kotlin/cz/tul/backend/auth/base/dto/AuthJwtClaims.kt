@@ -3,6 +3,10 @@ package cz.tul.backend.auth.base.dto
 import cz.tul.backend.auth.base.valueobject.AuthUserRole
 import org.springframework.security.core.AuthenticatedPrincipal
 
+/**
+ * Interface for JWT claims that are used in the application.
+ * It extends [AuthenticatedPrincipal] to be able to use it in Spring Security.
+ */
 interface AuthJwtClaims : AuthenticatedPrincipal {
   val authUserId: Long
   val authUserRole: AuthUserRole

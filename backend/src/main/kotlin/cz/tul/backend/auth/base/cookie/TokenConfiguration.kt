@@ -16,8 +16,17 @@ private const val REFRESH_COOKIE_NAME = "refresh_token"
 
 private const val ACCESS_COOKIE_NAME = "access_token"
 
+/**
+ * Configuration class for [RefreshTokenJwtService] and [AccessTokenJwtService] beans.
+ */
 @Configuration
 class TokenConfiguration {
+
+  /**
+   * Bean for creating a [RefreshTokenJwtService] instance with [BaseJwtClaimsService] and [BaseJwtCookieService].
+   * Uses values from application.yml for the secret, duration, sameSite, and secure parameters.
+   *
+   */
   @Bean
   fun getRefreshTokenJwtService(
     objectMapper: ObjectMapper,
@@ -35,6 +44,10 @@ class TokenConfiguration {
     )
   }
 
+  /**
+   * Bean for creating an [AccessTokenJwtService] instance with [BaseJwtClaimsService] and [BaseJwtCookieService].
+   * Uses values from application.yml for the secret, duration, sameSite, and secure parameters.
+   */
   @Bean
   fun getAccessTokenJwtService(
     objectMapper: ObjectMapper,

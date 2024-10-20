@@ -47,7 +47,7 @@ class RefreshTokenJwtServiceTests : FeatureSpec({
     }
 
     scenario("clear cookie") {
-      val emptyCookie = refreshTokenJwtService.clearCookie()
+      val emptyCookie = refreshTokenJwtService.createEmptyCookie()
 
       val header = emptyCookie.toString()
       header shouldContain "refresh_token="

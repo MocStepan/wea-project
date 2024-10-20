@@ -10,7 +10,7 @@ import jakarta.persistence.OneToMany
 class BookAuthor(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val id: Long = 0,
+  val id: Long = 0L,
   val name: String,
   @OneToMany(mappedBy = "author", orphanRemoval = true)
   val bookAuthorLink: Set<BookAuthorLink> = mutableSetOf()

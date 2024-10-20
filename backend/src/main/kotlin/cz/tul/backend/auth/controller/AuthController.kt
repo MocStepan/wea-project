@@ -7,8 +7,11 @@ import cz.tul.backend.auth.service.AuthPasswordService
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
 import cz.tul.backend.common.serviceresult.fold
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
@@ -20,10 +23,19 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Authentication", description = "Endpoints for authentication operations")
 class AuthController(
   private val authPasswordService: AuthPasswordService,
   private val authCookieService: AuthCookieService
 ) {
+
+  @Operation(summary = "User login", description = "Endpoint for logging in a user")
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "200", description = "Login successful"),
+      ApiResponse(responseCode = "400", description = "Invalid login credentials")
+    ]
+  )
   @PostMapping("/v1/auth/login")
   fun login(
     @RequestBody authLoginDTO: AuthLoginDTO,
@@ -34,18 +46,47 @@ class AuthController(
     return ResponseEntity(status)
   }
 
+  @Operation(summary = "User logout", description = "Endpoint for logging out a user")
+  @ApiResponse(responseCode = "200", description = "Logout successful")
   @PostMapping("/v1/auth/logout")
   fun logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<Any> {
     authCookieService.clearCookies(request, response)
     return ResponseEntity(HttpStatus.OK)
   }
 
-  @Operation(summary = "Endpoint for registering new user")
+  @Operation(summary = "User registration", description = "Endpoint for registering a new user")
   @ApiResponses(
     value = [
-      ApiResponse(responseCode = "200", description = "User registered successfully"),
-      ApiResponse(responseCode = "400", description = "Invalid data"),
-      ApiResponse(responseCode = "409", description = "User already exists")
+      ApiResponse(
+        responseCode = "200",
+        description = "User registered successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(example = "true")
+          )
+        ]
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "Invalid data",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(example = "Invalid data")
+          )
+        ]
+      ),
+      ApiResponse(
+        responseCode = "409",
+        description = "User already exists",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(example = "User already exists")
+          )
+        ]
+      )
     ]
   )
   @PostMapping("/v1/auth/register")
@@ -63,6 +104,16 @@ class AuthController(
     )
   }
 
+  @Operation(
+    summary = "Invoke refresh token",
+    description = "Endpoint to refresh access token using refresh token cookie"
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "200", description = "Token refreshed successfully"),
+      ApiResponse(responseCode = "400", description = "Invalid or expired refresh token")
+    ]
+  )
   @PostMapping("/v1/auth/invoke-refresh-token")
   fun invokeRefreshToken(
     request: HttpServletRequest,

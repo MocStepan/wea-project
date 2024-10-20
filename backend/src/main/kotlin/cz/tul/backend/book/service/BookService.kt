@@ -1,6 +1,8 @@
 package cz.tul.backend.book.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import cz.tul.backend.book.dto.BookAuthorOptionView
+import cz.tul.backend.book.dto.BookCategoryOptionView
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.BookImport
 import cz.tul.backend.book.repository.BookAuthorRepository
@@ -12,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Service for handling books.
+ */
 @Service
 @Transactional
 class BookService(
@@ -20,6 +25,12 @@ class BookService(
   private val bookCategoryRepository: BookCategoryRepository,
   private val bookAuthorRepository: BookAuthorRepository
 ) {
+
+  /**
+   * Save imported list of books to database. Before saving, the list is converted to byte array.
+   *
+   * @param importDTOs list of imported books
+   */
   fun saveImportedBooks(importDTOs: List<BookImportDTO>) {
     try {
       val jsonContent = objectMapper.writeValueAsBytes(importDTOs)
@@ -29,11 +40,25 @@ class BookService(
     }
   }
 
-  fun getAllCategories(): Set<String> {
-    return bookCategoryRepository.findAll().map { it.name }.toSet()
+  /**
+   * Get all categories from database and return them as set of [BookCategoryOptionView].
+   *
+   * @return set of [BookCategoryOptionView]
+   */
+  fun getAllCategories(): Set<BookCategoryOptionView> {
+    return bookCategoryRepository.findAll().map {
+      BookCategoryOptionView(it.name)
+    }.toSet()
   }
 
-  fun getAllAuthors(): Set<String> {
-    return bookAuthorRepository.findAll().map { it.name }.toSet()
+  /**
+   * Get all authors from database and return them as set of [BookAuthorOptionView].
+   *
+   * @return set of [BookAuthorOptionView]
+   */
+  fun getAllAuthors(): Set<BookAuthorOptionView> {
+    return bookAuthorRepository.findAll().map {
+      BookAuthorOptionView(it.name)
+    }.toSet()
   }
 }

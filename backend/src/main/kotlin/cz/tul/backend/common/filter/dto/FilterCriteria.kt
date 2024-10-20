@@ -4,7 +4,17 @@ import cz.tul.backend.common.filter.valueobject.FilterOperator
 import cz.tul.backend.common.filter.valueobject.FilterSort
 import cz.tul.backend.common.filter.valueobject.convertPossibleStringList
 
-class FilterCriteria<out T>(
+/**
+ * Represents a filter criteria.
+ *
+ * @param T type of the value
+ * @property operator operator of the filter
+ * @property value value of the filter
+ * @property sort sort of the filter
+ * @property key key of the filter
+ * @property joinsKeys keys of the joins
+ */
+data class FilterCriteria<out T>(
   val operator: FilterOperator? = null,
   val value: T? = null,
   val sort: FilterSort? = null,
@@ -13,6 +23,16 @@ class FilterCriteria<out T>(
 ) {
 
   companion object {
+
+    /**
+     * Converts and builds a filter criteria.
+     * Tries to convert the [FilterCriteriaDTO.value] to a list of strings, else it will be used as is.
+     *
+     * @param filterCriteriaDTO filter criteria DTO
+     * @param key key of the filter
+     * @param joinsKeys keys of the joins
+     * @return filter criteria
+     */
     fun convertAndBuild(
       filterCriteriaDTO: FilterCriteriaDTO,
       key: String,
@@ -27,6 +47,13 @@ class FilterCriteria<out T>(
       )
     }
 
+    /**
+     * Builds a filter criteria just with the sort and without the value.
+     *
+     * @param key key of the filter
+     * @param filterSort sort of the filter
+     * @return filter criteria
+     */
     fun buildOrderCriteria(key: String, filterSort: FilterSort): FilterCriteria<Any> {
       return FilterCriteria(
         key = key,

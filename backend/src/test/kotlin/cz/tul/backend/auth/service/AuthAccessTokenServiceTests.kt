@@ -34,7 +34,7 @@ class AuthAccessTokenServiceTests : FeatureSpec({
 
       val responseCookie = createResponseCookie(cookieName = "access")
 
-      every { spec.accessTokenJwtService.clearCookie() } returns responseCookie
+      every { spec.accessTokenJwtService.createEmptyCookie() } returns responseCookie
 
       val result = spec.authAccessTokenService.clearCookies()
 

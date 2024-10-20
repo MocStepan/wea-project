@@ -1,7 +1,11 @@
 package cz.tul.backend.book.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import cz.tul.backend.book.dto.BookAuthorOptionView
+import cz.tul.backend.book.dto.BookCategoryOptionView
 import cz.tul.backend.book.dto.BookImportDTO
+import cz.tul.backend.book.entity.BookAuthor
+import cz.tul.backend.book.entity.BookCategory
 import cz.tul.backend.book.entity.BookImport
 import cz.tul.backend.book.repository.BookAuthorRepository
 import cz.tul.backend.book.repository.BookCategoryRepository
@@ -51,14 +55,15 @@ class BookServiceTests : FeatureSpec({
     scenario("success") {
       val spec = getSpec()
 
-      every { spec.bookCategoryRepository.findAll() } returns listOf(
-        mockk { every { name } returns "Philosophy" },
-        mockk { every { name } returns "Science" }
-      )
+      val bookCategory1 = BookCategory(name = "Philosophy")
+      val bookCategory2 = BookCategory(name = "Science")
+
+      every { spec.bookCategoryRepository.findAll() } returns listOf(bookCategory1, bookCategory2)
 
       val result = spec.bookService.getAllCategories()
 
-      result shouldBe setOf("Philosophy", "Science")
+      result.size shouldBe 2
+      result shouldBe setOf(BookCategoryOptionView("Philosophy"), BookCategoryOptionView("Science"))
     }
   }
 
@@ -66,13 +71,14 @@ class BookServiceTests : FeatureSpec({
     scenario("success") {
       val spec = getSpec()
 
-      every { spec.bookAuthorRepository.findAll() } returns listOf(
-        mockk { every { name } returns "Plato" }
-      )
+      val bookAuthor = BookAuthor(name = "Plato")
+
+      every { spec.bookAuthorRepository.findAll() } returns listOf(bookAuthor)
 
       val result = spec.bookService.getAllAuthors()
 
-      result shouldBe setOf("Plato")
+      result.size shouldBe 1
+      result shouldBe setOf(BookAuthorOptionView("Plato"))
     }
   }
 })

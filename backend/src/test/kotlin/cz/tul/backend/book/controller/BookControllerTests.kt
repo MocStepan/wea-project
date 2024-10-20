@@ -1,8 +1,11 @@
 package cz.tul.backend.book.controller
 
+import cz.tul.backend.book.dto.BookAuthorOptionView
+import cz.tul.backend.book.dto.BookCategoryOptionView
 import cz.tul.backend.book.dto.BookFilterDTO
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.dto.BookTableDTO
+import cz.tul.backend.book.entity.Book_.authors
 import cz.tul.backend.book.service.BookFilterService
 import cz.tul.backend.book.service.BookService
 import cz.tul.backend.utils.createPageResponseDTO
@@ -50,11 +53,11 @@ class BookControllerTests : FeatureSpec({
     scenario("success") {
       val spec = getSpec()
 
-      val categories = setOf("Philosophy", "Science")
+      val categories = setOf(BookCategoryOptionView("Fantasy"))
 
       every { spec.bookService.getAllCategories() } returns categories
 
-      val response = spec.bookController.getAllCategories()
+      val response = spec.bookController.getCategoryOptionViews()
 
       response.statusCode shouldBe HttpStatus.OK
       response.body shouldBe categories
@@ -65,11 +68,11 @@ class BookControllerTests : FeatureSpec({
     scenario("success") {
       val spec = getSpec()
 
-      val authors = setOf("Sun Tzu")
+      val authors = setOf(BookAuthorOptionView("Fantasy"))
 
       every { spec.bookService.getAllAuthors() } returns authors
 
-      val response = spec.bookController.getAllAuthors()
+      val response = spec.bookController.getAuthorOptionViews()
 
       response.statusCode shouldBe HttpStatus.OK
       response.body shouldBe authors

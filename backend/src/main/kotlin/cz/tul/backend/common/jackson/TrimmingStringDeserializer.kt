@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.deser.std.StringDeserializer
 import org.springframework.boot.jackson.JsonComponent
 
+/**
+ * Custom Jackson deserializer that trims the leading and trailing whitespaces from the string.
+ */
 @JsonComponent
 class TrimmingStringDeserializer : StringDeserializer() {
   override fun deserialize(
