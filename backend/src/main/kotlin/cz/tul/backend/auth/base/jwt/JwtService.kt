@@ -1,9 +1,13 @@
 package cz.tul.backend.auth.base.jwt
 
 import cz.tul.backend.auth.base.dto.JwtClaims
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+
+private val log = KotlinLogging.logger { }
 
 /**
  * JWT service for generating and extracting JWT tokens.
@@ -11,7 +15,7 @@ import io.jsonwebtoken.security.Keys
 class JwtService(
   secret: String
 ) {
-  private val secretKey = Keys.hmacShaKeyFor(secret.toByteArray())
+  private val secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
 
   /**
    * Generates JWT token from [JwtClaims].
@@ -46,6 +50,7 @@ class JwtService(
         .parseSignedClaims(token)
         .payload
     } catch (e: Exception) {
+      log.debug { "Failed to extract token" }
       null
     }
   }

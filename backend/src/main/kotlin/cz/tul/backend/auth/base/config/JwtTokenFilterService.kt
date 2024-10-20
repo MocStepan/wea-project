@@ -27,7 +27,7 @@ class JwtTokenFilterService(
     val validClaims = tokenFilterComponent.filter(request, response)
 
     if (validClaims != null) {
-      val authToken = UsernamePasswordAuthenticationToken(validClaims, null, listOf(validClaims.authUserRole))
+      val authToken = UsernamePasswordAuthenticationToken(validClaims, null, listOf(validClaims.authRole))
       SecurityContextHolder.getContext().authentication = authToken
     }
 

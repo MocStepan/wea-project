@@ -11,7 +11,7 @@ import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 
-class TokenFilterTests : FeatureSpec({
+class TokenFilterComponentTests : FeatureSpec({
 
   feature("filter without refresh token") {
 
@@ -25,7 +25,7 @@ class TokenFilterTests : FeatureSpec({
 
       every { spec.accessTokenService.cookieName } returns "name"
       every { request.cookies } returns arrayOf(accessToken)
-      every { spec.accessTokenService.extractClaims(accessToken.toString()) } returns claims
+      every { spec.accessTokenService.extractClaims(accessToken.value) } returns claims
 
       val result = spec.tokenFilterComponent.filter(request, response)!!
 
@@ -81,7 +81,7 @@ class TokenFilterTests : FeatureSpec({
   }
 })
 
-private class TokenFilterSpecWrapper(
+private class TokenFilterComponentSpecWrapper(
   val accessTokenService: AccessTokenJwtService
 ) {
   val tokenFilterComponent: TokenFilterComponent = TokenFilterComponent(
@@ -89,4 +89,4 @@ private class TokenFilterSpecWrapper(
   )
 }
 
-private fun getSpec() = TokenFilterSpecWrapper(mockk())
+private fun getSpec() = TokenFilterComponentSpecWrapper(mockk())

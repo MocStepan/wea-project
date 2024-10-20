@@ -1,6 +1,6 @@
 package cz.tul.backend.auth.entity
 
-import cz.tul.backend.auth.base.valueobject.AuthUserRole
+import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.valueobject.Hashed
@@ -23,7 +23,7 @@ class AuthUser(
   val email: EmailAddress,
   val password: Hashed,
   @Enumerated(EnumType.STRING)
-  val role: AuthUserRole = AuthUserRole.USER,
+  val role: AuthRole = AuthRole.USER,
   @OneToMany(mappedBy = "authUser", orphanRemoval = true)
   val refreshToken: Set<RefreshToken> = mutableSetOf(),
   val createdDateTime: LocalDateTime = LocalDateTime.now()

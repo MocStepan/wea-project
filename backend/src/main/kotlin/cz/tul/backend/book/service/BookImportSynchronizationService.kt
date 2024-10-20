@@ -50,7 +50,12 @@ class BookImportSynchronizationService(
 
     importBooks.forEach { importBook ->
       log.debug { "Synchronizing import book: ${importBook.id}" }
-      val books = parseBooks(importBook.content) ?: return
+      val books = parseBooks(importBook.content)
+      if (books == null) {
+        log.warn { "Failed to parse import book content" }
+        return
+      }
+
       processBooksInBatch(books)
     }
     bookImportRepository.deleteAll()

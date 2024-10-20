@@ -1,12 +1,12 @@
 package cz.tul.backend.auth.base.config
 
 import cz.tul.backend.auth.base.cookie.access.AccessTokenJwtService
+import cz.tul.backend.auth.base.cookie.utils.getCookieValue
 import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
-import org.springframework.web.util.WebUtils
 
 private val log = KotlinLogging.logger {}
 
@@ -30,10 +30,10 @@ class TokenFilterComponent(
     var validClaims: AuthJwtClaims? = null
 
     try {
-      val accessToken = WebUtils.getCookie(request, accessTokenJwtService.cookieName)
+      val accessToken = request.getCookieValue(accessTokenJwtService.cookieName)
 
       if (accessToken != null) {
-        validClaims = accessTokenJwtService.extractClaims(accessToken.toString())
+        validClaims = accessTokenJwtService.extractClaims(accessToken)
       }
     } catch (e: Exception) {
       log.error(e) { "Error while filtering token" }

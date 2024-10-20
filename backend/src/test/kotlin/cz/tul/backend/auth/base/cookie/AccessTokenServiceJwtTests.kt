@@ -1,7 +1,7 @@
 package cz.tul.backend.auth.base.cookie
 
 import cz.tul.backend.auth.base.cookie.access.AccessTokenClaims
-import cz.tul.backend.auth.base.valueobject.AuthUserRole
+import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.utils.createAuthUser
 import cz.tul.backend.utils.objectMapper
 import io.kotest.core.spec.style.FeatureSpec
@@ -22,7 +22,7 @@ class AccessTokenServiceJwtTests : FeatureSpec({
     scenario("create token and extract claims") {
       val claims = AccessTokenClaims(
         authUserId = 1L,
-        authUserRole = AuthUserRole.USER,
+        authRole = AuthRole.USER,
         email = "john.doe@example.com"
       )
 
@@ -40,7 +40,7 @@ class AccessTokenServiceJwtTests : FeatureSpec({
       val extractedClaims = accessTokenJwtService.extractClaims(cookieValue)
 
       extractedClaims?.authUserId shouldBe 1L
-      extractedClaims?.authUserRole shouldBe AuthUserRole.USER
+      extractedClaims?.authRole shouldBe AuthRole.USER
       extractedClaims?.email shouldBe "john.doe@example.com"
     }
 
@@ -70,7 +70,7 @@ class AccessTokenServiceJwtTests : FeatureSpec({
       val token = accessTokenJwtService.createClaims(authUser)
 
       token.authUserId shouldBe authUser.id
-      token.authUserRole shouldBe authUser.role
+      token.authRole shouldBe authUser.role
       token.email shouldBe authUser.email.value
     }
   }

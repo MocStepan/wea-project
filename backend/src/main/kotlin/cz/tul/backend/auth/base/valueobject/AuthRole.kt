@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority
 /**
  * Enum for authorization roles extending [GrantedAuthority] used for Spring Security.
  */
-enum class AuthUserRole : GrantedAuthority {
+enum class AuthRole : GrantedAuthority {
   USER,
   ADMIN;
 
@@ -14,5 +14,9 @@ enum class AuthUserRole : GrantedAuthority {
    */
   override fun getAuthority(): String {
     return name
+  }
+
+  companion object {
+    val allAuthorities = AuthRole.entries.map { it.authority }
   }
 }

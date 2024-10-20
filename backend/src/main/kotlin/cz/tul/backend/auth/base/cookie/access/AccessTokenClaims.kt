@@ -1,12 +1,12 @@
 package cz.tul.backend.auth.base.cookie.access
 
 import cz.tul.backend.auth.base.dto.AuthJwtClaims
-import cz.tul.backend.auth.base.valueobject.AuthUserRole
+import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.entity.AuthUser
 
 data class AccessTokenClaims(
   override val authUserId: Long,
-  override val authUserRole: AuthUserRole,
+  override val authRole: AuthRole,
   val email: String
 ) : AuthJwtClaims {
   constructor(authUser: AuthUser) : this(

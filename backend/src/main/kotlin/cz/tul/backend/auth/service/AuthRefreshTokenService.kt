@@ -1,6 +1,7 @@
 package cz.tul.backend.auth.service
 
 import cz.tul.backend.auth.base.cookie.refresh.RefreshTokenJwtService
+import cz.tul.backend.auth.base.cookie.utils.getCookieValue
 import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.entity.RefreshToken
 import cz.tul.backend.auth.repository.RefreshTokenRepository
@@ -10,7 +11,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseCookie
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.util.WebUtils
 
 private val log = KotlinLogging.logger { }
 
@@ -76,8 +76,8 @@ class AuthRefreshTokenService(
    * @return the refresh token or null if not found
    */
   private fun getToken(request: HttpServletRequest): RefreshToken? {
-    val token = WebUtils.getCookie(request, refreshTokenJwtService.cookieName)?.let { cookie ->
-      refreshTokenJwtService.extractClaims(cookie.value)?.let { claims ->
+    val token = request.getCookieValue(refreshTokenJwtService.cookieName)?.let { cookie ->
+      refreshTokenJwtService.extractClaims(cookie)?.let { claims ->
         refreshTokenRepository.findByIdOrNull(claims.refreshTokenId)
       }
     }

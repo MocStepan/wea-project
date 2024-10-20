@@ -11,7 +11,7 @@ private val log = KotlinLogging.logger { }
 /**
  * Base class for [JwtClaimsService]. Encapsulates common logic for extracting and creating JWT tokens.
  */
-open class BaseJwtClaimsService<T>(
+class BaseJwtClaimsService<T>(
   private val objectMapper: ObjectMapper,
   private val claimType: Class<T>,
   secret: String

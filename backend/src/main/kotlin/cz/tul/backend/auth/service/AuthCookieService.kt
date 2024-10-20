@@ -1,10 +1,10 @@
 package cz.tul.backend.auth.service
 
+import cz.tul.backend.auth.base.cookie.utils.addCookie
 import cz.tul.backend.auth.entity.AuthUser
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
 
 private val log = KotlinLogging.logger {}
@@ -31,11 +31,11 @@ class AuthCookieService(
     rememberMe: Boolean
   ) {
     val accessCookie = authAccessTokenService.authenticate(authUser)
-    response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString())
+    response.addCookie(accessCookie)
 
     if (rememberMe) {
       val refreshCookie = authRefreshTokenService.assignRefreshToken(authUser)
-      response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+      response.addCookie(refreshCookie)
     }
   }
 
@@ -57,8 +57,8 @@ class AuthCookieService(
       )
 
       val accessCookie = authAccessTokenService.authenticate(authUser)
-      response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString())
-      response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+      response.addCookie(accessCookie)
+      response.addCookie(refreshCookie)
       true
     } catch (e: Exception) {
       log.warn(e) { "Failed to authenticate with refresh token" }
@@ -76,7 +76,7 @@ class AuthCookieService(
   fun clearCookies(request: HttpServletRequest, response: HttpServletResponse) {
     val accessCookie = authAccessTokenService.clearCookies()
     val refreshCookie = authRefreshTokenService.clearCookies(request)
-    response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString())
-    response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+    response.addCookie(accessCookie)
+    response.addCookie(refreshCookie)
   }
 }

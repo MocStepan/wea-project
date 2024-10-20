@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.junit.platform.commons.util.ReflectionUtils
 import org.springframework.security.core.context.SecurityContextHolder
 
-class JwtTokenFilterTests : FeatureSpec({
+class JwtTokenFilterServiceTests : FeatureSpec({
 
   feature("AuthJwtFilter") {
 
@@ -64,7 +64,7 @@ private val doFilterInternalMethod = ReflectionUtils.findMethod(
   FilterChain::class.java
 ).get()
 
-private class JwtTokenFilterSpecWrapper(
+private class JwtTokenFilterServiceSpecWrapper(
   val tokenFilterComponent: TokenFilterComponent
 ) {
   val jwtTokenFilterService = JwtTokenFilterService(
@@ -84,4 +84,4 @@ private class JwtTokenFilterSpecWrapper(
   )
 }
 
-private fun getSpec() = JwtTokenFilterSpecWrapper(mockk())
+private fun getSpec() = JwtTokenFilterServiceSpecWrapper(mockk())
