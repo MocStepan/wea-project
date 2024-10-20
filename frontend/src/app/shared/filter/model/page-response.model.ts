@@ -1,6 +1,5 @@
-
 export interface PageResponseModel<T> {
-  content: Array<T>,
+  content: T[],
   totalPages: number,
   page: number,
   size: number,
