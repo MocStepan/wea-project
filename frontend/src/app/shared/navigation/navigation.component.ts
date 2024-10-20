@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,12 +8,11 @@ import {
   OnInit,
   signal,
   WritableSignal
-} from '@angular/core';
-import {MatIcon} from '@angular/material/icon';
-import {MatToolbar} from '@angular/material/toolbar';
-import {NavigationEnd, Router, RouterLink} from '@angular/router';
-import {NgIf} from '@angular/common';
-import {filter, Subscription} from 'rxjs';
+} from '@angular/core'
+import {MatIcon} from '@angular/material/icon'
+import {MatToolbar} from '@angular/material/toolbar'
+import {NavigationEnd, Router, RouterLink} from '@angular/router'
+import {filter, Subscription} from 'rxjs'
 
 @Component({
   selector: 'app-navigation',
@@ -25,42 +25,38 @@ import {filter, Subscription} from 'rxjs';
     NgIf
   ],
   providers: [
-    Router,
+    Router
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css'
 })
 export class NavigationComponent implements OnInit, OnDestroy {
-  protected isUserSignedIn: WritableSignal<boolean> = signal(false);
-  private readonly subscriptions: Subscription[] = [];
-  private currentUrl: string = '';
+  protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  private readonly subscriptions: Subscription[] = []
+  private currentUrl = ''
 
-  private router: Router = inject(Router);
-  private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private router: Router = inject(Router)
+  private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef)
 
   ngOnInit() {
-    this.currentUrl = this.router.url;
-    this.navigationRouter();
+    this.currentUrl = this.router.url
+    this.navigationRouter()
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe())
   }
 
   isSelected(navigationUrl: string) {
-    return this.currentUrl == navigationUrl;
-  }
-
-  signOut() {
-
+    return this.currentUrl == navigationUrl
   }
 
   private navigationRouter() {
     this.subscriptions.push(this.router.events.pipe(filter((event) =>
       event instanceof NavigationEnd)
     ).subscribe((event) => {
-      this.currentUrl = (event as NavigationEnd).url;
-      this.changeDetectorRef.detectChanges();
-    }));
+      this.currentUrl = (event as NavigationEnd).url
+      this.changeDetectorRef.detectChanges()
+    }))
   }
 }

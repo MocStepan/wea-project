@@ -1,4 +1,4 @@
-import {Config} from 'jest';
+import {Config} from 'jest'
 
 const jestConfig: Config = {
 
@@ -6,12 +6,12 @@ const jestConfig: Config = {
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   globalSetup: 'jest-preset-angular/global-setup',
   reporters: [
-    'default',
+    'default'
   ],
   collectCoverageFrom: ['src/app/**/*.ts', '!**/node_modules/**'],
   coverageDirectory: 'coverage',
   coverageReporters: ['cobertura', 'text', 'text-summary', 'html'],
   cacheDirectory: '.jestcache'
-};
+}
 
-export default jestConfig;
+export default jestConfig

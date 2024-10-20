@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
+import {Component} from '@angular/core'
 
 @Component({
-  selector: 'book-detail',
+  selector: 'app-book-detail',
   standalone: true,
   imports: [],
   providers: [],
