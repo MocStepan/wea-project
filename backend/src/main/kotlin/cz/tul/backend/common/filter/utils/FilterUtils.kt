@@ -1,4 +1,4 @@
-package cz.tul.backend.common.filter.valueobject
+package cz.tul.backend.common.filter.utils
 
 fun convertPossibleStringList(value: String?): Any? {
   return if (isList(value)) {

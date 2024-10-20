@@ -26,13 +26,13 @@ auth:
     frontendUrl: "localhost:4200"
   jwt:
     access:
-      secret: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
-      duration: 600000
+      secret: "e3a62749cb3f1923567611b91b73f7e92996ff82bdabb05150d015f894f356c3"
+      duration: 600000 # 10 minutes
       sameSite: "Lax"
       secure: false
     refresh:
-      secret: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
-      duration: 1800000
+      secret: "1e631403b1c7cf24924927c2f2f7aa135ac984513cfd5dd2d5c88676e9a103dc"
+      duration: 2592000000 # 30 days
       sameSite: "Lax"
       secure: false
 springdoc:

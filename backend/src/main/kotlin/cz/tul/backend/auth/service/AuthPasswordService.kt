@@ -39,12 +39,12 @@ class AuthPasswordService(
 
     val authUser = authUserRepository.findByEmail(loginDTO.email.value)
     if (authUser == null) {
-      log.warn { "User: ${loginDTO.email} not found" }
+      log.warn { "AuthUser: ${loginDTO.email} not found" }
       return false
     }
 
     if (!authPasswordEncoder.matches(loginDTO.password, authUser.password)) {
-      log.warn { "Invalid password for user: ${loginDTO.email}" }
+      log.warn { "Invalid password for AuthUser: ${loginDTO.email}" }
       return false
     }
 
@@ -65,13 +65,14 @@ class AuthPasswordService(
     }
 
     if (authUserRepository.existsByEmail(authRegisterDTO.email.value)) {
-      log.warn { "User already exists: ${authRegisterDTO.email}" }
+      log.warn { "AuthUser already exists: ${authRegisterDTO.email}" }
       return ServiceResult.Error(AuthPasswordServiceRegisterError.USER_ALREADY_EXISTS)
     }
 
     val hashedPassword = authPasswordEncoder.encode(authRegisterDTO.password)
-    val authUser = AuthUser.from(authRegisterDTO, hashedPassword)
-    authUserRepository.save(authUser)
+    AuthUser.from(authRegisterDTO, hashedPassword).let {
+      authUserRepository.save(it)
+    }
     return ServiceResult.Success(true)
   }
 }

@@ -7,10 +7,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import cz.tul.backend.auth.base.cookie.access.AccessTokenClaims
 import cz.tul.backend.auth.base.dto.AuthJwtClaims
-import cz.tul.backend.auth.base.valueobject.AuthUserRole
+import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.entity.AuthUser
-import cz.tul.backend.auth.entity.AuthUser_.role
 import cz.tul.backend.auth.entity.RefreshToken
 import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.book.dto.BookImportDTO
@@ -44,7 +43,7 @@ fun createAuthUser(
   lastName: String = "lastName",
   email: EmailAddress = EmailAddress("example@example.com"),
   password: Hashed = Hashed("password"),
-  role: AuthUserRole = AuthUserRole.USER,
+  role: AuthRole = AuthRole.USER,
   refreshToken: Set<RefreshToken> = emptySet()
 ): AuthUser {
   return AuthUser(
@@ -152,12 +151,12 @@ fun createBookImportDTO(
 
 fun createUserClaims(
   id: Long = 0L,
-  role: AuthUserRole = AuthUserRole.USER,
+  role: AuthRole = AuthRole.USER,
   email: String = "user@user.com"
 ): AuthJwtClaims {
   return AccessTokenClaims(
     authUserId = id,
-    authUserRole = role,
+    authRole = role,
     email = email
   )
 }

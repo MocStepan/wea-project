@@ -1,6 +1,6 @@
 package cz.tul.backend.auth.service
 
-import cz.tul.backend.auth.base.valueobject.AuthUserRole
+import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.dto.AuthLoginDTO
 import cz.tul.backend.auth.dto.AuthRegisterDTO
@@ -122,7 +122,7 @@ class AuthPasswordServiceTests : FeatureSpec({
       captured.lastName shouldBe registerDTO.lastName
       captured.email shouldBe registerDTO.email
       captured.password shouldBe Hashed("hashedPassword")
-      captured.role shouldBe AuthUserRole.USER
+      captured.role shouldBe AuthRole.USER
     }
 
     scenario("invalid data") {

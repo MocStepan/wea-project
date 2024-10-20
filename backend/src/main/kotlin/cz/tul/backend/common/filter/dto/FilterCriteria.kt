@@ -1,8 +1,8 @@
 package cz.tul.backend.common.filter.dto
 
+import cz.tul.backend.common.filter.utils.convertPossibleStringList
 import cz.tul.backend.common.filter.valueobject.FilterOperator
 import cz.tul.backend.common.filter.valueobject.FilterSort
-import cz.tul.backend.common.filter.valueobject.convertPossibleStringList
 
 /**
  * Represents a filter criteria.

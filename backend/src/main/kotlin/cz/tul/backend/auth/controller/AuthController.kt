@@ -89,7 +89,7 @@ class AuthController(
       )
     ]
   )
-  @PostMapping("/v1/auth/register")
+  @PostMapping("/v1/auth/registration")
   fun register(
     @RequestBody authRegisterDTO: AuthRegisterDTO
   ): ResponseEntity<*> {

@@ -6,7 +6,7 @@ import kotlin.time.Duration
 /**
  * Base class for [JwtCookieService] implementations. Provides methods for creating and clearing JWT cookie.
  */
-open class BaseJwtCookieService<T>(
+class BaseJwtCookieService<T>(
   override val cookieName: String,
   private val duration: Duration,
   private val sameSite: String,

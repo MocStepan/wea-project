@@ -9,10 +9,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 
@@ -55,18 +56,22 @@ class WebSecurityConfig(
       .cors {
         it.configurationSource(corsConfigurationSource())
       }
+      .sessionManagement {
+        it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      }
+      .requestCache { config: RequestCacheConfigurer<HttpSecurity> ->
+        // get rid of default session cache in favor of cookie cache
+        config.disable()
+      }
       .authorizeHttpRequests {
         it
           .requestMatchers(*unsecuredEndpoints).permitAll()
           .anyRequest().authenticated()
       }
-      .sessionManagement {
-        it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      }
       .exceptionHandling {
         it.authenticationEntryPoint(authenticationExceptionHandler)
       }
-      .addFilterBefore(jwtTokenFilterService, UsernamePasswordAuthenticationFilter::class.java)
+      .addFilterAfter(jwtTokenFilterService, LogoutFilter::class.java)
       .build()
   }
 
