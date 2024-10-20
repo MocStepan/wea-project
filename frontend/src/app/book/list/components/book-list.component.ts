@@ -19,6 +19,7 @@ import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
 import {MatPaginator, PageEvent} from '@angular/material/paginator'
 import {MatSelect} from '@angular/material/select'
+import {TranslateModule} from '@ngx-translate/core'
 
 import {FilterCriteriaModel} from '../../../shared/filter/model/filter-criteria.model'
 import {PageResponseModel} from '../../../shared/filter/model/page-response.model'
@@ -54,7 +55,8 @@ import {BookTableModel} from '../model/book-table.model'
     MatIcon,
     MatInput,
     MatIconButton,
-    FormsModule
+    FormsModule,
+    TranslateModule
   ],
   providers: [],
   templateUrl: './book-list.component.html',

@@ -1,0 +1,16 @@
+.signup_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  width: 40vw;
+  margin-left: 30vw;
+  margin-right: 30vw;
+  margin-top: 5vh;
+}
+
+mat-card {
+  padding: 20px;
+}

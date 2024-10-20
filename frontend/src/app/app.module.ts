@@ -1,4 +1,5 @@
 import {HTTP_INTERCEPTORS, provideHttpClient} from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import {NgModule} from '@angular/core'
 import {FormsModule} from '@angular/forms'
 import {MatButtonModule} from '@angular/material/button'
@@ -8,13 +9,17 @@ import {BrowserModule} from '@angular/platform-browser'
 import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations'
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async'
 import {RouterModule} from '@angular/router'
+import { TranslateLoader,TranslateModule } from '@ngx-translate/core'
+import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 
 import {AppComponent} from './app.component'
 import {AppRoutingModule} from './app.routing-module'
 import {HttpErrorInterceptor} from './shared/http/interceptor/http-error.interceptor'
 import {HttpHeaderInterceptor} from './shared/http/interceptor/http-header.interceptor'
 import {NavigationComponent} from './shared/navigation/navigation.component'
-
+export function httpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json')
+}
 @NgModule({
   declarations: [
     AppComponent
@@ -29,7 +34,14 @@ import {NavigationComponent} from './shared/navigation/navigation.component'
     NavigationComponent,
     MatCardModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
   ],
   providers: [
     provideAnimations(),
