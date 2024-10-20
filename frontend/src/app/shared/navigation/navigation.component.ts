@@ -1,4 +1,3 @@
-import {NgIf} from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,7 +8,7 @@ import {
   signal,
   WritableSignal
 } from '@angular/core'
-import {FormControl, ReactiveFormsModule} from '@angular/forms'
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {MatOption} from '@angular/material/autocomplete'
 import {MatIcon} from '@angular/material/icon'
 import {MatFormField, MatSelect} from '@angular/material/select'
@@ -19,6 +18,11 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import {filter, Subscription} from 'rxjs'
 
 import {AuthService} from '../../auth/service/auth.service'
+import {NgIf} from '@angular/common'
+import {MatSlideToggle} from '@angular/material/slide-toggle'
+import {UserModel} from '../../user/model/user.model'
+import {UserService} from '../../user/service/user.service'
+import {Nullable} from '../utils/shared-types'
 
 @Component({
   selector: 'app-navigation',
@@ -33,7 +37,9 @@ import {AuthService} from '../../auth/service/auth.service'
     MatSelect,
     MatFormField,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    MatSlideToggle,
+    FormsModule
   ],
   providers: [
     Router,
@@ -48,25 +54,41 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private currentUrl = ''
   private router: Router = inject(Router)
   private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef)
-  protected langFormControl: FormControl = new FormControl<string>('cz')
+  protected langFormControl: FormControl = new FormControl<string>('cz') // Initialize empty
   private authService: AuthService = inject(AuthService)
+  protected isChecked: boolean = false
+  protected lang = 'Čeština'
+  private userService = inject(UserService)
+  protected user: WritableSignal<Nullable<UserModel>> = signal(null)
 
   constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang(this.langFormControl.value)
-  }
-
-  changeLanguage(lang: string) {
-    this.translate.use(lang)
   }
 
   ngOnInit() {
+    const savedLang = localStorage.getItem('lang') || 'cz'  // Default to 'cz' if not set
+    this.langFormControl.setValue(savedLang)
+    this.translate.use(savedLang)  // Apply the saved language
+    this.translate.get(savedLang === 'en' ? 'ENGLISH' : 'CZECH').subscribe((res: string) => {
+      this.lang = res
+    })
+
     this.currentUrl = this.router.url
     this.navigationRouter()
     this.isUserSignedIn.set(this.authService.isSignedIn())
+    this.getUser()
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe())
+  }
+
+  getUser(): void {
+    if (this.isUserSignedIn()) {
+      this.userService.getAuthUser().subscribe((response) => {
+        this.user.set(response)
+        sessionStorage.setItem('user', JSON.stringify(response))  // Store only user data, not the signal
+      })
+    }
   }
 
   isSelected(navigationUrl: string) {
@@ -77,8 +99,24 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.router.events.pipe(filter((event) =>
       event instanceof NavigationEnd)
     ).subscribe((event) => {
+      this.isUserSignedIn.set(this.authService.isSignedIn())
       this.currentUrl = (event as NavigationEnd).url
       this.changeDetectorRef.detectChanges()
     }))
   }
+
+  signOut() {
+    this.authService.signOut()
+  }
+
+  getLang(isChecked: boolean) {
+    const lang = isChecked ? 'en' : 'cz'
+    this.translate.use(lang)
+    this.translate.get(isChecked ? 'ENGLISH' : 'CZECH').subscribe((res: string) => {
+      this.lang = res
+    })
+    localStorage.setItem('lang', lang)
+  }
+
 }
+
