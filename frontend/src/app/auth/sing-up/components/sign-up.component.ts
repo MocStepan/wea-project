@@ -44,9 +44,14 @@ import {AuthService} from '../../service/auth.service'
   ]
 })
 export class SignUpComponent implements OnInit, OnDestroy {
+
+  // Form group for the sign-up form, used to manage input fields and validation rules.
   protected formGroup!: FormGroup
+
+  // Array to store subscriptions to clean them up when the component is destroyed.
   private subscriptions: Subscription[] = []
 
+  // Constructor that injects services needed for form handling, authentication, notifications, translations, and routing.
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
               private notificationService: NotificationService,
@@ -54,45 +59,61 @@ export class SignUpComponent implements OnInit, OnDestroy {
               private router: Router) {
   }
 
+  // Lifecycle hook called when the component is initialized.
   ngOnInit(): void {
+    // Initializes the form group with the necessary fields and validators.
     this.formGroup = this.buildFormGroup()
   }
 
+  // Lifecycle hook called when the component is destroyed.
   ngOnDestroy(): void {
+    // Unsubscribes from all subscriptions to prevent memory leaks.
     this.subscriptions.forEach((subscription) => subscription.unsubscribe())
   }
 
+  // Method triggered on form submission, handles user sign-up.
   onSubmit() {
+    // Checks if the form is valid before proceeding with sign-up.
     if (this.formGroup.valid) {
+      // Calls the signUp method of AuthService and adds the subscription to the list for cleanup.
       this.subscriptions.push(this.authService.signUp(this.formGroup.value).subscribe({
         next: () => {
+          // On successful sign-up, fetches a localized success message and shows a success notification.
           this.translate.get('auth.loginSuccess').subscribe((res: string) => {
             this.notificationService.successNotification(res)
           })
+          // Navigates to the sign-in page after successful registration.
           this.router.navigate(['/signIn'])
         },
         error: () => {
+          // On sign-up failure, fetches a localized error message and shows an error notification.
           this.translate.get('auth.loginError').subscribe((res: string) => {
             this.notificationService.errorNotification(res)
-          })        }
+          })
+        }
       }))
     } else {
+      // If the form is invalid, fetches a localized form error message and shows an error notification.
       this.translate.get('auth.formError').subscribe((res: string) => {
         this.notificationService.errorNotification(res)
-      })    }
+      })
+    }
   }
 
+  // Method to navigate to the sign-in form if the user already has an account.
   openSignInForm() {
     this.router.navigate(['/sign-in'])
   }
 
+  // Private method to build the form group for the sign-up form, including fields and validators.
   private buildFormGroup(): FormGroup {
     return this.formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required]],
-      secondPassword: ['', [Validators.required]]
+      firstName: ['', [Validators.required]], // First name field with a required validator.
+      lastName: ['', [Validators.required]], // Last name field with a required validator.
+      email: ['', [Validators.email, Validators.required]], // Email field with required and email format validators.
+      password: ['', [Validators.required]], // Password field with a required validator.
+      secondPassword: ['', [Validators.required]] // Confirmation password field with a required validator.
     })
   }
 }
+

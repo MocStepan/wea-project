@@ -68,15 +68,26 @@ import {BookTableModel} from '../model/book-table.model'
   styleUrls: ['../../style/book.component.css']
 })
 export class BookListComponent implements OnInit {
+
+  // Signal to store the list of books, or null if no books are available. This is a reactive signal.
   protected books: WritableSignal<PageResponseModel<BookTableModel> | null> = signal(null)
+
+  // Default filter object used for searching and filtering books.
   protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter()
+
+  // Signal for column definitions, defining how data will be presented and filtered in the table.
   protected columns: WritableSignal<ColumnDefModel[]> = signal([])
+
+  // Injecting the BookService to interact with book-related data and API calls.
   private bookService: BookService = inject(BookService)
 
+  // Lifecycle hook called when the component is initialized.
   ngOnInit(): void {
+    // Fetches authors and categories options in parallel and sets up the column definitions.
     this.bookService.getBookAuthorsOptionViews().pipe(
       combineLatestWith(this.bookService.getBookCategoriesOptionViews())
     ).subscribe(([authors, categories]) => {
+      // Defines the columns for the table including filters for ISBN, title, authors, and categories.
       this.columns.set([
         new ColumnDefModel('SEARCH_ISBN13', 'isbn13', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
         new ColumnDefModel('SEARCH_ISBN10', 'isbn10', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
@@ -88,23 +99,31 @@ export class BookListComponent implements OnInit {
       ])
     })
 
+    // Initiates the initial book filtering process based on the default filter.
     this.filterBooks()
   }
 
+  // Method to filter books based on the column definitions provided. It updates the book filter object.
   filterBooksWithColumnDef(columnDef: ColumnDefModel[]) {
+    // Prepares the book filter using the updated column definitions and filters the books.
     this.bookFilter = ColumnDefModel.prepareColumns(columnDef, this.bookFilter)
     this.filterBooks()
   }
 
+  // Method that performs the actual filtering of books by making a call to the BookService.
   filterBooks(): void {
     this.bookService.filterBooks(this.bookFilter).subscribe((response) => {
+      // Sets the books response in the reactive signal.
       this.books.set(response)
     })
   }
 
+  // Method that handles pagination events such as changing the page number or page size.
   onChangePage(event: PageEvent) {
+    // Updates the book filter with the new page size and index, then filters the books.
     this.bookFilter.size = event.pageSize
     this.bookFilter.page = event.pageIndex
     this.filterBooks()
   }
 }
+
