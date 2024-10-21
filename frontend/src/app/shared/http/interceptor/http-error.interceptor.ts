@@ -2,8 +2,8 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {inject, Injectable} from '@angular/core'
 import {catchError, Observable, throwError} from 'rxjs'
 
-import {NotificationService} from '../../notification/notification.service'
 import {AuthService} from '../../../auth/service/auth.service'
+import {NotificationService} from '../../notification/notification.service'
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {

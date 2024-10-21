@@ -40,7 +40,7 @@ data class FilterCriteria<out T>(
     ): FilterCriteria<Any> {
       return FilterCriteria(
         operator = filterCriteriaDTO.operator,
-        value = convertPossibleStringList(filterCriteriaDTO.value),
+        value = filterCriteriaDTO.value,
         sort = filterCriteriaDTO.sort,
         key = key,
         joinsKeys = joinsKeys

@@ -1,11 +1,11 @@
+import {HttpResponse} from '@angular/common/http'
 import {inject, Injectable} from '@angular/core'
+import {Observable, tap} from 'rxjs'
 
+import {BASE_API_URL} from '../../../config'
 import {HttpService} from '../../shared/http/service/http.service'
-import {Observable, tap} from "rxjs";
-import {BASE_API_URL} from "../../../config";
-import {SignInModel} from "../model/sign-in.model";
-import {SignUpModel} from "../model/sign-up.model";
-import {HttpHeaders, HttpResponse} from "@angular/common/http";
+import {SignInModel} from '../model/sign-in.model'
+import {SignUpModel} from '../model/sign-up.model'
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -14,15 +14,12 @@ export class AuthService {
   private rootHttpUrl = BASE_API_URL + 'auth/'
 
   signIn(signInForm: SignInModel): Observable<HttpResponse<void>> {
-    return this.httpService.post<HttpResponse<void>>(this.rootHttpUrl + 'login', signInForm, {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
-      withCredentials: true
-    }).pipe(tap(() => {
-      this.setSignedIn();
+    return this.httpService.post<HttpResponse<void>>(this.rootHttpUrl + 'login', signInForm).pipe(tap(() => {
+      this.setSignedIn()
     }))
   }
 
-  signUp(signUpForm: SignUpModel): Observable<Boolean> {
+  signUp(signUpForm: SignUpModel): Observable<boolean> {
     return this.httpService.post(this.rootHttpUrl + 'registration', signUpForm)
   }
 
@@ -30,14 +27,14 @@ export class AuthService {
     return sessionStorage.getItem('auth') === 'true'
   }
 
-  private setSignedIn() {
-    sessionStorage.setItem('auth', `true`)
-  }
-
   signOut() {
-    return this.httpService.post(this.rootHttpUrl + 'logout', null,).subscribe(() => {
+    return this.httpService.post(this.rootHttpUrl + 'logout', null).subscribe(() => {
       sessionStorage.removeItem('auth')
       window.location.reload()
     })
+  }
+
+  private setSignedIn() {
+    sessionStorage.setItem('auth', 'true')
   }
 }

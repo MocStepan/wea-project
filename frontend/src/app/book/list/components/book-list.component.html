@@ -1,11 +1,7 @@
 <div class="flex-row">
-  <mat-form-field>
-    <mat-label>{{"CATEGORY FILTER" | translate}}</mat-label>
-    <input (change)="onChangeGenre()" [(ngModel)]="value" matInput placeholder='{{"SEARCH_CATEGORY" | translate}}' type="text">
-    <button (click)="value=''" *ngIf="value" aria-label="Clear" mat-icon-button matSuffix>
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
+  <app-filter (filter)="filterBooksWithColumnDef($event)"
+              [columns]="columns()">
+  </app-filter>
 
   <mat-grid-list class="book-list-view" cols="3" gutterSize="16px">
     <mat-grid-tile *ngFor="let book of books()?.content">
@@ -23,8 +19,8 @@
   </mat-grid-list>
 
   <mat-paginator (page)="onChangePage($event)"
-                 [length]="books()!.totalPages * bookFilter.size"
-                 [pageIndex]="books()!.page - 1"
+                 [length]="(books()?.totalPages || 0) * bookFilter.size"
+                 [pageIndex]="(books()?.page || 0) - 1"
                  [pageSizeOptions]="[9, 27, 90]"
                  aria-label="Select page"
                  class="paginator-body">

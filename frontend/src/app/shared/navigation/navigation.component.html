@@ -17,7 +17,8 @@
 
   <span class="fill-space"></span>
 
-  <mat-slide-toggle labelPosition="before" [(ngModel)]="isChecked" (click)="getLang(isChecked)">{{lang}}</mat-slide-toggle>
+  <mat-slide-toggle (click)="getLang(isChecked)" [(ngModel)]="isChecked"
+                    labelPosition="before">{{lang}}</mat-slide-toggle>
 
   <a *ngIf="!isUserSignedIn()" [routerLink]="'/sign-in'">
     <li [class.selected]="isSelected('/sign-in')" class="page-body-text">
@@ -31,8 +32,8 @@
     </li>
   </a>
 
-  <a *ngIf="isUserSignedIn()">
-    <li (click)="signOut()" class="page-body-text">
+  <a (click)="signOut()" (keydown.enter)="signOut()" *ngIf="isUserSignedIn()" tabindex="0">
+    <li class="page-body-text">
       <span>{{'SIGN_OUT' | translate}}</span>
     </li>
   </a>

@@ -1,3 +1,5 @@
 export enum FilterOperatorEnum {
-  EQUAL = 'EQUAL',
+    EQUAL = 'EQUAL',
+    IN = 'IN',
+    ILIKE = 'ILIKE',
 }

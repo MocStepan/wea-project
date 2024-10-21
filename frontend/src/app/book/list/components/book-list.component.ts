@@ -19,14 +19,18 @@ import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
 import {MatPaginator, PageEvent} from '@angular/material/paginator'
 import {MatSelect} from '@angular/material/select'
+import {TranslateModule} from '@ngx-translate/core'
+import {combineLatestWith} from 'rxjs'
 
+import {FilterComponent} from '../../../shared/filter/component/filter.component'
+import {ColumnDefModel} from '../../../shared/filter/model/column-def.model'
+import {EnumColumnTypeModel} from '../../../shared/filter/model/enum-column-type.model'
 import {FilterCriteriaModel} from '../../../shared/filter/model/filter-criteria.model'
 import {PageResponseModel} from '../../../shared/filter/model/page-response.model'
 import {FilterOperatorEnum} from '../../../shared/filter/valueobject/filter-operator.enum'
 import {BookService} from '../../service/book.service'
 import {BookFilterModel} from '../model/book-filter.model'
 import {BookTableModel} from '../model/book-table.model'
-import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-book-list',
@@ -56,7 +60,8 @@ import {TranslateModule} from "@ngx-translate/core";
     MatInput,
     MatIconButton,
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    FilterComponent
   ],
   providers: [],
   templateUrl: './book-list.component.html',
@@ -65,13 +70,30 @@ import {TranslateModule} from "@ngx-translate/core";
 export class BookListComponent implements OnInit {
   protected books: WritableSignal<PageResponseModel<BookTableModel> | null> = signal(null)
   protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter()
-  protected value: string | null = null
+  protected columns: WritableSignal<ColumnDefModel[]> = signal([])
   private bookService: BookService = inject(BookService)
 
   ngOnInit(): void {
-    this.bookService.filterBooks(this.bookFilter).subscribe((response) => {
-      this.books.set(response)
+    this.bookService.getBookAuthorsOptionViews().pipe(
+      combineLatestWith(this.bookService.getBookCategoriesOptionViews())
+    ).subscribe(([authors, categories]) => {
+      this.columns.set([
+        new ColumnDefModel('SEARCH_ISBN13', 'isbn13', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
+        new ColumnDefModel('SEARCH_ISBN10', 'isbn10', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
+        new ColumnDefModel('SEARCH_TITLE', 'title', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
+        new ColumnDefModel('SEARCH_AUTHORS', 'authors',
+          EnumColumnTypeModel.fromOptionViews(authors), new FilterCriteriaModel(FilterOperatorEnum.IN)),
+        new ColumnDefModel('SEARCH_CATEGORY', 'categories',
+          EnumColumnTypeModel.fromOptionViews(categories), new FilterCriteriaModel(FilterOperatorEnum.IN))
+      ])
     })
+
+    this.filterBooks()
+  }
+
+  filterBooksWithColumnDef(columnDef: ColumnDefModel[]) {
+    this.bookFilter = ColumnDefModel.prepareColumns(columnDef, this.bookFilter)
+    this.filterBooks()
   }
 
   filterBooks(): void {
@@ -83,15 +105,6 @@ export class BookListComponent implements OnInit {
   onChangePage(event: PageEvent) {
     this.bookFilter.size = event.pageSize
     this.bookFilter.page = event.pageIndex
-    this.filterBooks()
-  }
-
-  onChangeGenre() {
-    if (this.value == '') {
-      this.bookFilter.categories = null
-    } else {
-      this.bookFilter.categories = new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.value)
-    }
     this.filterBooks()
   }
 }
