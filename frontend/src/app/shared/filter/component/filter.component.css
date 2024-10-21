@@ -1,0 +1,18 @@
+.flex-row {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.filter-wrapper {
+  padding: 1rem;
+}
+
+.filter-item {
+  margin: 0 1rem;
+}
+
+button {
+  margin: 0 1rem;
+}

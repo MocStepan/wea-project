@@ -9,8 +9,6 @@
   "REMEMBER_ME": "Zapamatovat si mě",
   "FAVORITE": "Oblíbené",
   "HOME": "Domů",
-  "SEARCH_CATEGORY": "Vyhledat kategorii",
-  "CATEGORY FILTER": "Filtrovat kategorii",
   "CLOSE": "Zavřít",
   "ENGLISH": "Angličtina",
   "CZECH": "Čeština",
@@ -30,5 +28,12 @@
   "EMAIL_VALID_ERROR": "Zadejte platnou e-mailovou adresu",
   "CONF_PASSWORD": "Potvrdit heslo",
   "CONF_PASSWORD_REQ": "Potvrzení hesla je povinné",
-  "CONF_PASSWORD_ENTER": "Potvrďte své heslo"
+  "CONF_PASSWORD_ENTER": "Potvrďte své heslo",
+  "SEARCH_ISBN13": "Hledat ISBN13",
+  "SEARCH_ISBN10": "Hledat ISBN10",
+  "SEARCH_TITLE": "Hledat název",
+  "SEARCH_AUTHORS": "Hledat autory",
+  "SEARCH_CATEGORY": "Hledat kategorii",
+  "APPLY_FILTER": "Použít filtr",
+  "CLEAR_FILTER": "Vymazat filtr"
 }

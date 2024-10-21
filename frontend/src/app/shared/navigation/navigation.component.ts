@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,14 +13,13 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {MatOption} from '@angular/material/autocomplete'
 import {MatIcon} from '@angular/material/icon'
 import {MatFormField, MatSelect} from '@angular/material/select'
+import {MatSlideToggle} from '@angular/material/slide-toggle'
 import {MatToolbar} from '@angular/material/toolbar'
 import {NavigationEnd, Router, RouterLink} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import {filter, Subscription} from 'rxjs'
 
 import {AuthService} from '../../auth/service/auth.service'
-import {NgIf} from '@angular/common'
-import {MatSlideToggle} from '@angular/material/slide-toggle'
 import {UserModel} from '../../user/model/user.model'
 import {UserService} from '../../user/service/user.service'
 import {Nullable} from '../utils/shared-types'
@@ -50,16 +50,16 @@ import {Nullable} from '../utils/shared-types'
 })
 export class NavigationComponent implements OnInit, OnDestroy {
   protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  protected langFormControl: FormControl = new FormControl<string>('cz') // Initialize empty
+  protected isChecked = false
+  protected lang = 'Čeština'
+  protected user: WritableSignal<Nullable<UserModel>> = signal(null)
   private readonly subscriptions: Subscription[] = []
   private currentUrl = ''
   private router: Router = inject(Router)
   private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef)
-  protected langFormControl: FormControl = new FormControl<string>('cz') // Initialize empty
   private authService: AuthService = inject(AuthService)
-  protected isChecked: boolean = false
-  protected lang = 'Čeština'
   private userService = inject(UserService)
-  protected user: WritableSignal<Nullable<UserModel>> = signal(null)
 
   constructor(private translate: TranslateService) {
   }
@@ -95,16 +95,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this.currentUrl == navigationUrl
   }
 
-  private navigationRouter() {
-    this.subscriptions.push(this.router.events.pipe(filter((event) =>
-      event instanceof NavigationEnd)
-    ).subscribe((event) => {
-      this.isUserSignedIn.set(this.authService.isSignedIn())
-      this.currentUrl = (event as NavigationEnd).url
-      this.changeDetectorRef.detectChanges()
-    }))
-  }
-
   signOut() {
     this.authService.signOut()
   }
@@ -116,6 +106,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.lang = res
     })
     localStorage.setItem('lang', lang)
+  }
+
+  private navigationRouter() {
+    this.subscriptions.push(this.router.events.pipe(filter((event) =>
+      event instanceof NavigationEnd)
+    ).subscribe((event) => {
+      this.isUserSignedIn.set(this.authService.isSignedIn())
+      this.currentUrl = (event as NavigationEnd).url
+      this.changeDetectorRef.detectChanges()
+    }))
   }
 
 }
