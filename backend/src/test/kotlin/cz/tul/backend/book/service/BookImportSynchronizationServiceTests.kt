@@ -53,6 +53,9 @@ class BookImportSynchronizationServiceTests : FeatureSpec({
       processTransaction(spec.transactionTemplate)
       every { spec.bookRepository.save(capture(bookSlot)) } answers { firstArg() }
       every { spec.bookImportRepository.deleteAll() } just runs
+      every { spec.bookRepository.deleteAll() } just runs
+      every { spec.bookAuthorRepository.deleteAll() } just runs
+      every { spec.bookCategoryRepository.deleteAll() } just runs
 
       every { spec.bookCategoryLinkRepository.existsByBook_IdAndCategory_Name(any(), any()) } returns false
       every { spec.bookCategoryRepository.findByName(any()) } returns null
@@ -102,6 +105,9 @@ class BookImportSynchronizationServiceTests : FeatureSpec({
       processTransaction(spec.transactionTemplate)
       every { spec.bookRepository.save(any()) } answers { firstArg() }
       every { spec.bookImportRepository.deleteAll() } just runs
+      every { spec.bookRepository.deleteAll() } just runs
+      every { spec.bookAuthorRepository.deleteAll() } just runs
+      every { spec.bookCategoryRepository.deleteAll() } just runs
 
       every { spec.bookCategoryLinkRepository.existsByBook_IdAndCategory_Name(any(), "Philosophy") } returns false
       every { spec.bookCategoryRepository.findByName("Philosophy") } returns bookCategory
@@ -132,6 +138,9 @@ class BookImportSynchronizationServiceTests : FeatureSpec({
       every { spec.bookCategoryLinkRepository.existsByBook_IdAndCategory_Name(any(), "Philosophy") } returns true
       every { spec.bookAuthorLinkRepository.existsByBook_IdAndAuthor_Name(any(), "Sun Tzu") } returns true
       every { spec.bookImportRepository.deleteAll() } just runs
+      every { spec.bookRepository.deleteAll() } just runs
+      every { spec.bookAuthorRepository.deleteAll() } just runs
+      every { spec.bookCategoryRepository.deleteAll() } just runs
 
       spec.bookImportSynchronizationService.synchronizeBooks()
 
@@ -157,6 +166,9 @@ class BookImportSynchronizationServiceTests : FeatureSpec({
       processTransaction(spec.transactionTemplate)
       every { spec.bookRepository.save(any()) } answers { firstArg() }
       every { spec.bookImportRepository.deleteAll() } just runs
+      every { spec.bookRepository.deleteAll() } just runs
+      every { spec.bookAuthorRepository.deleteAll() } just runs
+      every { spec.bookCategoryRepository.deleteAll() } just runs
 
       spec.bookImportSynchronizationService.synchronizeBooks()
 

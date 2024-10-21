@@ -4,6 +4,9 @@ import {FilterCriteriaModel} from './filter-criteria.model'
 export type ColumnType = 'string' | EnumColumnTypeModel
 export type FilterConfig = Record<string, number | FilterCriteriaModel | null>
 
+/**
+ * Model representing a column definition. Used for filtering data in a table.
+ */
 export class ColumnDefModel {
   placeholder: string
   name: string

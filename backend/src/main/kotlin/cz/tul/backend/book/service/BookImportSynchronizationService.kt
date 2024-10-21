@@ -48,6 +48,12 @@ class BookImportSynchronizationService(
       return
     }
 
+    transactionTemplate.executeWithoutResult {
+      bookRepository.deleteAll()
+      bookAuthorRepository.deleteAll()
+      bookCategoryRepository.deleteAll()
+    }
+
     importBooks.forEach { importBook ->
       log.debug { "Synchronizing import book: ${importBook.id}" }
       val books = parseBooks(importBook.content)

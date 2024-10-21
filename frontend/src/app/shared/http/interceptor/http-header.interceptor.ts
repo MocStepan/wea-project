@@ -2,6 +2,9 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Injectable} from '@angular/core'
 import {Observable} from 'rxjs'
 
+/**
+ * Interceptor to add headers to HTTP requests.
+ */
 @Injectable()
 export class HttpHeaderInterceptor implements HttpInterceptor {
 
