@@ -4,7 +4,6 @@ import cz.tul.backend.auth.dto.AuthLoginDTO
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.service.AuthCookieService
 import cz.tul.backend.auth.service.AuthPasswordService
-import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
 import cz.tul.backend.common.serviceresult.fold
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -76,16 +75,6 @@ class AuthController(
             schema = Schema(example = "Invalid data")
           )
         ]
-      ),
-      ApiResponse(
-        responseCode = "409",
-        description = "User already exists",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(example = "User already exists")
-          )
-        ]
       )
     ]
   )
@@ -95,12 +84,7 @@ class AuthController(
   ): ResponseEntity<*> {
     return authPasswordService.register(authRegisterDTO).fold(
       { ResponseEntity.ok(it) },
-      {
-        when (it) {
-          AuthPasswordServiceRegisterError.INVALID_DATA -> ResponseEntity(it.message, HttpStatus.BAD_REQUEST)
-          AuthPasswordServiceRegisterError.USER_ALREADY_EXISTS -> ResponseEntity(it.message, HttpStatus.CONFLICT)
-        }
-      }
+      { ResponseEntity.badRequest().build() }
     )
   }
 

@@ -80,19 +80,6 @@ class AuthControllerTests : FeatureSpec({
 
       result.statusCode shouldBe HttpStatus.BAD_REQUEST
     }
-
-    scenario("register user already exists") {
-      val spec = getSpec()
-      val authRegisterDTO = mockk<AuthRegisterDTO>()
-
-      every { spec.authPasswordService.register(authRegisterDTO) } returns ServiceResult.Error(
-        AuthPasswordServiceRegisterError.USER_ALREADY_EXISTS
-      )
-
-      val result = spec.authController.register(authRegisterDTO)
-
-      result.statusCode shouldBe HttpStatus.CONFLICT
-    }
   }
 
   feature("invoke refresh token") {

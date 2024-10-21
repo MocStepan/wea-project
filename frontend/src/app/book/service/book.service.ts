@@ -8,28 +8,43 @@ import {HttpService} from '../../shared/http/service/http.service'
 import {BookFilterModel} from '../list/model/book-filter.model'
 import {BookTableModel} from '../list/model/book-table.model'
 
+/**
+ * Service to handle book operations such as filtering books, retrieving book categories, and authors.
+ * Marks the service as injectable and provided at the root level, making it a singleton service accessible throughout the entire application.
+ */
 @Injectable({providedIn: 'root'})
-// Marks the service as injectable and provided at the root level, making it available as a singleton service across the app.
-
 export class BookService {
-
-  // Injects the HttpService to handle HTTP requests to the backend.
   private httpService: HttpService = inject(HttpService)
 
-  // Method to filter books based on the provided filter criteria (BookFilterModel).
-  // Sends a POST request to the 'book/filter' API endpoint with the filterDTO as the request body.
-  filterBooks(filterDTO: BookFilterModel): Observable<PageResponseModel<BookTableModel>> {
-    return this.httpService.post(`${BASE_API_URL}book/filter`, filterDTO)
+  /**
+   * Filters books based on the provided book filter.
+   *
+   * @param bookFilterModel The book filter model containing the filter criteria.
+   * @returns An observable of PageResponseModel<BookTableModel> containing the filtered books.
+   * @see BookFilterModel
+   * @see PageResponseModel
+   * @see BookTableModel
+   */
+  filterBooks(bookFilterModel: BookFilterModel): Observable<PageResponseModel<BookTableModel>> {
+    return this.httpService.post(`${BASE_API_URL}book/filter`, bookFilterModel)
   }
 
-  // Method to retrieve the available book categories as option views.
-  // Sends a GET request to the 'book/categories' API endpoint and returns an array of OptionViewModel.
+  /**
+   * Retrieves the available book categories as option views.
+   *
+   * @returns An observable of OptionViewModel[] containing the book categories as option views.
+   * @see OptionViewModel
+   */
   getBookCategoriesOptionViews(): Observable<OptionViewModel[]> {
     return this.httpService.get(`${BASE_API_URL}book/categories`)
   }
 
-  // Method to retrieve the available book authors as option views.
-  // Sends a GET request to the 'book/authors' API endpoint and returns an array of OptionViewModel.
+  /**
+   * Retrieves the available book authors as option views.
+   *
+   * @returns An observable of OptionViewModel[] containing the book authors as option views.
+   * @see OptionViewModel
+   */
   getBookAuthorsOptionViews(): Observable<OptionViewModel[]> {
     return this.httpService.get(`${BASE_API_URL}book/authors`)
   }

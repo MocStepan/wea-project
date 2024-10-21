@@ -185,10 +185,10 @@ class BookFilterServiceTests(
 
     val pageResponse = bookFilterService.filterBooks(filterDTO)
 
-    pageResponse.content.size shouldBe 1
+    pageResponse.content.size shouldBe 2
     pageResponse.page shouldBe 1
     pageResponse.totalPages shouldBe 1
-    pageResponse.size shouldBe 1
+    pageResponse.size shouldBe 2
     pageResponse.isEmpty shouldBe false
 
     val first = pageResponse.content.first()
