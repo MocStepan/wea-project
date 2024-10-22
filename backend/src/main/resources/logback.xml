@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <property name="LOGS_DIR" value="/var/logs"/>
+
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
       <Pattern>
@@ -50,13 +51,28 @@
     </filter>
   </appender>
 
-  <root level="info">
-    <appender-ref ref="STDOUT"/>
-  </root>
+  <appender name="ACCESS-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGS_DIR}/access.log</file>
 
-  <logger name="cz.tul.backend" level="trace" additivity="false">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>
+        %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M:%L - %msg%n
+      </Pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOGS_DIR}/access.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>31</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <root level="info">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="INFO-FILE"/>
     <appender-ref ref="ERROR-FILE"/>
+  </root>
+
+  <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="trace" additivity="false">
+    <appender-ref ref="ACCESS-FILE"/>
   </logger>
 </configuration>
