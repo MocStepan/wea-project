@@ -57,6 +57,8 @@ Webová aplikace je rozdělena do adresářů
 - Swagger: http://wea.nti.tul.cz:8000/api/v1/docs/swagger-ui/index.html
 - Endpoint pro příjem dat o knihách: http://wea.nti.tul.cz:8000/api/v1/book/import
 
+## Architektura
+- https://gitlab.tul.cz/stepan.moc/wea-project/-/tree/architecture?ref_type=heads
 
 ## Authors
 Štěpán Moc, Lukáč Matěj

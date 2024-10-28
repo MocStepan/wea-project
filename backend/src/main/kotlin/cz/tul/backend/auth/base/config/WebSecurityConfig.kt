@@ -38,11 +38,11 @@ class WebSecurityConfig(
       "/api/v1/auth/registration",
       "/api/v1/auth/logout",
       "/api/v1/auth/invoke-refresh-token",
-      "api/*/docs/**",
-      "api/v1/book/filter",
-      "api/v1/book/import",
-      "api/v1/book/categories",
-      "api/v1/book/authors"
+      "/api/*/docs/**",
+      "/api/v1/book/filter",
+      "/api/v1/book/import",
+      "/api/v1/book/categories",
+      "/api/v1/book/authors"
     )
 
   /**
@@ -54,9 +54,7 @@ class WebSecurityConfig(
   fun securityConfig(http: HttpSecurity): SecurityFilterChain {
     return http
       .csrf { it.disable() }
-      .cors {
-        it.configurationSource(corsConfigurationSource())
-      }
+      .cors { it.disable() }
       .sessionManagement {
         it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       }
