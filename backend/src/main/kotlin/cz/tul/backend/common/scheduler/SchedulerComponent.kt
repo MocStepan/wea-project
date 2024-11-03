@@ -1,6 +1,6 @@
 package cz.tul.backend.common.scheduler
 
-import cz.tul.backend.book.service.BookImportSynchronizationService
+import cz.tul.backend.book.service.synchronization.BookImportSynchronizationService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async

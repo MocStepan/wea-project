@@ -1,4 +1,4 @@
-package cz.tul.backend.book.service
+package cz.tul.backend.book.service.synchronization
 
 interface BookSynchronizationService {
 

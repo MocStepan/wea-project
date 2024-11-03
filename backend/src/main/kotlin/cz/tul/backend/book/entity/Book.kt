@@ -14,20 +14,21 @@ class Book(
   val id: Long = 0L,
   val isbn13: String,
   val isbn10: String,
-  val title: String,
+  var title: String,
   @OneToMany(mappedBy = "book", orphanRemoval = true)
   val categories: Set<BookCategoryLink> = mutableSetOf(),
-  val subtitle: String? = null,
+  var subtitle: String? = null,
   @OneToMany(mappedBy = "book", orphanRemoval = true)
   val authors: Set<BookAuthorLink> = mutableSetOf(),
-  val thumbnail: String? = null,
-  val description: String? = null,
-  val publishedYear: Int? = null,
-  val averageRating: Double? = null,
-  val numPages: Int? = null,
-  val ratingsCount: Int? = null,
   @OneToMany(mappedBy = "book", orphanRemoval = true)
-  val bookComments: Set<BookComment> = mutableSetOf()
+  val bookComments: Set<BookComment> = mutableSetOf(),
+  var thumbnail: String? = null,
+  var description: String? = null,
+  var publishedYear: Int? = null,
+  var averageRating: Double? = null,
+  var numPages: Int? = null,
+  var ratingsCount: Int? = null,
+  var disabled: Boolean = false
 ) {
 
   companion object {
@@ -45,5 +46,17 @@ class Book(
         ratingsCount = importDTO.ratingsCount
       )
     }
+  }
+
+  fun update(importDTO: BookImportDTO) {
+    title = importDTO.title
+    subtitle = importDTO.subtitle
+    thumbnail = importDTO.thumbnail
+    description = importDTO.description
+    publishedYear = importDTO.publishedYear
+    averageRating = importDTO.averageRating
+    numPages = importDTO.numPages
+    ratingsCount = importDTO.ratingsCount
+    disabled = false
   }
 }
