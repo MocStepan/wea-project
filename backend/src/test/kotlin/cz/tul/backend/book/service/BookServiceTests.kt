@@ -1,5 +1,6 @@
 package cz.tul.backend.book.service
 
+import cz.tul.backend.auth.utils.getAuthUserFullName
 import cz.tul.backend.book.dto.BookAuthorOptionView
 import cz.tul.backend.book.dto.BookCategoryOptionView
 import cz.tul.backend.book.entity.BookAuthor
@@ -83,6 +84,7 @@ class BookServiceTests : FeatureSpec({
       result.ratingsCount shouldBe book.ratingsCount
       result.bookComments.size shouldBe 1
       result.bookComments[0].comment shouldBe "Great book!"
+      result.bookComments[0].user shouldBe authUser.getAuthUserFullName()
     }
 
     scenario("book not found") {
