@@ -8,6 +8,7 @@ import cz.tul.backend.book.repository.BookAuthorRepository
 import cz.tul.backend.book.repository.BookCategoryRepository
 import cz.tul.backend.book.repository.BookCommentRepository
 import cz.tul.backend.book.repository.BookRepository
+import cz.tul.backend.utils.createAuthUser
 import cz.tul.backend.utils.createBook
 import cz.tul.backend.utils.createBookComment
 import io.kotest.core.spec.style.FeatureSpec
@@ -54,9 +55,10 @@ class BookServiceTests : FeatureSpec({
       val spec = getSpec()
 
       val book = createBook()
-      val bookCategory = BookCategory(name = "Philosophy")
+      val authUser = createAuthUser()
       val bookAuthor = BookAuthor(name = "Plato")
-      val bookComment = createBookComment()
+      val bookCategory = BookCategory(name = "Philosophy")
+      val bookComment = createBookComment(authUser = authUser)
 
       every { spec.bookRepository.findByIdOrNull(1L) } returns book
       every { spec.bookCategoryRepository.findByBookCategoryLink_Book_Id(1L) } returns setOf(bookCategory)
