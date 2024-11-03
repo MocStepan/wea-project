@@ -4,6 +4,7 @@ import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.valueobject.Hashed
+import cz.tul.backend.book.entity.BookComment
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -25,7 +26,10 @@ class AuthUser(
   @Enumerated(EnumType.STRING)
   val role: AuthRole = AuthRole.USER,
   @OneToMany(mappedBy = "authUser", orphanRemoval = true)
-  val refreshToken: Set<RefreshToken> = mutableSetOf(),
+  val refreshTokens: Set<RefreshToken> = mutableSetOf(),
+  @OneToMany(mappedBy = "authUser", orphanRemoval = true)
+  val bookComments: Set<BookComment> = mutableSetOf(),
+
   val createdDateTime: LocalDateTime = LocalDateTime.now()
 ) {
   companion object {

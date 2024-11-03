@@ -42,7 +42,8 @@ class WebSecurityConfig(
       "/api/v1/book/filter",
       "/api/v1/book/import",
       "/api/v1/book/categories",
-      "/api/v1/book/authors"
+      "/api/v1/book/authors",
+      "/api/v1/book/*"
     )
 
   /**

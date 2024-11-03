@@ -25,7 +25,9 @@ class Book(
   val publishedYear: Int? = null,
   val averageRating: Double? = null,
   val numPages: Int? = null,
-  val ratingsCount: Int? = null
+  val ratingsCount: Int? = null,
+  @OneToMany(mappedBy = "book", orphanRemoval = true)
+  val bookComments: Set<BookComment> = mutableSetOf()
 ) {
 
   companion object {

@@ -1,55 +1,22 @@
 package cz.tul.backend.book.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import cz.tul.backend.book.dto.BookAuthorOptionView
 import cz.tul.backend.book.dto.BookCategoryOptionView
-import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.BookAuthor
 import cz.tul.backend.book.entity.BookCategory
-import cz.tul.backend.book.entity.BookImport
 import cz.tul.backend.book.repository.BookAuthorRepository
 import cz.tul.backend.book.repository.BookCategoryRepository
-import cz.tul.backend.book.repository.BookImportRepository
-import cz.tul.backend.utils.objectMapper
+import cz.tul.backend.book.repository.BookCommentRepository
+import cz.tul.backend.book.repository.BookRepository
+import cz.tul.backend.utils.createBook
+import cz.tul.backend.utils.createBookComment
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
+import org.springframework.data.repository.findByIdOrNull
 
 class BookServiceTests : FeatureSpec({
-
-  feature("save imported booking") {
-    scenario("success") {
-      val spec = getSpec()
-
-      val importDTOs = listOf(
-        BookImportDTO(
-          isbn13 = "978-1-56619-909-4",
-          isbn10 = "156619909X",
-          title = "The Art of War",
-          categories = "Philosophy",
-          subtitle = "The Ancient Classic",
-          authors = "Sun Tzu",
-          thumbnail = "http://books.google.com/books/content?id=1-56619-909-4&printsec=frontcover&img=1&",
-          description = "The Art of War is an ancient Chinese military treatise dating from the Late Spring.",
-          publishedYear = -500,
-          averageRating = 4.5,
-          numPages = 48,
-          ratingsCount = 3
-        )
-      )
-
-      val slot = slot<BookImport>()
-
-      every { spec.bookImportRepository.save(capture(slot)) } answers { firstArg() }
-
-      spec.bookService.saveImportedBooks(importDTOs)
-
-      val captured = slot.captured
-      captured.content shouldBe objectMapper.writeValueAsBytes(importDTOs)
-    }
-  }
 
   feature("get all categories") {
     scenario("success") {
@@ -81,21 +48,66 @@ class BookServiceTests : FeatureSpec({
       result shouldBe setOf(BookAuthorOptionView("Plato"))
     }
   }
+
+  feature("get book detail") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val book = createBook()
+      val bookCategory = BookCategory(name = "Philosophy")
+      val bookAuthor = BookAuthor(name = "Plato")
+      val bookComment = createBookComment()
+
+      every { spec.bookRepository.findByIdOrNull(1L) } returns book
+      every { spec.bookCategoryRepository.findByBookCategoryLink_Book_Id(1L) } returns setOf(bookCategory)
+      every { spec.bookAuthorRepository.findByBookAuthorLink_Book_Id(1L) } returns setOf(bookAuthor)
+      every { spec.bookCommentRepository.findByBook_Id(1L) } returns setOf(bookComment)
+
+      val result = spec.bookService.getBookDetail(1L)!!
+
+      result.isbn13 shouldBe book.isbn13
+      result.isbn10 shouldBe book.isbn10
+      result.title shouldBe book.title
+      result.categories.size shouldBe 1
+      result.categories[0].name shouldBe "Philosophy"
+      result.subtitle shouldBe book.subtitle
+      result.authors.size shouldBe 1
+      result.authors[0].name shouldBe "Plato"
+      result.thumbnail shouldBe book.thumbnail
+      result.description shouldBe book.description
+      result.publishedYear shouldBe book.publishedYear
+      result.averageRating shouldBe book.averageRating
+      result.numPages shouldBe book.numPages
+      result.ratingsCount shouldBe book.ratingsCount
+      result.bookComments.size shouldBe 1
+      result.bookComments[0].comment shouldBe "Great book!"
+    }
+
+    scenario("book not found") {
+      val spec = getSpec()
+
+      every { spec.bookRepository.findByIdOrNull(1L) } returns null
+
+      val result = spec.bookService.getBookDetail(1L)
+
+      result shouldBe null
+    }
+  }
 })
 
 private class BookServiceSpecWrapper(
-  val objectMapper: ObjectMapper,
-  val bookImportRepository: BookImportRepository,
+  val bookRepository: BookRepository,
+  val bookCommentRepository: BookCommentRepository,
   val bookCategoryRepository: BookCategoryRepository,
   val bookAuthorRepository: BookAuthorRepository
 ) {
 
   val bookService: BookService = BookService(
-    objectMapper,
-    bookImportRepository,
+    bookRepository,
+    bookCommentRepository,
     bookCategoryRepository,
     bookAuthorRepository
   )
 }
 
-private fun getSpec() = BookServiceSpecWrapper(objectMapper, mockk(), mockk(), mockk())
+private fun getSpec() = BookServiceSpecWrapper(mockk(), mockk(), mockk(), mockk())
