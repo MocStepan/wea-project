@@ -25,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [IntegrationTestApplication::class])
 @ActiveProfiles("test")
-class BookFilterServiceTests(
+class BookFilterServiceIntegrationTests(
   private val bookFilterService: BookFilterService,
   private val bookRepository: BookRepository,
   private val bookCategoryRepository: BookCategoryRepository,
@@ -53,6 +53,14 @@ class BookFilterServiceTests(
         isbn13 = "978-3-16-148410-1",
         isbn10 = "3-16-148410-1",
         title = "The Republic 1"
+      )
+    )
+    bookRepository.save(
+      createBook(
+        isbn13 = "978-3-16-148410-2",
+        isbn10 = "3-16-148410-2",
+        title = "The Republic 2",
+        disabled = true
       )
     )
 

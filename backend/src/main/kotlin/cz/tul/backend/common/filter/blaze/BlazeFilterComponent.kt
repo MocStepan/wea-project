@@ -31,6 +31,7 @@ class BlazeFilterComponent(
    * @param entityViewClass class of entity view
    * @param rootEntity class of root entity
    * @param orderCriteria criteria for ordering
+   * @param additionCriteria additional criteria for filtering
    * @return [PageResponseDTO] with filtered entity views
    * @see EntityViewFilterComponent.filterEntityView
    */
@@ -38,10 +39,12 @@ class BlazeFilterComponent(
     filterDTO: FilterDTO,
     entityViewClass: Class<T>,
     rootEntity: Class<*>,
-    orderCriteria: FilterCriteria<Any>
+    orderCriteria: FilterCriteria<Any>,
+    additionCriteria: FilterCriteria<Any>?
   ): PageResponseDTO<T> {
     val filterCriteria = filterDTO.toFilterCriteria()
     filterCriteria.add(orderCriteria)
+    additionCriteria?.let { filterCriteria.add(it) }
 
     var criteriaBuilder = entityViewManager.applySetting(
       EntityViewSetting.create(entityViewClass),

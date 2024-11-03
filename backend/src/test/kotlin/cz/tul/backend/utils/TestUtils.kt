@@ -103,7 +103,8 @@ fun createBook(
   publishedYear: Int? = null,
   averageRating: Double? = null,
   numPages: Int? = null,
-  ratingsCount: Int? = null
+  ratingsCount: Int? = null,
+  disabled: Boolean = false
 ): Book {
   return Book(
     id = id,
@@ -116,7 +117,8 @@ fun createBook(
     publishedYear = publishedYear,
     averageRating = averageRating,
     numPages = numPages,
-    ratingsCount = ratingsCount
+    ratingsCount = ratingsCount,
+    disabled = disabled
   )
 }
 

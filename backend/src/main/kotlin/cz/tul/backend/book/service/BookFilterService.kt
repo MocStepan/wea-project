@@ -5,8 +5,10 @@ import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.Book_
 import cz.tul.backend.common.filter.blaze.EntityViewFilterComponent
 import cz.tul.backend.common.filter.dto.FilterCriteria
+import cz.tul.backend.common.filter.dto.FilterCriteriaDTO
 import cz.tul.backend.common.filter.dto.FilterDTO
 import cz.tul.backend.common.filter.dto.PageResponseDTO
+import cz.tul.backend.common.filter.valueobject.FilterOperator
 import cz.tul.backend.common.filter.valueobject.FilterSort
 import org.springframework.stereotype.Service
 
@@ -29,7 +31,8 @@ class BookFilterService(
       filterDTO,
       BookTableDTO::class.java,
       Book::class.java,
-      FilterCriteria.buildOrderCriteria(Book_.ID, FilterSort.ASC)
+      FilterCriteria.buildOrderCriteria(Book_.ID, FilterSort.ASC),
+      FilterCriteria.convertAndBuild(FilterCriteriaDTO(FilterOperator.EQUAL, false), Book_.DISABLED)
     )
   }
 }

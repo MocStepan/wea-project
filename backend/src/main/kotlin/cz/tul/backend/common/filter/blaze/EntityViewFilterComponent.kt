@@ -16,12 +16,14 @@ interface EntityViewFilterComponent {
    * @param entityViewClass class of the entity view
    * @param rootEntity class of the root entity
    * @param orderCriteria criteria for ordering the results
+   * @param additionCriteria additional criteria for filtering
    * @return page response containing filtered entity views
    */
   fun <T> filterEntityView(
     filterDTO: FilterDTO,
     entityViewClass: Class<T>,
     rootEntity: Class<*>,
-    orderCriteria: FilterCriteria<Any>
+    orderCriteria: FilterCriteria<Any>,
+    additionCriteria: FilterCriteria<Any>?
   ): PageResponseDTO<T>
 }
