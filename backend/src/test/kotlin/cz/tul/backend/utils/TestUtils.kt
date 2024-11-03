@@ -14,6 +14,7 @@ import cz.tul.backend.auth.entity.RefreshToken
 import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.Book
+import cz.tul.backend.book.entity.BookComment
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
@@ -53,7 +54,7 @@ fun createAuthUser(
     email = email,
     password = password,
     role = role,
-    refreshToken = refreshToken
+    refreshTokens = refreshToken
   )
 }
 
@@ -158,5 +159,19 @@ fun createUserClaims(
     authUserId = id,
     authRole = role,
     email = email
+  )
+}
+
+fun createBookComment(
+  id: Long = 0L,
+  comment: String = "Great book!",
+  book: Book = mockk(),
+  authUser: AuthUser = mockk()
+): BookComment {
+  return BookComment(
+    id = id,
+    comment = comment,
+    book = book,
+    authUser = authUser
   )
 }
