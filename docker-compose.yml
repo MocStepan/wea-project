@@ -1,37 +1,8 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:4200"
-    depends_on:
-      - sk01-web
-    environment:
-      BASE_URL: ${BASE_URL}
-    networks:
-      space:
-        ipv4_address: 192.168.92.4
-      cdb-network:
-  sk01-web:
-    container_name: sk01-web
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - "/home/cerny/logs/sk01-web:/var/logs/"
-    ports:
-      - "8000:80"
-    depends_on:
-      - postgres
-    networks:
-      space:
-        ipv4_address: 192.168.92.5
-      cdb-network:
   postgres:
     image: postgres:14-alpine
     ports:
-      - "50000:5432"
+      - "50000:50000"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -42,6 +13,7 @@ services:
       space:
         ipv4_address: 192.168.92.6
       cdb-network:
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
@@ -56,11 +28,43 @@ services:
       PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
       PGADMIN_CONFIG_SESSION_DB_PATH: ${PGADMIN_CONFIG_SESSION_DB_PATH}
     volumes:
-      - ~/pgadmin-data:/var/lib/pgadmin
+      - pgadmin-data:/var/lib/pgadmin
     networks:
       space:
         ipv4_address: 192.168.92.7
       cdb-network:
+
+  sk01-web:
+    container_name: sk01-web
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - "/home/cerny/logs/sk01-web:/var/logs/"
+    ports:
+      - "8000:8080"
+    depends_on:
+      - postgres
+    networks:
+      space:
+        ipv4_address: 192.168.92.5
+      cdb-network:
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:4200"
+    depends_on:
+      - sk01-web
+    environment:
+      BASE_URL: ${BASE_URL}
+    networks:
+      space:
+        ipv4_address: 192.168.92.4
+      cdb-network:
+
 networks:
   cdb-network:
     driver: bridge
@@ -69,5 +73,7 @@ networks:
     ipam:
       config:
         - subnet: "192.168.92.0/24"
+
 volumes:
   postgres-data:
+  pgadmin-data:

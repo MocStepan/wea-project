@@ -1,25 +1,15 @@
-# Use an official Gradle image to build the backend
 FROM gradle:jdk20 AS build
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the backend folder only (since gradlew is there)
-COPY . /app/
+COPY . .
 
-# Ensure gradlew is executable
-RUN chmod +x ./gradlew
+RUN gradle clean build -x test
 
-# Run the Gradle build to create the application JAR
-RUN ./gradlew build
+FROM tomcat:latest
 
-# Create a new stage to run the application
-FROM openjdk:20-jdk-slim
-# Set the working directory in the new stage
-WORKDIR /app
+ENV SPRING_PROFILES_ACTIVE=prod
 
-# Copy the JAR file from the build stage
-COPY --from=build /app/build/libs/*.jar /app/app.jar
+COPY --from=build /app/build/libs/backend-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
-# Run the application JAR
-CMD ["java", "-jar", "/app/app.jar","--spring.profiles.active=prod"]
+CMD ["catalina.sh", "run"]
