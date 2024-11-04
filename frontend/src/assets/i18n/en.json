@@ -35,5 +35,17 @@
   "SEARCH_AUTHORS": "Search authors",
   "SEARCH_CATEGORY": "Search category",
   "APPLY_FILTER": "Apply filter",
-  "CLEAR_FILTER": "Clear filter"
+  "CLEAR_FILTER": "Clear filter",
+  "COMMENTS": "Comments",
+  "ADD_COMMENT": "Add Comment",
+  "RETURN_LIST_VIEW": "Return to List",
+  "SUBMIT_COMMENT": "Submit Comment",
+  "COMMENT": "Comment",
+  "SUBTITLE": "Subtitle",
+  "AUTHORS": "Authors",
+  "CATEGORIES": "Categories",
+  "PUBLISHED_YEAR": "Published Year",
+  "PAGES": "Pages",
+  "AVERAGE_RATING": "Average Rating",
+  "DESCRIPTION": "Description"
 }

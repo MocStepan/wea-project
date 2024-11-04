@@ -1,1 +1,64 @@
-<span>Book detail</span>
+<div class="main-detail" *ngIf="book() as book">
+  <div class="header">
+    <h2>{{ book.title }}</h2>
+    <img [src]="book.thumbnail" alt="{{ book.title }} cover image" class="thumbnail">
+  </div>
+
+  <div class="details">
+    <p><strong>{{ 'SUBTITLE' | translate }}:</strong> {{ book.subtitle }}</p>
+    <p><strong>ISBN-13:</strong> {{ book.isbn13 }}</p>
+    <p><strong>ISBN-10:</strong> {{ book.isbn10 }}</p>
+
+    <div class="authors">
+      <p><strong>{{ 'AUTHORS' | translate }}:</strong></p>
+      <ul>
+        <li *ngFor="let author of book.authors">{{ author.name }}</li>
+      </ul>
+    </div>
+
+    <div class="categories">
+      <p><strong>{{ 'CATEGORIES' | translate }}:</strong></p>
+      <ul>
+        <li *ngFor="let category of book.categories">{{ category.name }}</li>
+      </ul>
+    </div>
+
+    <p><strong>{{ 'PUBLISHED_YEAR' | translate }}:</strong> {{ book.publishedYear }}</p>
+    <p><strong>{{ 'PAGES' | translate }}:</strong> {{ book.numPages }}</p>
+    <p><strong>{{ 'AVERAGE_RATING' | translate }}:</strong> {{ book.averageRating }} ({{ book.ratingsCount }} ratings)</p>
+    <p><strong>{{ 'DESCRIPTION' | translate }}:</strong> {{ book.description }}</p>
+  </div>
+
+  <div *ngIf="book.bookComments?.length" class="comments">
+    <h3>{{ 'COMMENTS' | translate }}</h3>
+    <ul>
+      <li *ngFor="let comment of book.bookComments">
+        <div class="comment">
+          <p><strong>{{ comment.user }}:</strong></p>
+          <p>{{ comment.comment }}</p>
+          <p class="comment-date">{{ moment(comment.createdDateTime).format('DD.MM.YYYY HH:mm') }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="isSignedIn()" class="add-comment-form">
+    <h3>{{ 'ADD_COMMENT' | translate }}</h3>
+    <form (ngSubmit)="submitComment()" #commentForm="ngForm">
+      <mat-form-field class="form-field" appearance="fill">
+        <mat-label>{{ 'COMMENT' | translate }}</mat-label>
+        <textarea
+          matInput
+          [(ngModel)]="commentInput"
+          name="commentInput"
+          required
+          minlength="5"
+          maxlength="500"
+          placeholder="{{ 'Type your comment here...' | translate }}"
+          class="comment-input">
+        </textarea>
+      </mat-form-field>
+      <button class="btn" type="submit" [disabled]="!commentForm.valid">{{ 'SUBMIT_COMMENT' | translate }}</button>
+    </form>
+  </div>
+</div>

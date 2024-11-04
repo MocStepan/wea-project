@@ -27,7 +27,7 @@ auth:
   jwt:
     access:
       secret: "e3a62749cb3f1923567611b91b73f7e92996ff82bdabb05150d015f894f356c3"
-      duration: 600000 # 10 minutes
+      duration: 1800000 # 30 minutes
       sameSite: "Lax"
       secure: false
     refresh:

@@ -5,6 +5,8 @@ import {BASE_API_URL} from '../../../config'
 import {OptionViewModel} from '../../shared/filter/model/option-view.model'
 import {PageResponseModel} from '../../shared/filter/model/page-response.model'
 import {HttpService} from '../../shared/http/service/http.service'
+import {BookCommentCreateModel} from '../detail/model/book-comment-create.model'
+import {BookDetailModel} from '../detail/model/book-detail.model'
 import {BookFilterModel} from '../list/model/book-filter.model'
 import {BookTableModel} from '../list/model/book-table.model'
 
@@ -47,5 +49,26 @@ export class BookService {
    */
   getBookAuthorsOptionViews(): Observable<OptionViewModel[]> {
     return this.httpService.get(`${BASE_API_URL}book/authors`)
+  }
+
+  /**
+   * Retrieves the details of a book based on the provided book ID.
+   *
+   * @param id The ID of the book to retrieve.
+   * @returns An observable of BookTableModel containing the details of the book.
+   * @see BookDetailModel
+   */
+  getBookDetail(id: number): Observable<BookDetailModel> {
+    return this.httpService.get(`${BASE_API_URL}book/${id}`)
+  }
+
+  /**
+   * Posts a comment for a book based on the provided book ID and comment.
+   *
+   * @param bookId The ID of the book to post the comment for.
+   * @param comment The comment to post for the book.
+   */
+  createComment(bookId: number, comment: BookCommentCreateModel): Observable<boolean> {
+    return this.httpService.post(`${BASE_API_URL}book/${bookId}/comment`, comment)
   }
 }
