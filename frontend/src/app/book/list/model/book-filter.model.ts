@@ -24,8 +24,11 @@ export class BookFilterModel {
     this.categories = categories
   }
 
-  static createDefaultFilter(): BookFilterModel {
+  static createDefaultFilter(key: string): BookFilterModel {
+    if (sessionStorage.getItem(key)) {
+      const config = JSON.parse(sessionStorage.getItem(key) as string)
+      return new BookFilterModel(config.size, config.page, config.categories, config.isbn13, config.isbn10, config.title, config.authors)
+    }
     return new BookFilterModel(9, 0)
   }
-
 }

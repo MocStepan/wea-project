@@ -19,6 +19,7 @@ import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
 import {MatPaginator, PageEvent} from '@angular/material/paginator'
 import {MatSelect} from '@angular/material/select'
+import {Router} from '@angular/router'
 import {TranslateModule} from '@ngx-translate/core'
 import {combineLatestWith} from 'rxjs'
 
@@ -28,9 +29,12 @@ import {EnumColumnTypeModel} from '../../../shared/filter/model/enum-column-type
 import {FilterCriteriaModel} from '../../../shared/filter/model/filter-criteria.model'
 import {PageResponseModel} from '../../../shared/filter/model/page-response.model'
 import {FilterOperatorEnum} from '../../../shared/filter/valueobject/filter-operator.enum'
+import {BookDetailComponent} from '../../detail/components/book-detail.component'
 import {BookService} from '../../service/book.service'
 import {BookFilterModel} from '../model/book-filter.model'
 import {BookTableModel} from '../model/book-table.model'
+
+const CONFIG_NAME = 'book-list'
 
 /**
  * Component for the book list.
@@ -64,7 +68,8 @@ import {BookTableModel} from '../model/book-table.model'
     MatIconButton,
     FormsModule,
     TranslateModule,
-    FilterComponent
+    FilterComponent,
+    BookDetailComponent
   ],
   providers: [],
   templateUrl: './book-list.component.html',
@@ -72,8 +77,9 @@ import {BookTableModel} from '../model/book-table.model'
 })
 export class BookListComponent implements OnInit {
   protected books: WritableSignal<PageResponseModel<BookTableModel> | null> = signal(null)
-  protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter()
+  protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter(CONFIG_NAME)
   protected columns: WritableSignal<ColumnDefModel[]> = signal([])
+  private router: Router = inject(Router)
 
   // Injects bookService instead of using constructor injection.
   private bookService: BookService = inject(BookService)
@@ -86,13 +92,17 @@ export class BookListComponent implements OnInit {
       combineLatestWith(this.bookService.getBookCategoriesOptionViews())
     ).subscribe(([authors, categories]) => {
       this.columns.set([
-        new ColumnDefModel('SEARCH_ISBN13', 'isbn13', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
-        new ColumnDefModel('SEARCH_ISBN10', 'isbn10', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
-        new ColumnDefModel('SEARCH_TITLE', 'title', 'string', new FilterCriteriaModel(FilterOperatorEnum.ILIKE)),
-        new ColumnDefModel('SEARCH_AUTHORS', 'authors',
-          EnumColumnTypeModel.fromOptionViews(authors), new FilterCriteriaModel(FilterOperatorEnum.IN)),
+        new ColumnDefModel('SEARCH_ISBN13', 'isbn13', 'string',
+          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.isbn13?.value)),
+        new ColumnDefModel('SEARCH_ISBN10', 'isbn10', 'string',
+          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.isbn10?.value)),
+        new ColumnDefModel('SEARCH_TITLE', 'title', 'string',
+          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.title?.value)),
+        new ColumnDefModel('SEARCH_AUTHORS', 'authors', EnumColumnTypeModel.fromOptionViews(authors),
+          new FilterCriteriaModel(FilterOperatorEnum.IN, this.bookFilter.authors?.value)),
         new ColumnDefModel('SEARCH_CATEGORY', 'categories',
-          EnumColumnTypeModel.fromOptionViews(categories), new FilterCriteriaModel(FilterOperatorEnum.IN))
+          EnumColumnTypeModel.fromOptionViews(categories),
+          new FilterCriteriaModel(FilterOperatorEnum.IN, this.bookFilter.categories?.value))
       ])
     })
 
@@ -116,6 +126,7 @@ export class BookListComponent implements OnInit {
    * @see BookService
    */
   filterBooks(): void {
+    sessionStorage.setItem(CONFIG_NAME, JSON.stringify(this.bookFilter))
     this.bookService.filterBooks(this.bookFilter).subscribe((response) => {
       this.books.set(response)
     })
@@ -130,6 +141,15 @@ export class BookListComponent implements OnInit {
     this.bookFilter.size = event.pageSize
     this.bookFilter.page = event.pageIndex
     this.filterBooks()
+  }
+
+  /**
+   * Navigates to the book detail page for the given book ID.
+   *
+   * @param bookId - The ID of the book to view details for.
+   */
+  goToBookDetail(bookId: number) {
+    this.router.navigate([`/book-list/${bookId}`])
   }
 }
 

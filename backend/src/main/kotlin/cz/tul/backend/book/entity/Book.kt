@@ -27,7 +27,7 @@ class Book(
   var publishedYear: Int? = null,
   var averageRating: Double? = null,
   var numPages: Int? = null,
-  var ratingsCount: Int? = null,
+  val ratingsCount: Int? = null,
   var disabled: Boolean = false
 ) {
 
@@ -56,7 +56,6 @@ class Book(
     publishedYear = importDTO.publishedYear
     averageRating = importDTO.averageRating
     numPages = importDTO.numPages
-    ratingsCount = importDTO.ratingsCount
     disabled = false
   }
 }

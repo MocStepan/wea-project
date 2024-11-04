@@ -4,7 +4,7 @@
   </app-filter>
 
   <mat-grid-list class="book-list-view" cols="3" gutterSize="16px">
-    <mat-grid-tile *ngFor="let book of books()?.content">
+    <mat-grid-tile (click)="goToBookDetail(book.id)" *ngFor="let book of books()?.content">
       <mat-card appearance="outlined" class="book-list-item">
         <mat-card-header class="header">
           <mat-card-title>{{book.title}}</mat-card-title>

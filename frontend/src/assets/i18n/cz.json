@@ -35,5 +35,17 @@
   "SEARCH_AUTHORS": "Hledat autory",
   "SEARCH_CATEGORY": "Hledat kategorii",
   "APPLY_FILTER": "Použít filtr",
-  "CLEAR_FILTER": "Vymazat filtr"
+  "CLEAR_FILTER": "Vymazat filtr",
+  "COMMENTS": "Komentáře",
+  "ADD_COMMENT": "Přidat komentář",
+  "RETURN_LIST_VIEW": "Zpět na seznam",
+  "SUBMIT_COMMENT": "Odeslat komentář",
+  "COMMENT": "Komentář",
+  "SUBTITLE": "Podtitul",
+  "AUTHORS": "Autoři",
+  "CATEGORIES": "Kategorie",
+  "PUBLISHED_YEAR": "Rok vydání",
+  "PAGES": "Počet stran",
+  "AVERAGE_RATING": "Průměrné hodnocení",
+  "DESCRIPTION": "Popis"
 }
