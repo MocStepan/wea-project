@@ -1,12 +1,11 @@
-package cz.tul.backend.book.service
+package cz.tul.backend.book.rating.service
 
 import cz.tul.backend.auth.base.dto.AuthJwtClaims
-import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.repository.AuthUserRepository
-import cz.tul.backend.book.dto.BookRatingCreateDTO
-import cz.tul.backend.book.dto.BookRatingDTO
 import cz.tul.backend.book.entity.Book
-import cz.tul.backend.book.entity.BookRating
+import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
+import cz.tul.backend.book.rating.dto.BookRatingDTO
+import cz.tul.backend.book.rating.entity.BookRating
 import cz.tul.backend.book.repository.BookRatingRepository
 import cz.tul.backend.book.repository.BookRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -35,49 +34,60 @@ class BookRatingService(
   }
 
   fun createBookRating(id: Long, createDTO: BookRatingCreateDTO, claims: AuthJwtClaims): Boolean {
-    val (book, authUser) = getBookAndAuthUser(id, claims) ?: return false
+    val existsBookRating = bookRatingRepository.existsByAuthUser_IdAndBook_Id(claims.authUserId, id)
+    if (existsBookRating) {
+      log.warn { "BookRating for book with id $id and authUser with id ${claims.authUserId} not found" }
+      return false
+    }
+
+    val authUser = authUserRepository.findByIdOrNull(claims.authUserId)
+    if (authUser == null) {
+      log.warn { "AuthUser with id ${claims.authUserId} not found" }
+      return false
+    }
+
+    val book = bookRepository.findByIdOrNull(id)
+    if (book == null || book.disabled) {
+      log.warn { "Book with id $id not found or book is disabled" }
+      return false
+    }
+
     changeBookRating(createDTO.rating, 1, book)
-    createOrUpdateBookRating(authUser, book, createDTO.rating)
+    bookRatingRepository.save(BookRating.from(authUser, book, createDTO.rating))
+    return true
+  }
+
+  fun editBookRating(id: Long, updateDTO: BookRatingCreateDTO, claims: AuthJwtClaims): Boolean {
+    val (book, bookRating) = getBookAndBookRating(id, claims) ?: return false
+
+    changeBookRating(updateDTO.rating - bookRating.rating, 0, book)
+    bookRating.rating = updateDTO.rating
+    bookRatingRepository.save(bookRating)
     return true
   }
 
   fun deleteBookRating(id: Long, claims: AuthJwtClaims): Boolean {
-    val (book, authUser) = getBookAndAuthUser(id, claims) ?: return false
-    val bookRating = bookRatingRepository.findByAuthUser_IdAndBook_Id(authUser.id, book.id)
-    if (bookRating == null) {
-      log.warn { "BookRating for book with id $id and authUser with id ${claims.authUserId} not found" }
-      return false
-    }
+    val (book, bookRating) = getBookAndBookRating(id, claims) ?: return false
 
     changeBookRating(-bookRating.rating, -1, book)
     bookRatingRepository.delete(bookRating)
     return true
   }
 
-  private fun getBookAndAuthUser(id: Long, claims: AuthJwtClaims): Pair<Book, AuthUser>? {
-    val authUser = authUserRepository.findByIdOrNull(claims.authUserId)
-    if (authUser == null) {
-      log.warn { "AuthUser with id ${claims.authUserId} not found" }
+  private fun getBookAndBookRating(id: Long, claims: AuthJwtClaims): Pair<Book, BookRating>? {
+    val bookRating = bookRatingRepository.findByAuthUser_IdAndBook_Id(claims.authUserId, id)
+    if (bookRating == null) {
+      log.warn { "BookRating for book with id $id and authUser with id ${claims.authUserId} not found" }
       return null
     }
 
     val book = bookRepository.findByIdOrNull(id)
-    if (book == null) {
-      log.warn { "Book with id $id not found" }
+    if (book == null || book.disabled) {
+      log.warn { "Book with id $id not found or book is disabled" }
       return null
     }
 
-    return Pair(book, authUser)
-  }
-
-  private fun createOrUpdateBookRating(authUser: AuthUser, book: Book, rating: Double) {
-    val bookRating = bookRatingRepository.findByAuthUser_IdAndBook_Id(authUser.id, book.id)
-    if (bookRating != null) {
-      bookRating.rating = rating
-      bookRatingRepository.save(bookRating)
-    } else {
-      bookRatingRepository.save(BookRating.from(authUser, book, rating))
-    }
+    return Pair(book, bookRating)
   }
 
   private fun changeBookRating(rating: Double, count: Int, book: Book) {

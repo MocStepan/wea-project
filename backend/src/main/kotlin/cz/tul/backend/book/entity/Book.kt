@@ -1,6 +1,7 @@
 package cz.tul.backend.book.entity
 
 import cz.tul.backend.book.dto.BookImportDTO
+import cz.tul.backend.book.rating.entity.BookRating
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType

@@ -1,8 +1,8 @@
-package cz.tul.backend.book.controller
+package cz.tul.backend.book.rating.controller
 
-import cz.tul.backend.book.dto.BookRatingCreateDTO
-import cz.tul.backend.book.dto.BookRatingDTO
-import cz.tul.backend.book.service.BookRatingService
+import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
+import cz.tul.backend.book.rating.dto.BookRatingDTO
+import cz.tul.backend.book.rating.service.BookRatingService
 import cz.tul.backend.utils.createUserClaims
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
@@ -74,6 +74,40 @@ class BookRatingControllerTests : FeatureSpec({
       every { spec.bookRatingService.createBookRating(1L, createDTO, claims) } returns false
 
       val response = spec.bookRatingController.createBookRating(1L, createDTO, authentication)
+
+      response.statusCode shouldBe HttpStatus.BAD_REQUEST
+      response.body shouldBe false
+    }
+  }
+
+  feature("edit book rating") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val createDTO = BookRatingCreateDTO(5.0)
+      val claims = createUserClaims()
+      val authentication = mockk<Authentication>()
+
+      every { authentication.principal } returns claims
+      every { spec.bookRatingService.editBookRating(1L, createDTO, claims) } returns true
+
+      val response = spec.bookRatingController.editBookRating(1L, createDTO, authentication)
+
+      response.statusCode shouldBe HttpStatus.OK
+      response.body shouldBe true
+    }
+
+    scenario("book rating addition failed") {
+      val spec = getSpec()
+
+      val createDTO = BookRatingCreateDTO(5.0)
+      val claims = createUserClaims()
+      val authentication = mockk<Authentication>()
+
+      every { authentication.principal } returns claims
+      every { spec.bookRatingService.editBookRating(1L, createDTO, claims) } returns false
+
+      val response = spec.bookRatingController.editBookRating(1L, createDTO, authentication)
 
       response.statusCode shouldBe HttpStatus.BAD_REQUEST
       response.body shouldBe false
