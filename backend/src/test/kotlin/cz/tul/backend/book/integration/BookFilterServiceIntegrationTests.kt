@@ -1,12 +1,16 @@
 package cz.tul.backend.book.integration
 
 import cz.tul.backend.IntegrationTestApplication
+import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.book.dto.BookFilterDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.BookAuthor
 import cz.tul.backend.book.entity.BookAuthorLink
 import cz.tul.backend.book.entity.BookCategory
 import cz.tul.backend.book.entity.BookCategoryLink
+import cz.tul.backend.book.entity.BookFavorite
+import cz.tul.backend.book.favorite.repository.BookFavoriteRepository
 import cz.tul.backend.book.repository.BookAuthorLinkRepository
 import cz.tul.backend.book.repository.BookAuthorRepository
 import cz.tul.backend.book.repository.BookCategoryLinkRepository
@@ -17,7 +21,9 @@ import cz.tul.backend.common.filter.dto.FilterCriteriaDTO
 import cz.tul.backend.common.filter.valueobject.FilterOperator
 import cz.tul.backend.common.filter.valueobject.FilterSort
 import cz.tul.backend.utils.IntegrationTestService
+import cz.tul.backend.utils.createAuthUser
 import cz.tul.backend.utils.createBook
+import cz.tul.backend.utils.createUserClaims
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.context.SpringBootTest
@@ -32,11 +38,14 @@ class BookFilterServiceIntegrationTests(
   private val bookAuthorRepository: BookAuthorRepository,
   private val bookAuthorLinkRepository: BookAuthorLinkRepository,
   private val bookCategoryLinkRepository: BookCategoryLinkRepository,
-  private val integrationTestService: IntegrationTestService
+  private val integrationTestService: IntegrationTestService,
+  private val authUserRepository: AuthUserRepository,
+  private val bookFavoriteRepository: BookFavoriteRepository
 ) : FunSpec({
 
   lateinit var book1: Book
   lateinit var book2: Book
+  lateinit var claims: AuthJwtClaims
 
   beforeSpec {
     integrationTestService.cleanDatabase()
@@ -83,6 +92,13 @@ class BookFilterServiceIntegrationTests(
         BookAuthorLink(book = book2, author = author1)
       )
     )
+
+    val authUser = authUserRepository.save(createAuthUser())
+    claims = createUserClaims(authUser)
+
+    bookFavoriteRepository.save(
+      BookFavorite(authUser = authUser, book = book1)
+    )
   }
 
   test("filter by categories") {
@@ -90,7 +106,7 @@ class BookFilterServiceIntegrationTests(
       categories = FilterCriteriaDTO(FilterOperator.EQUAL, "Philosophy")
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 1
     pageResponse.page shouldBe 1
@@ -108,7 +124,7 @@ class BookFilterServiceIntegrationTests(
       categories = FilterCriteriaDTO(FilterOperator.EQUAL, null)
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 0
     pageResponse.page shouldBe 1
@@ -122,7 +138,7 @@ class BookFilterServiceIntegrationTests(
       categories = FilterCriteriaDTO(sort = FilterSort.DESC)
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 2
     pageResponse.page shouldBe 1
@@ -140,7 +156,7 @@ class BookFilterServiceIntegrationTests(
       isbn13 = FilterCriteriaDTO(FilterOperator.EQUAL, book1.isbn13)
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 1
     pageResponse.page shouldBe 1
@@ -157,7 +173,7 @@ class BookFilterServiceIntegrationTests(
       isbn10 = FilterCriteriaDTO(FilterOperator.EQUAL, book1.isbn10)
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 1
     pageResponse.page shouldBe 1
@@ -174,7 +190,7 @@ class BookFilterServiceIntegrationTests(
       title = FilterCriteriaDTO(FilterOperator.EQUAL, book1.title)
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 1
     pageResponse.page shouldBe 1
@@ -191,7 +207,7 @@ class BookFilterServiceIntegrationTests(
       categories = FilterCriteriaDTO(FilterOperator.IN, "[Philosophy, Science]")
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 2
     pageResponse.page shouldBe 1
@@ -209,7 +225,7 @@ class BookFilterServiceIntegrationTests(
       authors = FilterCriteriaDTO(FilterOperator.ILIKE, "Pla")
     )
 
-    val pageResponse = bookFilterService.filterBooks(filterDTO)
+    val pageResponse = bookFilterService.filterBooks(filterDTO, false, null)
 
     pageResponse.content.size shouldBe 2
     pageResponse.page shouldBe 1
@@ -220,5 +236,18 @@ class BookFilterServiceIntegrationTests(
     val first = pageResponse.content.first()
     first.id shouldBe book1.id
     first.authors shouldBe setOf("Plato")
+  }
+
+  test("filter books by favorite") {
+    val pageResponse = bookFilterService.filterBooks(BookFilterDTO(), true, claims)
+
+    pageResponse.content.size shouldBe 1
+    pageResponse.page shouldBe 1
+    pageResponse.totalPages shouldBe 1
+    pageResponse.size shouldBe 1
+    pageResponse.isEmpty shouldBe false
+
+    val first = pageResponse.content.first()
+    first.id shouldBe book1.id
   }
 })

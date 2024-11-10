@@ -22,9 +22,12 @@
     </createTable>
     <addForeignKeyConstraint baseColumnNames="auth_user_id" baseTableName="book_rating"
                              constraintName="FK_BOOKRATING_ON_AUTHUSER" referencedColumnNames="id"
-                             referencedTableName="auth_user"/>
+                             referencedTableName="auth_user" onDelete="CASCADE"/>
     <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book_rating"
                              constraintName="FK_BOOKRATING_ON_BOOK" referencedColumnNames="id"
-                             referencedTableName="book"/>
+                             referencedTableName="book" onDelete="CASCADE"/>
+
+    <addUniqueConstraint tableName="book_rating" columnNames="auth_user_id, book_id"
+                         constraintName="UNIQUE_RATING_BOOK"/>
   </changeSet>
 </databaseChangeLog>

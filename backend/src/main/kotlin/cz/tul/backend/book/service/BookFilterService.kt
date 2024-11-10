@@ -1,14 +1,13 @@
 package cz.tul.backend.book.service
 
+import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import cz.tul.backend.book.dto.BookTableDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.Book_
 import cz.tul.backend.common.filter.blaze.EntityViewFilterComponent
 import cz.tul.backend.common.filter.dto.FilterCriteria
-import cz.tul.backend.common.filter.dto.FilterCriteriaDTO
 import cz.tul.backend.common.filter.dto.FilterDTO
 import cz.tul.backend.common.filter.dto.PageResponseDTO
-import cz.tul.backend.common.filter.valueobject.FilterOperator
 import cz.tul.backend.common.filter.valueobject.FilterSort
 import org.springframework.stereotype.Service
 
@@ -17,7 +16,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class BookFilterService(
-  private val entityViewFilterComponent: EntityViewFilterComponent
+  private val entityViewFilterComponent: EntityViewFilterComponent,
+  private val bookFavoriteAccessService: BookFavoriteAccessService
 ) {
 
   /**
@@ -26,13 +26,15 @@ class BookFilterService(
    * @param filterDTO filter data
    * @return page response with filtered books
    */
-  fun filterBooks(filterDTO: FilterDTO): PageResponseDTO<BookTableDTO> {
+  fun filterBooks(filterDTO: FilterDTO, favorite: Boolean, claims: AuthJwtClaims?): PageResponseDTO<BookTableDTO> {
+    val additionalCriteria = bookFavoriteAccessService.getFavoriteOrDisabledFilter(favorite, claims)
+
     return entityViewFilterComponent.filterEntityView(
       filterDTO,
       BookTableDTO::class.java,
       Book::class.java,
       FilterCriteria.buildOrderCriteria(Book_.ID, FilterSort.ASC),
-      FilterCriteria.convertAndBuild(FilterCriteriaDTO(FilterOperator.EQUAL, false), Book_.DISABLED)
+      additionalCriteria
     )
   }
 }

@@ -43,8 +43,8 @@ class BookCommentService(
     }
 
     val book = bookRepository.findByIdOrNull(bookId)
-    if (book == null) {
-      log.warn { "Book with id $bookId not found" }
+    if (book == null || book.disabled) {
+      log.warn { "Book with id $bookId not found or book is disabled" }
       return false
     }
 

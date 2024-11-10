@@ -72,11 +72,6 @@
     <appender-ref ref="ERROR-FILE"/>
   </root>
 
-  <logger level="debug" name="cz.tul.backend">
-    <appender-ref ref="INFO-FILE"/>
-    <appender-ref ref="ERROR-FILE"/>
-  </logger>
-
   <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="trace" additivity="false">
     <appender-ref ref="ACCESS-FILE"/>
   </logger>
