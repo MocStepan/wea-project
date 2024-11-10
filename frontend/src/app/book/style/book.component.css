@@ -93,7 +93,7 @@
 
 .btn {
   display: inline-block;
-  margin-top: 10px;
+  margin: 10px 2px 2px 2px;
   padding: 8px 12px;
   background-color: #007bff;
   color: white;
@@ -101,3 +101,45 @@
   border-radius: 4px;
   cursor: pointer;
 }
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  padding-top: 1em;
+}
+
+.rating input {
+  display: none;
+}
+
+.rating label {
+  cursor: pointer;
+}
+
+.rating label .mat-icon {
+  font-size: 1.5em;
+  color: #757575;
+  transition: color 0.3s;
+}
+
+.rating input:checked ~ label .mat-icon,
+.rating input:checked ~ label ~ label .mat-icon {
+  color: gold;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: none;
+  color: #757575;
+  cursor: pointer;
+  padding: 0 0 0 1em;
+  margin: 0;
+}
+
+.cancel-btn:hover {
+  color: red;
+}
+button.active-star mat-icon {
+  color: gold;
+}
+

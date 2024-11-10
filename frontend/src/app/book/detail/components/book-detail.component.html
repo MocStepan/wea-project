@@ -29,6 +29,25 @@
     <p><strong>{{ 'DESCRIPTION' | translate }}:</strong> {{ book.description }}</p>
   </div>
 
+  <button mat-icon-button *ngFor="let ratingId of ratingArr;index as i" [id]="'star_'+i" (click)="onBookOnClick(i+1)" [ngClass]="{'active-star': i < ratingInput()}" >
+    <mat-icon>
+      {{onBookShowIcon(i)}}
+    </mat-icon>
+  </button>
+
+  <div *ngIf="isSignedIn()">
+    <form (ngSubmit)="onBookSubmitRating()" #ratingForm="ngForm" class="rating">
+      <div class="flex-column">
+        <button class="btn submit-btn" type="submit">{{ 'SUBMIT_RATING' | translate }}</button>
+        <button class="btn submit-btn" type="button" (click)="onBookDeleteRating()">
+          {{ 'DELETE_RATING' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <br>
+  <br>
   <div *ngIf="book.bookComments?.length" class="comments">
     <h3>{{ 'COMMENTS' | translate }}</h3>
     <ul>
@@ -44,7 +63,7 @@
 
   <div *ngIf="isSignedIn()" class="add-comment-form">
     <h3>{{ 'ADD_COMMENT' | translate }}</h3>
-    <form (ngSubmit)="submitComment()" #commentForm="ngForm">
+    <form (ngSubmit)="onBookSubmitComment()" #commentForm="ngForm">
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>{{ 'COMMENT' | translate }}</mat-label>
         <textarea
