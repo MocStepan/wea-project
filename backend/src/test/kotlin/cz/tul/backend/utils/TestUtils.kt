@@ -15,7 +15,7 @@ import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.BookComment
-import cz.tul.backend.book.rating.entity.BookRating
+import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
@@ -166,7 +166,7 @@ fun createUserClaims(
 }
 
 fun createUserClaims(
-  authUser: AuthUser
+  authUser: AuthUser = createAuthUser()
 ): AuthJwtClaims {
   return AccessTokenClaims(
     authUserId = authUser.id,

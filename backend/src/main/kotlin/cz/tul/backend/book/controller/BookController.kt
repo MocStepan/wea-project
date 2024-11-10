@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -41,9 +42,12 @@ class BookController(
   @ApiResponse(responseCode = "200", description = "Books filtered successfully")
   @PostMapping("/v1/book/filter")
   fun filterBooks(
-    @RequestBody filterDTO: BookFilterDTO
+    @RequestBody filterDTO: BookFilterDTO,
+    @PathParam("favorite") favorite: Boolean,
+    authentication: Authentication?
   ): ResponseEntity<PageResponseDTO<BookTableDTO>> {
-    val response = bookFilterService.filterBooks(filterDTO)
+    val claims = authentication?.principal as AuthJwtClaims?
+    val response = bookFilterService.filterBooks(filterDTO, favorite, claims)
     return ResponseEntity(response, HttpStatus.OK)
   }
 

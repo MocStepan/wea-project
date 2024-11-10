@@ -2,10 +2,10 @@ package cz.tul.backend.book.rating.service
 
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.book.entity.Book
+import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
 import cz.tul.backend.book.rating.dto.BookRatingDTO
-import cz.tul.backend.book.rating.entity.BookRating
-import cz.tul.backend.book.repository.BookRatingRepository
+import cz.tul.backend.book.rating.repository.BookRatingRepository
 import cz.tul.backend.book.repository.BookRepository
 import cz.tul.backend.utils.createAuthUser
 import cz.tul.backend.utils.createBook

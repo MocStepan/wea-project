@@ -3,10 +3,10 @@ package cz.tul.backend.book.rating.service
 import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.book.entity.Book
+import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
 import cz.tul.backend.book.rating.dto.BookRatingDTO
-import cz.tul.backend.book.rating.entity.BookRating
-import cz.tul.backend.book.repository.BookRatingRepository
+import cz.tul.backend.book.rating.repository.BookRatingRepository
 import cz.tul.backend.book.repository.BookRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.repository.findByIdOrNull

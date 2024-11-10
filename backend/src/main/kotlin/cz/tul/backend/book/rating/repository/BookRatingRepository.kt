@@ -1,6 +1,6 @@
-package cz.tul.backend.book.repository
+package cz.tul.backend.book.rating.repository
 
-import cz.tul.backend.book.rating.entity.BookRating
+import cz.tul.backend.book.entity.BookRating
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface BookRatingRepository : JpaRepository<BookRating, Long> {

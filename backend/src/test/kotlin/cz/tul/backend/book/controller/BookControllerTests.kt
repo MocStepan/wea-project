@@ -30,10 +30,13 @@ class BookControllerTests : FeatureSpec({
 
       val filterDTO = BookFilterDTO()
       val pageResponseDTO = createPageResponseDTO(emptyList<BookTableDTO>())
+      val claims = createUserClaims()
+      val authentication = mockk<Authentication>()
 
-      every { spec.bookFilterService.filterBooks(filterDTO) } returns pageResponseDTO
+      every { authentication.principal } returns claims
+      every { spec.bookFilterService.filterBooks(filterDTO, false, claims) } returns pageResponseDTO
 
-      val response = spec.bookController.filterBooks(filterDTO)
+      val response = spec.bookController.filterBooks(filterDTO, false, authentication)
 
       response.statusCode shouldBe HttpStatus.OK
       response.body shouldBe pageResponseDTO
