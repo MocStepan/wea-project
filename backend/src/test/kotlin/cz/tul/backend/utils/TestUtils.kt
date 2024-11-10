@@ -15,6 +15,7 @@ import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.BookComment
+import cz.tul.backend.book.rating.entity.BookRating
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
@@ -183,6 +184,20 @@ fun createBookComment(
   return BookComment(
     id = id,
     comment = comment,
+    book = book,
+    authUser = authUser
+  )
+}
+
+fun createBookRating(
+  id: Long = 0L,
+  rating: Double = 4.5,
+  book: Book = mockk(),
+  authUser: AuthUser = mockk()
+): BookRating {
+  return BookRating(
+    id = id,
+    rating = rating,
     book = book,
     authUser = authUser
   )

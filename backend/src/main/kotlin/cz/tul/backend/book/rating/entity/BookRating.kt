@@ -1,6 +1,7 @@
-package cz.tul.backend.book.entity
+package cz.tul.backend.book.rating.entity
 
 import cz.tul.backend.auth.entity.AuthUser
+import cz.tul.backend.book.entity.Book
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType

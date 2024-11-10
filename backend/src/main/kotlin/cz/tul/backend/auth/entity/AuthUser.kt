@@ -5,7 +5,7 @@ import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.valueobject.Hashed
 import cz.tul.backend.book.entity.BookComment
-import cz.tul.backend.book.entity.BookRating
+import cz.tul.backend.book.rating.entity.BookRating
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
