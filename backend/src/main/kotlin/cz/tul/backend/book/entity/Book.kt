@@ -27,8 +27,10 @@ class Book(
   var publishedYear: Int? = null,
   var averageRating: Double? = null,
   var numPages: Int? = null,
-  val ratingsCount: Int? = null,
-  var disabled: Boolean = false
+  var ratingsCount: Int? = null,
+  var disabled: Boolean = false,
+  @OneToMany(mappedBy = "book", orphanRemoval = true)
+  val bookRatings: Set<BookRating> = mutableSetOf()
 ) {
 
   companion object {
@@ -54,8 +56,12 @@ class Book(
     thumbnail = importDTO.thumbnail
     description = importDTO.description
     publishedYear = importDTO.publishedYear
-    averageRating = importDTO.averageRating
     numPages = importDTO.numPages
     disabled = false
+  }
+
+  fun updateRating(rating: Double, count: Int) {
+    averageRating = rating
+    ratingsCount = count
   }
 }
