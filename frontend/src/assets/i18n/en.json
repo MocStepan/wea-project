@@ -15,8 +15,15 @@
   "auth": {
     "loginSuccess": "You have successfully logged in",
     "loginError": "Wrong password or email",
-    "formError": "The form contains invalid information"
+    "formError": "The form contains invalid information",
+    "getBookDetailError": "Failed to load book detail"
   },
+  "POST_COMMENT_ERROR": "Failed to post comment",
+  "COMMENT_POSTED": "Comment posted",
+  "RATING_DELETED": "Rating deleted",
+  "RATING_DELETED_ERROR": "Failed to delete rating",
+  "RATING_POSTED": "Rating posted",
+  "RATING_POSTED_ERROR": "Failed to post rating",
   "FIRST_NAME": "First name",
   "ENTER_FIRST_NAME": "Enter first name...",
   "FIRST_NAME_ERROR": "First name is required",
@@ -47,5 +54,7 @@
   "PUBLISHED_YEAR": "Published Year",
   "PAGES": "Pages",
   "AVERAGE_RATING": "Average Rating",
-  "DESCRIPTION": "Description"
+  "DESCRIPTION": "Description",
+  "SUBMIT_RATING": "Submit Rating",
+  "DELETE_RATING": "Delete Rating"
 }

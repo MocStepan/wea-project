@@ -9,6 +9,8 @@ import {BookCommentCreateModel} from '../detail/model/book-comment-create.model'
 import {BookDetailModel} from '../detail/model/book-detail.model'
 import {BookFilterModel} from '../list/model/book-filter.model'
 import {BookTableModel} from '../list/model/book-table.model'
+import {BookRatingCreateModel} from '../detail/model/book-rating-create.model'
+import {BookRatingModel} from '../detail/model/book-rating.model'
 
 /**
  * Service to handle book operations such as filtering books, retrieving book categories, and authors.
@@ -70,5 +72,39 @@ export class BookService {
    */
   createComment(bookId: number, comment: BookCommentCreateModel): Observable<boolean> {
     return this.httpService.post(`${BASE_API_URL}book/${bookId}/comment`, comment)
+  }
+
+  /**
+   * Retrieves the comments for a book based on the provided book ID.
+   * @param bookId
+   * @param rating
+   */
+  createRating(bookId: number, rating: BookRatingCreateModel): Observable<boolean> {
+    return this.httpService.post(`${BASE_API_URL}book/${bookId}/rating`, rating)
+  }
+
+  /**
+   * Updates the rating for the book.
+   * @param bookId
+   * @param bookRatingCreateModel
+   */
+  updateRating(bookId: number, bookRatingCreateModel: BookRatingCreateModel): Observable<boolean> {
+    return this.httpService.put(`${BASE_API_URL}book/${bookId}/rating`, bookRatingCreateModel)
+  }
+
+  /**
+   * Fetches the rating for the book.
+   * @param bookId
+   */
+  getRating(bookId: number): Observable<BookRatingModel>  {
+    return this.httpService.get(`${BASE_API_URL}book/${bookId}/rating`)
+  }
+
+  /**
+   * Deletes the rating for the book.
+   * @param bookId
+   */
+  deleteRating(bookId: number) {
+    return this.httpService.delete(`${BASE_API_URL}book/${bookId}/rating`)
   }
 }
