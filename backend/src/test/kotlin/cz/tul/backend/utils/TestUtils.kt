@@ -164,6 +164,16 @@ fun createUserClaims(
   )
 }
 
+fun createUserClaims(
+  authUser: AuthUser
+): AuthJwtClaims {
+  return AccessTokenClaims(
+    authUserId = authUser.id,
+    authRole = authUser.role,
+    email = authUser.email.value
+  )
+}
+
 fun createBookComment(
   id: Long = 0L,
   comment: String = "Great book!",
