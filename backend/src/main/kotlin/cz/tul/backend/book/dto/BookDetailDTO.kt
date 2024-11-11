@@ -19,7 +19,8 @@ data class BookDetailDTO(
   val numPages: Int?,
   val ratingsCount: Int?,
   val bookComments: List<BookCommentDetailDTO>,
-  val disabled: Boolean
+  val disabled: Boolean,
+  val favorite: Boolean
 ) {
 
   companion object {
@@ -27,7 +28,8 @@ data class BookDetailDTO(
       book: Book,
       categories: Set<BookCategory>,
       authors: Set<BookAuthor>,
-      comments: Set<BookComment>
+      comments: Set<BookComment>,
+      favorite: Boolean
     ): BookDetailDTO {
       return BookDetailDTO(
         isbn13 = book.isbn13,
@@ -43,7 +45,8 @@ data class BookDetailDTO(
         numPages = book.numPages,
         ratingsCount = book.ratingsCount,
         bookComments = comments.map { BookCommentDetailDTO.from(it) },
-        disabled = book.disabled
+        disabled = book.disabled,
+        favorite = favorite
       )
     }
   }

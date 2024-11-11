@@ -1,0 +1,53 @@
+.book-list-item {
+  width: 100%;
+  height: 500px;
+  padding: 1rem;
+  color: white;
+  background-color: rgb(34, 34, 34);
+  border-radius: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.book-list-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.book-thumbnail {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.book-list-item-text {
+  padding: 1rem 0;
+}
+
+.book-list-view {
+  margin: 0 2rem;
+}
+
+.flex-row {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.paginator-body {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.book-list-item .header {
+  margin-bottom: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}

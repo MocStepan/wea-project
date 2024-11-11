@@ -90,8 +90,12 @@ class BookController(
     ApiResponse(responseCode = "404", description = "Book with given id not found")
   )
   @GetMapping("/v1/book/{id}")
-  fun getBookDetail(@PathVariable id: Long): ResponseEntity<BookDetailDTO?> {
-    val bookDetail = bookService.getBookDetail(id)
+  fun getBookDetail(
+    @PathVariable id: Long,
+    authentication: Authentication?
+  ): ResponseEntity<BookDetailDTO?> {
+    val claims = authentication?.principal as AuthJwtClaims?
+    val bookDetail = bookService.getBookDetail(id, claims)
     val status = if (bookDetail == null) HttpStatus.NOT_FOUND else HttpStatus.OK
     return ResponseEntity(bookDetail, status)
   }

@@ -10,7 +10,8 @@
           <mat-card-title>{{book.title}}</mat-card-title>
           <mat-card-subtitle>{{book.authors.join(", ")}}</mat-card-subtitle>
         </mat-card-header>
-        <img [src]="book.thumbnail" alt="{{book.title}}" class="book-thumbnail" mat-card-image>
+        <img [src]="book.thumbnail || 'assets/img/empty.avif'" alt="{{book.title}}" class="book-thumbnail"
+             mat-card-image>
         <mat-card-content class="book-list-item-text">
           <p>{{book.description}}</p>
         </mat-card-content>

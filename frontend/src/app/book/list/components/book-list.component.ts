@@ -19,7 +19,7 @@ import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
 import {MatPaginator, PageEvent} from '@angular/material/paginator'
 import {MatSelect} from '@angular/material/select'
-import {Router} from '@angular/router'
+import {ActivatedRoute, Router} from '@angular/router'
 import {TranslateModule} from '@ngx-translate/core'
 import {combineLatestWith} from 'rxjs'
 
@@ -73,21 +73,25 @@ const CONFIG_NAME = 'book-list'
   ],
   providers: [],
   templateUrl: './book-list.component.html',
-  styleUrls: ['../../style/book.component.css']
+  styleUrls: ['./book-list.component.css']
 })
 export class BookListComponent implements OnInit {
   protected books: WritableSignal<PageResponseModel<BookTableModel> | null> = signal(null)
   protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter(CONFIG_NAME)
   protected columns: WritableSignal<ColumnDefModel[]> = signal([])
-  private router: Router = inject(Router)
+  private favorite = false
 
-  // Injects bookService instead of using constructor injection.
+  // Injected services instead of using the constructor
+  private router: Router = inject(Router)
   private bookService: BookService = inject(BookService)
+  private route: ActivatedRoute = inject(ActivatedRoute)
 
   /**
    * Initializes the component by fetching authors and categories options and setting up the column definitions.
    */
   ngOnInit(): void {
+    this.favorite = this.route.snapshot.data['favorite']
+
     this.bookService.getBookAuthorsOptionViews().pipe(
       combineLatestWith(this.bookService.getBookCategoriesOptionViews())
     ).subscribe(([authors, categories]) => {
@@ -127,7 +131,7 @@ export class BookListComponent implements OnInit {
    */
   filterBooks(): void {
     sessionStorage.setItem(CONFIG_NAME, JSON.stringify(this.bookFilter))
-    this.bookService.filterBooks(this.bookFilter).subscribe((response) => {
+    this.bookService.filterBooks(this.bookFilter, this.favorite).subscribe((response) => {
       this.books.set(response)
     })
   }
