@@ -56,5 +56,13 @@
   "AVERAGE_RATING": "Average Rating",
   "DESCRIPTION": "Description",
   "SUBMIT_RATING": "Submit Rating",
-  "DELETE_RATING": "Delete Rating"
+  "DELETE_RATING": "Delete Rating",
+  "favorite": {
+    "addSuccess": "Book has been added to favorites",
+    "removeSuccess": "Book has been removed from favorites",
+    "addError": "Book has not been added to favorites",
+    "removeError": "Book has not been removed from favorites"
+  },
+  "DISABLED_BOOK": "Book is disabled so you can't add it to favorites, comment or rate it",
+  "UNKNOWN_TEXT": "Unknown"
 }

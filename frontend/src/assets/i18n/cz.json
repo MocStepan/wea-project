@@ -56,5 +56,13 @@
   "AVERAGE_RATING": "Průměrné hodnocení",
   "DESCRIPTION": "Popis",
   "SUBMIT_RATING": "Odeslat hodnocení",
-  "DELETE_RATING": "Smazat hodnocení"
+  "DELETE_RATING": "Smazat hodnocení",
+  "favorite": {
+    "addSuccess": "Kniha byla přidána do oblíbených",
+    "removeSuccess": "Kniha byla odebrána z oblíbených",
+    "addError": "Kniha nebyla přidána do oblíbených",
+    "removeError": "Kniha nebyla odebrána z oblíbených"
+  },
+  "DISABLED_BOOK": "Kniha je zakázána, takže ji nemůžete přidat do oblíbených, komentovat nebo hodnotit",
+  "UNKNOWN_TEXT": "Neznámý"
 }

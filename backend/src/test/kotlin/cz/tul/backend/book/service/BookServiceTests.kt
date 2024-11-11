@@ -5,6 +5,7 @@ import cz.tul.backend.book.dto.BookAuthorOptionView
 import cz.tul.backend.book.dto.BookCategoryOptionView
 import cz.tul.backend.book.entity.BookAuthor
 import cz.tul.backend.book.entity.BookCategory
+import cz.tul.backend.book.favorite.repository.BookFavoriteRepository
 import cz.tul.backend.book.repository.BookAuthorRepository
 import cz.tul.backend.book.repository.BookCategoryRepository
 import cz.tul.backend.book.repository.BookCommentRepository
@@ -12,6 +13,7 @@ import cz.tul.backend.book.repository.BookRepository
 import cz.tul.backend.utils.createAuthUser
 import cz.tul.backend.utils.createBook
 import cz.tul.backend.utils.createBookComment
+import cz.tul.backend.utils.createUserClaims
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -60,13 +62,15 @@ class BookServiceTests : FeatureSpec({
       val bookAuthor = BookAuthor(name = "Plato")
       val bookCategory = BookCategory(name = "Philosophy")
       val bookComment = createBookComment(authUser = authUser)
+      val claims = createUserClaims(authUser)
 
-      every { spec.bookRepository.findByIdOrNull(1L) } returns book
-      every { spec.bookCategoryRepository.findByBookCategoryLink_Book_Id(1L) } returns setOf(bookCategory)
-      every { spec.bookAuthorRepository.findByBookAuthorLink_Book_Id(1L) } returns setOf(bookAuthor)
-      every { spec.bookCommentRepository.findByBook_Id(1L) } returns setOf(bookComment)
+      every { spec.bookRepository.findByIdOrNull(0L) } returns book
+      every { spec.bookCategoryRepository.findByBookCategoryLink_Book_Id(0L) } returns setOf(bookCategory)
+      every { spec.bookAuthorRepository.findByBookAuthorLink_Book_Id(0L) } returns setOf(bookAuthor)
+      every { spec.bookCommentRepository.findByBook_Id(0L) } returns setOf(bookComment)
+      every { spec.bookFavoriteRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
 
-      val result = spec.bookService.getBookDetail(1L)!!
+      val result = spec.bookService.getBookDetail(0L, claims)!!
 
       result.isbn13 shouldBe book.isbn13
       result.isbn10 shouldBe book.isbn10
@@ -85,6 +89,8 @@ class BookServiceTests : FeatureSpec({
       result.bookComments.size shouldBe 1
       result.bookComments[0].comment shouldBe "Great book!"
       result.bookComments[0].user shouldBe authUser.getAuthUserFullName()
+      result.disabled shouldBe book.disabled
+      result.favorite shouldBe false
     }
 
     scenario("book not found") {
@@ -92,7 +98,7 @@ class BookServiceTests : FeatureSpec({
 
       every { spec.bookRepository.findByIdOrNull(1L) } returns null
 
-      val result = spec.bookService.getBookDetail(1L)
+      val result = spec.bookService.getBookDetail(1L, null)
 
       result shouldBe null
     }
@@ -103,15 +109,17 @@ private class BookServiceSpecWrapper(
   val bookRepository: BookRepository,
   val bookCommentRepository: BookCommentRepository,
   val bookCategoryRepository: BookCategoryRepository,
-  val bookAuthorRepository: BookAuthorRepository
+  val bookAuthorRepository: BookAuthorRepository,
+  val bookFavoriteRepository: BookFavoriteRepository
 ) {
 
   val bookService: BookService = BookService(
     bookRepository,
     bookCommentRepository,
     bookCategoryRepository,
-    bookAuthorRepository
+    bookAuthorRepository,
+    bookFavoriteRepository
   )
 }
 
-private fun getSpec() = BookServiceSpecWrapper(mockk(), mockk(), mockk(), mockk())
+private fun getSpec() = BookServiceSpecWrapper(mockk(), mockk(), mockk(), mockk(), mockk())

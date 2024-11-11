@@ -5,7 +5,7 @@
     </li>
   </a>
 
-  <a [routerLink]="'/favorite'">
+  <a *ngIf="isUserSignedIn()" [routerLink]="'/favorite'">
     <li [class.selected]="isSelected('/favorite')" class="page-body-text">
       <span>{{'FAVORITE' | translate}}</span>
     </li>

@@ -92,10 +92,13 @@ class BookControllerTests : FeatureSpec({
       val spec = getSpec()
 
       val bookDetailDTO = mockk<BookDetailDTO>()
+      val claims = createUserClaims()
+      val authentication = mockk<Authentication>()
 
-      every { spec.bookService.getBookDetail(1L) } returns bookDetailDTO
+      every { authentication.principal } returns claims
+      every { spec.bookService.getBookDetail(1L, claims) } returns bookDetailDTO
 
-      val response = spec.bookController.getBookDetail(1L)
+      val response = spec.bookController.getBookDetail(1L, authentication)
 
       response.statusCode shouldBe HttpStatus.OK
       response.body shouldBe bookDetailDTO
@@ -104,9 +107,13 @@ class BookControllerTests : FeatureSpec({
     scenario("book not found") {
       val spec = getSpec()
 
-      every { spec.bookService.getBookDetail(1L) } returns null
+      val claims = createUserClaims()
+      val authentication = mockk<Authentication>()
 
-      val response = spec.bookController.getBookDetail(1L)
+      every { authentication.principal } returns claims
+      every { spec.bookService.getBookDetail(1L, claims) } returns null
+
+      val response = spec.bookController.getBookDetail(1L, authentication)
 
       response.statusCode shouldBe HttpStatus.NOT_FOUND
       response.body shouldBe null

@@ -1,23 +1,26 @@
 import {CommonModule, NgOptimizedImage} from '@angular/common'
-import {Component, EventEmitter, inject, Input, OnInit, Output, signal, WritableSignal} from '@angular/core'
+import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import {MatIconButton} from '@angular/material/button'
 import {MatCard} from '@angular/material/card'
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field'
+import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
+import {MatTooltip} from '@angular/material/tooltip'
 import {ActivatedRoute} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import moment from 'moment'
-import { RatingModule } from 'primeng/rating';
+import {RatingModule} from 'primeng/rating'
+
 import {AuthService} from '../../../auth/service/auth.service'
 import {NotificationService} from '../../../shared/notification/notification.service'
+import {Nullable} from '../../../shared/utils/shared-types'
 import {BookService} from '../../service/book.service'
+import {BookFavoriteService} from '../../service/book-favorite.service'
+import {BookRatingService} from '../../service/book-rating.service'
 import {BookCommentCreateModel} from '../model/book-comment-create.model'
-import { BookRatingCreateModel } from '../model/book-rating-create.model';
 import {BookDetailModel} from '../model/book-detail.model'
-import {MatIcon} from '@angular/material/icon'
-import {MatTooltip} from '@angular/material/tooltip'
-import {MatIconButton} from '@angular/material/button'
-import {error} from '@angular/compiler-cli/src/transformers/util'
+import {BookRatingCreateModel} from '../model/book-rating-create.model'
 
 /**
  * Component for the book detail.
@@ -28,22 +31,26 @@ import {error} from '@angular/compiler-cli/src/transformers/util'
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatLabel, MatFormField, MatCard, NgOptimizedImage, TranslateModule, MatInput, RatingModule, MatIcon, MatTooltip, MatIconButton, MatError],
   providers: [],
   templateUrl: './book-detail.component.html',
-  styleUrls: ['../../style/book.component.css']
+  styleUrls: ['./book-detail.component.css']
 })
-export class BookDetailComponent implements OnInit  {
-  book: WritableSignal<BookDetailModel | null> = signal(null)
+export class BookDetailComponent implements OnInit {
+  book: WritableSignal<Nullable<BookDetailModel>> = signal(null)
   commentInput: WritableSignal<string> = signal('')
   ratingInput: WritableSignal<number> = signal(0)
-  private bookId: number | null = null
-  protected readonly moment = moment
+  isBookFavorite: WritableSignal<boolean> = signal(false)
 
+  protected readonly moment = moment
+  private bookId: Nullable<number> = null
   private ratingExists = false
-  private bookService: BookService = inject(BookService)
-  private authService: AuthService = inject(AuthService)
+
+  // Injects bookService instead of using constructor injection.
   private route = inject(ActivatedRoute)
-  private translate: TranslateService = inject(TranslateService)
+  private authService = inject(AuthService)
+  private bookService: BookService = inject(BookService)
+  private translateService = inject(TranslateService)
+  private bookRatingService = inject(BookRatingService)
   private notificationService = inject(NotificationService)
-  ratingArr: number[] = [];
+  private bookFavoriteService = inject(BookFavoriteService)
 
   /**
    * Initializes the component. Fetches the book detail based on the book id.
@@ -54,46 +61,108 @@ export class BookDetailComponent implements OnInit  {
       if (bookId) {
         this.bookId = bookId
         this.getBookDetail()
-        this.onBookGetRating()
+
+        if (this.isSignedIn()) {
+          this.getUserBookRating()
+        }
       }
     })
-    for (let index = 0; index < 5; index++) {
-      this.ratingArr.push(index);
-    }
-  }
-
-  /**
-   * Handles the click event for the rating.
-   * @param rating
-   */
-  onBookOnClick(rating: number) {
-    this.ratingInput.set(rating)
-    return false;
   }
 
   /**
    * Shows the icon based on the rating.
    * @param index
    */
-  onBookShowIcon(index: number) {
+  showBookIcons(index: number) {
     if (this.ratingInput() >= index + 1) {
-      return 'star';
+      return 'star'
     } else {
-      return 'star_border';
+      return 'star_border'
     }
   }
 
   /**
-   * Fetches the rating for the book.
-   * Sets the rating input and updates the rating existence flag.
+   * Checks if the user is signed in.
    *
-   * @private
+   * @returns {boolean} True if the user is signed in, false otherwise.
    */
-  private onBookGetRating(): void {
-    this.bookService.getRating(this.bookId!).subscribe((response) => {
-      this.ratingInput.set(response.rating ?? 0)
-      this.ratingExists = response.rating !== null
+  isSignedIn() {
+    return this.authService.isSignedIn()
+  }
+
+  /**
+   * Submits a comment for the book.
+   */
+  submitComment() {
+    if (this.book()?.disabled) {
+      this.translateService.get('DISABLED_BOOK').subscribe((res: string) => {
+        this.notificationService.errorNotification(res)
+      })
+      return
+    }
+
+    this.bookService.createComment(this.bookId!, new BookCommentCreateModel(this.commentInput())).subscribe({
+      next: () => {
+        this.translateService.get('COMMENT_POSTED').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
+        })
+        this.getBookDetail()
+      },
+      error: () => {
+        this.translateService.get('POST_COMMENT_ERROR').subscribe((res: string) => {
+          this.notificationService.errorNotification(res)
+        })
+      }
     })
+  }
+
+  /**
+   * Deletes the rating for the book.
+   */
+  deleteBookRating() {
+    this.bookRatingService.deleteRating(this.bookId!).subscribe({
+      next: () => {
+        this.translateService.get('RATING_DELETED').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
+        })
+        this.ratingInput.set(0)
+        this.ratingExists = false
+        this.getBookDetail()
+      },
+      error: () => {
+        this.translateService.get('RATING_DELETED_ERROR').subscribe((res: string) => {
+          this.notificationService.errorNotification(res)
+        })
+      }
+    })
+  }
+
+  /**
+   * Submits the rating for the book.
+   *
+   * If the rating exists, it will update the existing rating.
+   * If the rating does not exist, it will create a new rating.
+   */
+  onSubmitBookRating(): void {
+    if (!this.ratingExists) {
+      this.createNewBookRating()
+    } else {
+      this.updateExistingBookRating()
+    }
+  }
+
+  /**
+   * Toggles the favorite status of the book.
+   *
+   * If the book is already marked as favorite, it will be removed from favorites.
+   * If the book is not marked as favorite, it will be added to favorites.
+   */
+  onSubmitBookFavorite(): void {
+    if (this.isBookFavorite()) {
+      this.deleteBookFromFavorite()
+    } else {
+      this.addBookToFavorite()
+    }
   }
 
   /**
@@ -107,9 +176,10 @@ export class BookDetailComponent implements OnInit  {
     this.bookService.getBookDetail(this.bookId!).subscribe({
       next: (response) => {
         this.book.set(response)
+        this.isBookFavorite.set(response.favorite)
       },
       error: () => {
-        this.translate.get('auth.Error').subscribe((res: string) => {
+        this.translateService.get('auth.Error').subscribe((res: string) => {
           this.notificationService.errorNotification(res)
         })
       }
@@ -117,28 +187,35 @@ export class BookDetailComponent implements OnInit  {
   }
 
   /**
-   * Checks if the user is signed in.
+   * Fetches the rating for the book.
+   * Sets the rating input and updates the rating existence flag.
    *
-   * @returns {boolean} True if the user is signed in, false otherwise.
+   * @private
    */
-  isSignedIn() {
-    return this.authService.isSignedIn()
+  private getUserBookRating(): void {
+    this.bookRatingService.getRating(this.bookId!).subscribe((response) => {
+      this.ratingInput.set(response?.rating ?? 0)
+      this.ratingExists = response?.rating !== null
+    })
   }
 
-
   /**
-   * Submits a comment for the book.
+   * Creates a new rating for the book.
+   *
+   * @see BookService.createRating
+   * @private
    */
-  onBookSubmitComment() {
-    this.bookService.createComment(this.bookId!, new BookCommentCreateModel(this.commentInput())).subscribe({
+  private createNewBookRating() {
+    this.bookRatingService.createRating(this.bookId!, new BookRatingCreateModel(this.ratingInput())).subscribe({
       next: () => {
-        this.translate.get('COMMENT_POSTED').subscribe((res: string) => {
-          this.notificationService.errorNotification(res)
+        this.translateService.get('RATING_POSTED').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
         })
+        this.ratingExists = true
         this.getBookDetail()
       },
       error: () => {
-        this.translate.get('POST_COMMENT_ERROR').subscribe((res: string) => {
+        this.translateService.get('RATING_POSTED_ERROR').subscribe((res: string) => {
           this.notificationService.errorNotification(res)
         })
       }
@@ -146,20 +223,21 @@ export class BookDetailComponent implements OnInit  {
   }
 
   /**
-   * Deletes the rating for the book.
+   * Updates an existing rating for the book.
+   *
+   * @see BookService.updateRating
+   * @private
    */
-  onBookDeleteRating() {
-    this.bookService.deleteRating(this.bookId!).subscribe({
+  private updateExistingBookRating() {
+    this.bookRatingService.updateRating(this.bookId!, new BookRatingCreateModel(this.ratingInput())).subscribe({
       next: () => {
-        this.translate.get('RATING_DELETED').subscribe((res: string) => {
-          this.notificationService.errorNotification(res)
+        this.translateService.get('RATING_POSTED').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
         })
-        this.ratingInput.set(0)
-        this.ratingExists = false
         this.getBookDetail()
       },
       error: () => {
-        this.translate.get('RATING_DELETED_ERROR').subscribe((res: string) => {
+        this.translateService.get('RATING_POSTED_ERROR').subscribe((res: string) => {
           this.notificationService.errorNotification(res)
         })
       }
@@ -167,47 +245,40 @@ export class BookDetailComponent implements OnInit  {
   }
 
   /**
-   * Submits a rating for the book.
-   * If the rating does not exist, it creates a new rating.
-   * If the rating exists, it updates the existing rating.
+   * Marks a book as favorite.
    */
-  onBookSubmitRating() {
-    if (!this.ratingExists) {
-      this.bookService
-        .createRating(this.bookId!, new BookRatingCreateModel(this.ratingInput()))
-        .subscribe({
-          next: () => {
-            this.translate.get('RATING_POSTED').subscribe((res: string) => {
-              this.notificationService.errorNotification(res)
-            })
-            this.ratingExists = true;
-            this.getBookDetail();
-          },
-          error: () => {
-            this.translate.get('RATING_POSTED_ERROR').subscribe((res: string) => {
-              this.notificationService.errorNotification(res)
-            })
-            this.notificationService.errorNotification('Failed to post rating');
-          },
-        });
-    } else {
-      this.bookService
-        .updateRating(this.bookId!, new BookRatingCreateModel(this.ratingInput()))
-        .subscribe({
-          next: () => {
-            this.translate.get('RATING_POSTED').subscribe((res: string) => {
-              this.notificationService.errorNotification(res)
-            })
-            this.notificationService.successNotification('Rating posted');
-            this.getBookDetail();
-          },
-          error: () => {
-            this.translate.get('RATING_POSTED_ERROR').subscribe((res: string) => {
-              this.notificationService.errorNotification(res)
-            })
-            this.notificationService.errorNotification('Failed to post rating');
-          },
-        });
-    }
+  private addBookToFavorite(): void {
+    this.bookFavoriteService.addFavorite(this.bookId!).subscribe({
+      next: () => {
+        this.translateService.get('favorite.addSuccess').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
+          this.isBookFavorite.set(true)
+        })
+      },
+      error: () => {
+        this.translateService.get('favorite.addError').subscribe((res: string) => {
+          this.notificationService.errorNotification(res)
+        })
+      }
+    })
+  }
+
+  /**
+   * Removes a book from favorites.
+   */
+  private deleteBookFromFavorite(): void {
+    this.bookFavoriteService.removeFavorite(this.bookId!).subscribe({
+      next: () => {
+        this.translateService.get('favorite.removeSuccess').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
+          this.isBookFavorite.set(false)
+        })
+      },
+      error: () => {
+        this.translateService.get('favorite.removeError').subscribe((res: string) => {
+          this.notificationService.errorNotification(res)
+        })
+      }
+    })
   }
 }
