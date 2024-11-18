@@ -32,7 +32,8 @@ class Book(
   @OneToMany(mappedBy = "book", orphanRemoval = true)
   val bookRatings: Set<BookRating> = mutableSetOf(),
   @OneToMany(mappedBy = "book", orphanRemoval = true)
-  val favorites: Set<BookFavorite> = mutableSetOf()
+  val favorites: Set<BookFavorite> = mutableSetOf(),
+  var price: Double? = null
 ) {
 
   companion object {
@@ -47,7 +48,8 @@ class Book(
         publishedYear = importDTO.publishedYear,
         averageRating = importDTO.averageRating,
         numPages = importDTO.numPages,
-        ratingsCount = importDTO.ratingsCount
+        ratingsCount = importDTO.ratingsCount,
+        price = importDTO.price
       )
     }
   }
@@ -59,6 +61,7 @@ class Book(
     description = importDTO.description
     publishedYear = importDTO.publishedYear
     numPages = importDTO.numPages
+    price = importDTO.price
     disabled = false
   }
 

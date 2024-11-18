@@ -140,7 +140,8 @@ fun createBookImportDTO(
   publishedYear: Int? = -500,
   averageRating: Double? = 4.5,
   numPages: Int? = 48,
-  ratingsCount: Int? = 3
+  ratingsCount: Int? = 3,
+  price: Double? = null
 ): BookImportDTO {
   return BookImportDTO(
     isbn13 = isbn13,
@@ -154,7 +155,8 @@ fun createBookImportDTO(
     publishedYear = publishedYear,
     averageRating = averageRating,
     numPages = numPages,
-    ratingsCount = ratingsCount
+    ratingsCount = ratingsCount,
+    price = price
   )
 }
 

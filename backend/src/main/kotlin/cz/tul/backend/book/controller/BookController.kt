@@ -10,8 +10,8 @@ import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.dto.BookTableDTO
 import cz.tul.backend.book.service.BookCommentService
 import cz.tul.backend.book.service.BookFilterService
-import cz.tul.backend.book.service.BookImportService
 import cz.tul.backend.book.service.BookService
+import cz.tul.backend.book.service.synchronization.BookStockSynchronizationService
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -34,8 +34,8 @@ import org.springframework.web.bind.annotation.RestController
 class BookController(
   private val bookFilterService: BookFilterService,
   private val bookService: BookService,
-  private val bookImportService: BookImportService,
-  private val bookCommentService: BookCommentService
+  private val bookCommentService: BookCommentService,
+  private val bookStockSynchronizationService: BookStockSynchronizationService
 ) {
 
   @Operation(summary = "Filter books", description = "Endpoint to filter books based on various criteria")
@@ -57,7 +57,7 @@ class BookController(
   fun importBooks(
     @RequestBody importDTOs: List<BookImportDTO>
   ): ResponseEntity<Any> {
-    bookImportService.saveImportedBooks(importDTOs)
+    bookStockSynchronizationService.synchronizeBooks(importDTOs)
     return ResponseEntity.ok().build()
   }
 
