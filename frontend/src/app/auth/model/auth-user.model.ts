@@ -1,4 +1,4 @@
-export interface UserModel{
+export interface AuthUserModel {
   firstName: string,
   lastName: string
 }

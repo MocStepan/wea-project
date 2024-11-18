@@ -4,8 +4,9 @@ import {Observable, tap} from 'rxjs'
 
 import {BASE_API_URL} from '../../../config'
 import {HttpService} from '../../shared/http/service/http.service'
-import {SignInModel} from '../model/sign-in.model'
-import {SignUpModel} from '../model/sign-up.model'
+import {AuthUserModel} from '../model/auth-user.model'
+import {SignInModel} from '../sign-in/model/sign-in.model'
+import {SignUpModel} from '../sing-up/model/sign-up.model'
 
 /**
  * Service to handle user authentication operations such as sign-in, sign-up, and sign-out.
@@ -25,7 +26,7 @@ export class AuthService {
    * @see SignInModel
    */
   signIn(signInModel: SignInModel): Observable<HttpResponse<void>> {
-    return this.httpService.post<HttpResponse<void>>(this.rootHttpUrl + 'login', signInModel).pipe(tap(() => {
+    return this.httpService.post<HttpResponse<void>>(`${this.rootHttpUrl}login`, signInModel).pipe(tap(() => {
       this.setSignedIn()
     }))
   }
@@ -38,7 +39,7 @@ export class AuthService {
    * @see SignUpModel
    */
   signUp(signUpModel: SignUpModel): Observable<boolean> {
-    return this.httpService.post(this.rootHttpUrl + 'registration', signUpModel)
+    return this.httpService.post(`${this.rootHttpUrl}registration`, signUpModel)
   }
 
 
@@ -47,10 +48,19 @@ export class AuthService {
    * Removes the 'auth' session key and reloads the page to reset the application state.
    */
   signOut() {
-    return this.httpService.post(this.rootHttpUrl + 'logout', null).subscribe(() => {
+    this.httpService.post(`${this.rootHttpUrl}logout`, null).subscribe(() => {
       sessionStorage.removeItem('auth')
-      window.location.reload()
     })
+  }
+
+  /**
+   * Method to get the authenticated user's data, sends a GET request to the user endpoint.
+   *
+   * @returns An observable of the authenticated user's data.
+   * @see AuthUserModel
+   */
+  getAuthUser(): Observable<AuthUserModel> {
+    return this.httpService.get(`${this.rootHttpUrl}user`)
   }
 
   /**
