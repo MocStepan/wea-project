@@ -9,8 +9,8 @@ import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.dto.BookTableDTO
 import cz.tul.backend.book.service.BookCommentService
 import cz.tul.backend.book.service.BookFilterService
-import cz.tul.backend.book.service.BookImportService
 import cz.tul.backend.book.service.BookService
+import cz.tul.backend.book.service.synchronization.BookStockSynchronizationService
 import cz.tul.backend.utils.createPageResponseDTO
 import cz.tul.backend.utils.createUserClaims
 import io.kotest.core.spec.style.FeatureSpec
@@ -49,7 +49,7 @@ class BookControllerTests : FeatureSpec({
 
       val importDTOs = emptyList<BookImportDTO>()
 
-      every { spec.bookImportService.saveImportedBooks(importDTOs) } just runs
+      every { spec.bookStockSynchronizationService.synchronizeBooks(importDTOs) } just runs
 
       val response = spec.bookController.importBooks(importDTOs)
 
@@ -158,15 +158,15 @@ class BookControllerTests : FeatureSpec({
 private class BookControllerSpecWrapper(
   val bookFilterService: BookFilterService,
   val bookService: BookService,
-  val bookImportService: BookImportService,
-  val bookCommentService: BookCommentService
+  val bookCommentService: BookCommentService,
+  val bookStockSynchronizationService: BookStockSynchronizationService
 ) {
 
   val bookController: BookController = BookController(
     bookFilterService,
     bookService,
-    bookImportService,
-    bookCommentService
+    bookCommentService,
+    bookStockSynchronizationService
   )
 }
 

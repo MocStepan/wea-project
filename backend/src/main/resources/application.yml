@@ -47,5 +47,3 @@ synchronization:
   book:
     import:
       chunkSize: 20
-      cron: "0 */30 * * * *"
-      enabled: false
