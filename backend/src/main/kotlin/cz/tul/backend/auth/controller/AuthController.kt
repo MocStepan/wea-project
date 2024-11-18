@@ -1,5 +1,6 @@
 package cz.tul.backend.auth.controller
 
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.dto.AuthLoginDTO
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.service.AuthCookieService
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -48,8 +50,13 @@ class AuthController(
   @Operation(summary = "User logout", description = "Endpoint for logging out a user")
   @ApiResponse(responseCode = "200", description = "Logout successful")
   @PostMapping("/v1/auth/logout")
-  fun logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<Any> {
-    authCookieService.clearCookies(request, response)
+  fun logout(
+    request: HttpServletRequest,
+    response: HttpServletResponse,
+    authentication: Authentication
+  ): ResponseEntity<Any> {
+    val principal = authentication.principal as AuthJwtClaims
+    authPasswordService.logout(request, response, principal)
     return ResponseEntity(HttpStatus.OK)
   }
 

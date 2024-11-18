@@ -1,6 +1,6 @@
 package cz.tul.backend.book.service
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.entity.AuthUser_
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.book.entity.BookFavorite_

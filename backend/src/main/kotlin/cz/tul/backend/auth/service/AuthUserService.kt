@@ -1,7 +1,8 @@
 package cz.tul.backend.auth.service
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.dto.AuthUserDTO
+import cz.tul.backend.auth.entity.AuthUser
 import cz.tul.backend.auth.repository.AuthUserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.repository.findByIdOrNull
@@ -34,4 +35,6 @@ class AuthUserService(
 
     return AuthUserDTO.from(authUser)
   }
+
+  fun getReferenceIfExists(authUserId: Long): AuthUser? = authUserRepository.findByIdOrNull(authUserId)
 }

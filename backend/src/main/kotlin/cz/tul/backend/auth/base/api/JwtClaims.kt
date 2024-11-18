@@ -1,4 +1,4 @@
-package cz.tul.backend.auth.base.dto
+package cz.tul.backend.auth.base.api
 
 import java.util.Date
 import kotlin.time.Duration

@@ -1,8 +1,8 @@
 package cz.tul.backend.auth.base.config
 
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.base.cookie.access.AccessTokenJwtService
 import cz.tul.backend.auth.base.cookie.utils.getCookieValue
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

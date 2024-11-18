@@ -1,7 +1,7 @@
 package cz.tul.backend.book.integration
 
 import cz.tul.backend.IntegrationTestApplication
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.book.dto.BookFilterDTO
 import cz.tul.backend.book.entity.Book

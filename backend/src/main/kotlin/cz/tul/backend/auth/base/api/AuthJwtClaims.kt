@@ -1,4 +1,4 @@
-package cz.tul.backend.auth.base.dto
+package cz.tul.backend.auth.base.api
 
 import cz.tul.backend.auth.base.valueobject.AuthRole
 import org.springframework.security.core.AuthenticatedPrincipal

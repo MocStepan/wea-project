@@ -1,6 +1,6 @@
 package cz.tul.backend.personinfo.service
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.personinfo.dto.PersonInfoAddressDTO
 import cz.tul.backend.personinfo.dto.PersonInfoDTO

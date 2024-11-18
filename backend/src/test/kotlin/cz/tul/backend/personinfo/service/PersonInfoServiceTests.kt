@@ -9,6 +9,7 @@ import cz.tul.backend.personinfo.valueobject.AddressType
 import cz.tul.backend.personinfo.valueobject.Gender
 import cz.tul.backend.utils.createAuthUser
 import cz.tul.backend.utils.createPersonInfo
+import cz.tul.backend.utils.createPersonInfoAddress
 import cz.tul.backend.utils.createUserClaims
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
@@ -85,13 +86,16 @@ class PersonInfoServiceTests : FeatureSpec({
       val spec = getSpec()
 
       val authUser = createAuthUser()
+      val personalAddress = createPersonInfoAddress(addressType = AddressType.PERSONAL)
+      val billingAddress = createPersonInfoAddress(addressType = AddressType.BILLING)
       val personInfo = createPersonInfo(
         authUser = authUser,
         gender = Gender.MALE,
         birthDate = LocalDate.now(),
         favoriteCategory = "Fantasy",
         referenceSource = "Friend",
-        processingConsent = true
+        processingConsent = true,
+        personInfoAddresses = setOf(personalAddress, billingAddress)
       )
       val claims = createUserClaims(authUser)
 
@@ -104,6 +108,20 @@ class PersonInfoServiceTests : FeatureSpec({
       response.favoriteCategory shouldBe personInfo.favoriteCategory
       response.referenceSource shouldBe personInfo.referenceSource
       response.processingConsent shouldBe personInfo.processingConsent
+
+      val address1 = response.personalAddress!!
+      address1.country shouldBe personalAddress.country
+      address1.city shouldBe personalAddress.city
+      address1.street shouldBe personalAddress.street
+      address1.houseNumber shouldBe personalAddress.houseNumber
+      address1.zipCode shouldBe personalAddress.zipCode
+
+      val address2 = response.billingAddress!!
+      address2.country shouldBe billingAddress.country
+      address2.city shouldBe billingAddress.city
+      address2.street shouldBe billingAddress.street
+      address2.houseNumber shouldBe billingAddress.houseNumber
+      address2.zipCode shouldBe billingAddress.zipCode
     }
 
     scenario("person info not found") {

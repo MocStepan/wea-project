@@ -1,6 +1,6 @@
 package cz.tul.backend.auth.controller
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.dto.AuthUserDTO
 import cz.tul.backend.auth.service.AuthUserService
 import io.swagger.v3.oas.annotations.Operation

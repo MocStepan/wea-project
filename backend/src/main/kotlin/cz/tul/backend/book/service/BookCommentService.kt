@@ -1,7 +1,7 @@
 package cz.tul.backend.book.service
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.base.api.AuthJwtClaims
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.book.dto.BookCommentCreateDTO
 import cz.tul.backend.book.entity.BookComment
 import cz.tul.backend.book.repository.BookCommentRepository
@@ -18,7 +18,7 @@ private val log = KotlinLogging.logger {}
 class BookCommentService(
   private val bookCommentRepository: BookCommentRepository,
   private val bookRepository: BookRepository,
-  private val authUserRepository: AuthUserRepository
+  private val authUserService: AuthUserService
 ) {
 
   /**
@@ -36,7 +36,7 @@ class BookCommentService(
       return false
     }
 
-    val authUser = authUserRepository.findByIdOrNull(claims.authUserId)
+    val authUser = authUserService.getReferenceIfExists(claims.authUserId)
     if (authUser == null) {
       log.warn { "AuthUser with id ${claims.authUserId} not found" }
       return false

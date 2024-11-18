@@ -1,5 +1,8 @@
 package cz.tul.backend.auth.service
 
+import cz.tul.backend.audit.service.BookStockAuditService
+import cz.tul.backend.audit.valueobject.AuditType
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.dto.AuthLoginDTO
 import cz.tul.backend.auth.dto.AuthRegisterDTO
 import cz.tul.backend.auth.entity.AuthUser
@@ -7,6 +10,7 @@ import cz.tul.backend.auth.repository.AuthUserRepository
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
 import cz.tul.backend.common.serviceresult.ServiceResult
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,7 +25,8 @@ private val log = KotlinLogging.logger { }
 class AuthPasswordService(
   private val authUserRepository: AuthUserRepository,
   private val authPasswordEncoder: AuthPasswordEncoder,
-  private val authCookieService: AuthCookieService
+  private val authCookieService: AuthCookieService,
+  private val bookStockAuditService: BookStockAuditService
 ) {
 
   /**
@@ -48,6 +53,7 @@ class AuthPasswordService(
       return false
     }
 
+    bookStockAuditService.saveAuditLog(AuditType.SIGN_IN, authUser.email.value)
     authCookieService.setAccessCookie(authUser, response, loginDTO.rememberMe)
     return true
   }
@@ -70,9 +76,16 @@ class AuthPasswordService(
     }
 
     val hashedPassword = authPasswordEncoder.encode(authRegisterDTO.password)
-    AuthUser.from(authRegisterDTO, hashedPassword).let {
+    val authUser = AuthUser.from(authRegisterDTO, hashedPassword).let {
       authUserRepository.save(it)
     }
+
+    bookStockAuditService.saveAuditLog(AuditType.SIGN_UP, authUser.email.value)
     return ServiceResult.Success(true)
+  }
+
+  fun logout(request: HttpServletRequest, response: HttpServletResponse, claims: AuthJwtClaims) {
+    bookStockAuditService.saveAuditLog(AuditType.SIGN_OUT, claims)
+    authCookieService.clearCookies(request, response)
   }
 }
