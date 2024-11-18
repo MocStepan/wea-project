@@ -18,6 +18,8 @@ import cz.tul.backend.book.entity.BookComment
 import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
+import cz.tul.backend.personinfo.entity.PersonInfo
+import cz.tul.backend.personinfo.valueobject.Gender
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
 import io.mockk.every
 import io.mockk.mockk
@@ -25,6 +27,7 @@ import org.springframework.http.ResponseCookie
 import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.support.TransactionTemplate
 import java.time.Duration
+import java.time.LocalDate
 import java.util.function.Consumer
 
 val objectMapper: ObjectMapper = jacksonObjectMapper()
@@ -200,5 +203,25 @@ fun createBookRating(
     rating = rating,
     book = book,
     authUser = authUser
+  )
+}
+
+fun createPersonInfo(
+  id: Long = 0L,
+  authUser: AuthUser = mockk(),
+  gender: Gender? = null,
+  birthDate: LocalDate? = null,
+  favoriteCategory: String? = null,
+  referenceSource: String? = null,
+  processingConsent: Boolean = false
+): PersonInfo {
+  return PersonInfo(
+    id = id,
+    authUser = authUser,
+    gender = gender,
+    birthDate = birthDate,
+    favoriteCategory = favoriteCategory,
+    referenceSource = referenceSource,
+    processingConsent = processingConsent
   )
 }
