@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+  <changeSet id="1731918800283-1" author="stepan.moc">
+    <createTable tableName="book_stock_audit">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bookstockaudit"/>
+      </column>
+      <column name="audit_type" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="creator" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="VARCHAR(255)"/>
+      <column name="created_date_time" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

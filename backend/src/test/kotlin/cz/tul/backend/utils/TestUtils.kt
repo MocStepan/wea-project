@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.base.cookie.access.AccessTokenClaims
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
 import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.base.valueobject.EmailAddress
 import cz.tul.backend.auth.entity.AuthUser
@@ -19,6 +19,8 @@ import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import cz.tul.backend.personinfo.entity.PersonInfo
+import cz.tul.backend.personinfo.entity.PersonInfoAddress
+import cz.tul.backend.personinfo.valueobject.AddressType
 import cz.tul.backend.personinfo.valueobject.Gender
 import io.github.projectmapk.jackson.module.kogera.jacksonObjectMapper
 import io.mockk.every
@@ -213,7 +215,8 @@ fun createPersonInfo(
   birthDate: LocalDate? = null,
   favoriteCategory: String? = null,
   referenceSource: String? = null,
-  processingConsent: Boolean = false
+  processingConsent: Boolean = false,
+  personInfoAddresses: Set<PersonInfoAddress> = emptySet()
 ): PersonInfo {
   return PersonInfo(
     id = id,
@@ -222,6 +225,29 @@ fun createPersonInfo(
     birthDate = birthDate,
     favoriteCategory = favoriteCategory,
     referenceSource = referenceSource,
-    processingConsent = processingConsent
+    processingConsent = processingConsent,
+    personInfoAddress = personInfoAddresses
+  )
+}
+
+fun createPersonInfoAddress(
+  id: Long = 0L,
+  addressType: AddressType = AddressType.PERSONAL,
+  personInfo: PersonInfo = mockk(),
+  country: String = "address",
+  street: String = "country",
+  city: String = "city",
+  houseNumber: String = "1",
+  zipCode: String = "12345"
+): PersonInfoAddress {
+  return PersonInfoAddress(
+    id = id,
+    addressType = addressType,
+    personInfo = personInfo,
+    country = country,
+    city = city,
+    street = street,
+    houseNumber = houseNumber,
+    zipCode = zipCode
   )
 }

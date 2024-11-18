@@ -38,4 +38,12 @@ class BlazeOperatorValidatorComponent {
     }
     return "%$value%"
   }
+
+  fun isValidComparable(value: Any?): Boolean {
+    val isValid = value is Comparable<*> && value !is String
+    if (!isValid) {
+      log.warn { "GREATER_THAN/LESS_THAN operators can be used only with Comparable values and not with $value" }
+    }
+    return isValid
+  }
 }

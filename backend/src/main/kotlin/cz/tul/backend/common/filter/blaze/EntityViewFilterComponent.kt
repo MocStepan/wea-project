@@ -24,6 +24,6 @@ interface EntityViewFilterComponent {
     entityViewClass: Class<T>,
     rootEntity: Class<*>,
     orderCriteria: FilterCriteria<Any>,
-    additionCriteria: FilterCriteria<Any>?
+    additionCriteria: FilterCriteria<Any>? = null
   ): PageResponseDTO<T>
 }

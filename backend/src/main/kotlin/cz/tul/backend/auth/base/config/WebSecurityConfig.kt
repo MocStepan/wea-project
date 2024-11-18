@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
@@ -23,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 class WebSecurityConfig(
   private val objectMapper: ObjectMapper,
   private val jwtTokenFilterService: JwtTokenFilterService,

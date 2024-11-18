@@ -1,6 +1,6 @@
 package cz.tul.backend.book.service
 
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.book.dto.BookCommentCreateDTO
 import cz.tul.backend.book.entity.BookComment
 import cz.tul.backend.book.repository.BookCommentRepository
@@ -29,7 +29,7 @@ class BookCommentServiceTests : FeatureSpec({
 
       val bookCommentSlot = slot<BookComment>()
 
-      every { spec.authUserRepository.findByIdOrNull(claims.authUserId) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(claims.authUserId) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns book
       every { spec.bookCommentRepository.save(capture(bookCommentSlot)) } answers { firstArg() }
 
@@ -60,7 +60,7 @@ class BookCommentServiceTests : FeatureSpec({
       val createDTO = BookCommentCreateDTO("comment")
       val claims = createUserClaims()
 
-      every { spec.authUserRepository.findByIdOrNull(claims.authUserId) } returns null
+      every { spec.authUserService.getReferenceIfExists(claims.authUserId) } returns null
 
       val result = spec.bookCommentService.createBookComment(0L, createDTO, claims)
 
@@ -76,7 +76,7 @@ class BookCommentServiceTests : FeatureSpec({
       val authUser = createAuthUser()
       val claims = createUserClaims()
 
-      every { spec.authUserRepository.findByIdOrNull(claims.authUserId) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(claims.authUserId) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns null
 
       val result = spec.bookCommentService.createBookComment(0L, createDTO, claims)
@@ -91,13 +91,13 @@ class BookCommentServiceTests : FeatureSpec({
 private class BookCommentServiceSpecWrapper(
   val bookRepository: BookRepository,
   val bookCommentRepository: BookCommentRepository,
-  val authUserRepository: AuthUserRepository
+  val authUserService: AuthUserService
 ) {
 
   val bookCommentService: BookCommentService = BookCommentService(
     bookCommentRepository,
     bookRepository,
-    authUserRepository
+    authUserService
   )
 }
 

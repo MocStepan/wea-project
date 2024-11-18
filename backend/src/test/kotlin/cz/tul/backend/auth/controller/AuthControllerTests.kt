@@ -6,6 +6,7 @@ import cz.tul.backend.auth.service.AuthCookieService
 import cz.tul.backend.auth.service.AuthPasswordService
 import cz.tul.backend.auth.valueobject.AuthPasswordServiceRegisterError
 import cz.tul.backend.common.serviceresult.ServiceResult
+import cz.tul.backend.utils.createUserClaims
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -15,12 +16,14 @@ import io.mockk.runs
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.Authentication
 
 class AuthControllerTests : FeatureSpec({
 
   feature("login") {
     scenario("login success") {
       val spec = getSpec()
+
       val authLoginDTO = mockk<AuthLoginDTO>()
       val response = mockk<HttpServletResponse>()
 
@@ -33,6 +36,7 @@ class AuthControllerTests : FeatureSpec({
 
     scenario("login failure") {
       val spec = getSpec()
+
       val authLoginDTO = mockk<AuthLoginDTO>()
       val response = mockk<HttpServletResponse>()
 
@@ -47,18 +51,25 @@ class AuthControllerTests : FeatureSpec({
   feature("logout") {
     scenario("logout success") {
       val spec = getSpec()
+
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()
+      val claims = createUserClaims()
+      val authentication = mockk<Authentication>()
 
-      every { spec.authCookieService.clearCookies(request, response) } just runs
+      every { authentication.principal } returns claims
+      every { spec.authPasswordService.logout(request, response, claims) } just runs
 
-      spec.authController.logout(request, response)
+      val result = spec.authController.logout(request, response, authentication)
+
+      result.statusCode shouldBe HttpStatus.OK
     }
   }
 
   feature("register") {
     scenario("register success") {
       val spec = getSpec()
+
       val authRegisterDTO = mockk<AuthRegisterDTO>()
 
       every { spec.authPasswordService.register(authRegisterDTO) } returns ServiceResult.Success(true)
@@ -70,6 +81,7 @@ class AuthControllerTests : FeatureSpec({
 
     scenario("register invalid data") {
       val spec = getSpec()
+
       val authRegisterDTO = mockk<AuthRegisterDTO>()
 
       every { spec.authPasswordService.register(authRegisterDTO) } returns ServiceResult.Error(

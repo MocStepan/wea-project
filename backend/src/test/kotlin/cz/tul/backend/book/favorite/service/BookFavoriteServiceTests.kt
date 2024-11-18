@@ -1,6 +1,6 @@
 package cz.tul.backend.book.favorite.service
 
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.book.entity.BookFavorite
 import cz.tul.backend.book.favorite.repository.BookFavoriteRepository
 import cz.tul.backend.book.repository.BookRepository
@@ -28,7 +28,7 @@ class BookFavoriteServiceTests : FeatureSpec({
       val bookFavoriteSlot = slot<BookFavorite>()
 
       every { spec.bookFavoriteRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(0L) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns book
       every { spec.bookFavoriteRepository.save(capture(bookFavoriteSlot)) } answers { firstArg() }
 
@@ -57,7 +57,7 @@ class BookFavoriteServiceTests : FeatureSpec({
       val claims = createUserClaims()
 
       every { spec.bookFavoriteRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns null
+      every { spec.authUserService.getReferenceIfExists(0L) } returns null
 
       val result = spec.bookFavoriteService.addBookToFavorite(0L, claims)
 
@@ -72,7 +72,7 @@ class BookFavoriteServiceTests : FeatureSpec({
       val claims = createUserClaims(authUser)
 
       every { spec.bookFavoriteRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(0L) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns null
 
       val result = spec.bookFavoriteService.addBookToFavorite(0L, claims)
@@ -89,7 +89,7 @@ class BookFavoriteServiceTests : FeatureSpec({
       val claims = createUserClaims(authUser)
 
       every { spec.bookFavoriteRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(0L) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns book
 
       val result = spec.bookFavoriteService.addBookToFavorite(0L, claims)
@@ -103,13 +103,13 @@ class BookFavoriteServiceTests : FeatureSpec({
 private class BookFavoriteServiceSpecWrapper(
   val bookRepository: BookRepository,
   val bookFavoriteRepository: BookFavoriteRepository,
-  val authUserRepository: AuthUserRepository
+  val authUserService: AuthUserService
 ) {
 
   val bookFavoriteService: BookFavoriteService = BookFavoriteService(
     bookRepository,
     bookFavoriteRepository,
-    authUserRepository
+    authUserService
   )
 }
 

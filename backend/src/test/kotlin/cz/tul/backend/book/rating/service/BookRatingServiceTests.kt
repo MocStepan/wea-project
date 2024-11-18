@@ -1,6 +1,6 @@
 package cz.tul.backend.book.rating.service
 
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
@@ -67,7 +67,7 @@ class BookRatingServiceTests : FeatureSpec({
 
       every { spec.bookRatingRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
       every { spec.bookRepository.findByIdOrNull(0L) } returns book
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(0L) } returns authUser
       every { spec.bookRepository.save(capture(bookSlot)) } answers { firstArg() }
       every { spec.bookRatingRepository.save(capture(bookRatingSlot)) } answers { firstArg() }
 
@@ -104,7 +104,7 @@ class BookRatingServiceTests : FeatureSpec({
       val createDTO = BookRatingCreateDTO(5.0)
 
       every { spec.bookRatingRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns null
+      every { spec.authUserService.getReferenceIfExists(0L) } returns null
 
       val result = spec.bookRatingService.createBookRating(0L, createDTO, claims)
 
@@ -121,7 +121,7 @@ class BookRatingServiceTests : FeatureSpec({
       val createDTO = BookRatingCreateDTO(5.0)
 
       every { spec.bookRatingRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(0L) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns null
 
       val result = spec.bookRatingService.createBookRating(0L, createDTO, claims)
@@ -142,7 +142,7 @@ class BookRatingServiceTests : FeatureSpec({
       val createDTO = BookRatingCreateDTO(5.0)
 
       every { spec.bookRatingRepository.existsByAuthUser_IdAndBook_Id(0L, 0L) } returns false
-      every { spec.authUserRepository.findByIdOrNull(0L) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(0L) } returns authUser
       every { spec.bookRepository.findByIdOrNull(0L) } returns book
 
       val result = spec.bookRatingService.createBookRating(0L, createDTO, claims)
@@ -331,13 +331,13 @@ class BookRatingServiceTests : FeatureSpec({
 private class BookRatingServiceSpecWrapper(
   val bookRepository: BookRepository,
   val bookRatingRepository: BookRatingRepository,
-  val authUserRepository: AuthUserRepository
+  val authUserService: AuthUserService
 ) {
 
   val bookRatingService: BookRatingService = BookRatingService(
     bookRepository,
     bookRatingRepository,
-    authUserRepository
+    authUserService
   )
 }
 

@@ -29,8 +29,11 @@ class BlazeOperatorCriteriaBuilder(
     when (operator) {
       null -> {}
       FilterOperator.EQUAL -> createEqualCriteria(criteriaBuilder, joinedKeys, value)
+      FilterOperator.NOT_EQUAL -> createNotEqualCriteria(criteriaBuilder, joinedKeys, value)
       FilterOperator.IN -> createInCriteria(criteriaBuilder, joinedKeys, value)
       FilterOperator.ILIKE -> createIlikeCriteria(criteriaBuilder, joinedKeys, value)
+      FilterOperator.GREATER_THAN -> createGreaterThanCriteria(criteriaBuilder, joinedKeys, value)
+      FilterOperator.LESS_THAN -> createLessThanCriteria(criteriaBuilder, joinedKeys, value)
     }
   }
 
@@ -50,6 +53,18 @@ class BlazeOperatorCriteriaBuilder(
       criteriaBuilder.where(joinedKeys).isNull
     } else {
       criteriaBuilder.where(joinedKeys).eq(value)
+    }
+  }
+
+  private fun <T> createNotEqualCriteria(
+    criteriaBuilder: PaginatedCriteriaBuilder<T>,
+    joinedKeys: String,
+    value: Any?
+  ) {
+    if (value == null) {
+      criteriaBuilder.where(joinedKeys).isNotNull
+    } else {
+      criteriaBuilder.where(joinedKeys).notEq(value)
     }
   }
 
@@ -84,6 +99,26 @@ class BlazeOperatorCriteriaBuilder(
   ) {
     operatorValidatorComponent.castToILikeOperator(value)?.let {
       criteriaBuilder.where(joinedKeys).like(false).value(it).noEscape()
+    }
+  }
+
+  private fun <T> createGreaterThanCriteria(
+    criteriaBuilder: PaginatedCriteriaBuilder<T>,
+    joinedKeys: String,
+    value: Any?
+  ) {
+    if (operatorValidatorComponent.isValidComparable(value)) {
+      criteriaBuilder.where(joinedKeys).gt(value)
+    }
+  }
+
+  private fun <T> createLessThanCriteria(
+    criteriaBuilder: PaginatedCriteriaBuilder<T>,
+    joinedKeys: String,
+    value: Any?
+  ) {
+    if (operatorValidatorComponent.isValidComparable(value)) {
+      criteriaBuilder.where(joinedKeys).lt(value)
     }
   }
 }

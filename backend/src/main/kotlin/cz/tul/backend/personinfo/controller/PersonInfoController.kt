@@ -1,6 +1,6 @@
 package cz.tul.backend.personinfo.controller
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.personinfo.dto.PersonInfoDTO
 import cz.tul.backend.personinfo.service.PersonInfoService
 import io.swagger.v3.oas.annotations.Operation

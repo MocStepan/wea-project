@@ -1,7 +1,7 @@
 package cz.tul.backend.book.rating.service
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.base.api.AuthJwtClaims
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
@@ -20,7 +20,7 @@ private val log = KotlinLogging.logger {}
 class BookRatingService(
   private val bookRepository: BookRepository,
   private val bookRatingRepository: BookRatingRepository,
-  private val authUserRepository: AuthUserRepository
+  private val authUserService: AuthUserService
 ) {
 
   fun getBookRating(id: Long, claims: AuthJwtClaims): BookRatingDTO? {
@@ -40,7 +40,7 @@ class BookRatingService(
       return false
     }
 
-    val authUser = authUserRepository.findByIdOrNull(claims.authUserId)
+    val authUser = authUserService.getReferenceIfExists(claims.authUserId)
     if (authUser == null) {
       log.warn { "AuthUser with id ${claims.authUserId} not found" }
       return false

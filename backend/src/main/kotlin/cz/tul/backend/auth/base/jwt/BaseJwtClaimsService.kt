@@ -2,7 +2,7 @@ package cz.tul.backend.auth.base.jwt
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import cz.tul.backend.auth.base.dto.JwtClaims
+import cz.tul.backend.auth.base.api.JwtClaims
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.time.Duration
 

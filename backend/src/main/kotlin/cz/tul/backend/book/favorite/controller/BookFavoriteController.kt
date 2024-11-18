@@ -1,6 +1,6 @@
 package cz.tul.backend.book.favorite.controller
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.book.favorite.service.BookFavoriteService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse

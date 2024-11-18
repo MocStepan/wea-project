@@ -1,6 +1,6 @@
 package cz.tul.backend.auth.base.cookie.access
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.auth.base.valueobject.AuthRole
 import cz.tul.backend.auth.entity.AuthUser
 

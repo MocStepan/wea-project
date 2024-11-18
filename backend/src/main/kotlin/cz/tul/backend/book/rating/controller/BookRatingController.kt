@@ -1,6 +1,6 @@
 package cz.tul.backend.book.rating.controller
 
-import cz.tul.backend.auth.base.dto.AuthJwtClaims
+import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.book.rating.dto.BookRatingCreateDTO
 import cz.tul.backend.book.rating.dto.BookRatingDTO
 import cz.tul.backend.book.rating.service.BookRatingService
