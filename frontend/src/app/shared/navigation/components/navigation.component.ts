@@ -9,7 +9,7 @@ import {
   signal,
   WritableSignal
 } from '@angular/core'
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms'
+import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {MatOption} from '@angular/material/autocomplete'
 import {MatIcon} from '@angular/material/icon'
 import {MatFormField, MatSelect} from '@angular/material/select'
@@ -19,10 +19,10 @@ import {NavigationEnd, Router, RouterLink} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import {filter, Subscription} from 'rxjs'
 
-import {AuthService} from '../../auth/service/auth.service'
-import {UserModel} from '../../user/model/user.model'
-import {UserService} from '../../user/service/user.service'
-import {Nullable} from '../utils/shared-types'
+import {AuthUserModel} from '../../../auth/model/auth-user.model'
+import {AuthService} from '../../../auth/service/auth.service'
+import {Nullable} from '../../utils/shared-types'
+import {LangEnum} from '../valueobject/lang.enum'
 
 @Component({
   selector: 'app-navigation',
@@ -49,37 +49,29 @@ import {Nullable} from '../utils/shared-types'
   styleUrl: './navigation.component.css'
 })
 export class NavigationComponent implements OnInit, OnDestroy {
-  protected isUserSignedIn: WritableSignal<boolean> = signal(false)
-  protected langFormControl: FormControl = new FormControl<string>('cz')
-  protected isChecked = false
-  protected lang = 'Čeština'
-  protected user: WritableSignal<Nullable<UserModel>> = signal(null)
-  private readonly subscriptions: Subscription[] = []
-  private currentUrl = ''
-
-  // Injected services and dependencies instead of using the constructor.
   private router: Router = inject(Router)
   private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef)
   private authService: AuthService = inject(AuthService)
-  private userService = inject(UserService)
   private translate: TranslateService = inject(TranslateService)
 
+  private subscriptions: Subscription[] = []
+  private currentUrl = ''
+
+  protected lang: LangEnum = LangEnum.CZ
+  protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  protected authUser: WritableSignal<Nullable<AuthUserModel>> = signal(null)
 
   /**
    * Initializes the component by setting up the language, current URL, and user details.
+   * Loads the saved language from localStorage, defaulting to 'cz' if no language is saved.
    */
   ngOnInit() {
-    // Load the saved language from localStorage, defaulting to 'cz' if no language is saved.
-    const savedLang = localStorage.getItem('lang') || 'cz'
-    this.langFormControl.setValue(savedLang)
+    const savedLang = localStorage.getItem('lang') || 'CZ'
     this.translate.use(savedLang)
-
-    this.translate.get(savedLang === 'en' ? 'ENGLISH' : 'CZECH').subscribe((res: string) => {
-      this.lang = res
-    })
 
     this.currentUrl = this.router.url
     this.navigationRouter()
+
     this.isUserSignedIn.set(this.authService.isSignedIn())
     this.getUser()
   }
@@ -96,11 +88,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
    * stores them in the session storage.
    */
   getUser(): void {
-    if (this.isUserSignedIn()) {
-      this.userService.getAuthUser().subscribe((response) => {
-        this.user.set(response)
+    if (this.isUserSignedIn() && this.authUser() === null) {
+      this.authService.getAuthUser().subscribe((response) => {
         sessionStorage.setItem('user', JSON.stringify(response))
+        this.authUser.set(response)
       })
+    } else if (!this.isUserSignedIn()) {
+      sessionStorage.removeItem('user')
+      this.authUser.set(null)
     }
   }
 
@@ -116,9 +111,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   /**
    * Signs out the user by calling the signOut method from the AuthService.
+   *
+   * Sets the isUserSignedIn signal to false and the authUser signal to null.
    */
   signOut() {
     this.authService.signOut()
+    this.isUserSignedIn.set(false)
+    this.getUser()
   }
 
   /**
@@ -126,13 +125,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
    *
    * @param isChecked The value to determine the language to switch to.
    */
-  getLang(isChecked: boolean) {
-    const lang = isChecked ? 'en' : 'cz'
+  changeLang(isChecked: boolean) {
+    const lang = isChecked ? 'EN' : 'CZ'
     this.translate.use(lang)
-
-    this.translate.get(isChecked ? 'ENGLISH' : 'CZECH').subscribe((res: string) => {
-      this.lang = res
-    })
+    this.lang = LangEnum[lang]
     localStorage.setItem('lang', lang)
   }
 
@@ -144,6 +140,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       filter((event) => event instanceof NavigationEnd)
     ).subscribe((event) => {
       this.isUserSignedIn.set(this.authService.isSignedIn())
+      this.getUser()
       this.currentUrl = (event as NavigationEnd).url
       this.changeDetectorRef.detectChanges()
     }))

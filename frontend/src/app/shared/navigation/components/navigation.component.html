@@ -13,12 +13,11 @@
 
   <span class="fill-space"></span>
 
-  <span *ngIf="user() as userData">{{userData.firstName}} {{userData.lastName}}</span>
+  <span>{{authUser()?.firstName}} {{authUser()?.lastName}}</span>
 
   <span class="fill-space"></span>
 
-  <mat-slide-toggle (click)="getLang(isChecked)" [(ngModel)]="isChecked"
-                    labelPosition="before">{{lang}}</mat-slide-toggle>
+  <mat-slide-toggle (change)="changeLang($event.checked)" labelPosition="before">{{lang}}</mat-slide-toggle>
 
   <a *ngIf="!isUserSignedIn()" [routerLink]="'/sign-in'">
     <li [class.selected]="isSelected('/sign-in')" class="page-body-text">

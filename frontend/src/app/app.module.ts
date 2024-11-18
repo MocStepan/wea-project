@@ -15,7 +15,7 @@ import {AppComponent} from './app.component'
 import {AppRoutingModule} from './app.routing-module'
 import {HttpErrorInterceptor} from './shared/http/interceptor/http-error.interceptor'
 import {HttpHeaderInterceptor} from './shared/http/interceptor/http-header.interceptor'
-import {NavigationComponent} from './shared/navigation/navigation.component'
+import {NavigationComponent} from './shared/navigation/components/navigation.component'
 
 export function httpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json')

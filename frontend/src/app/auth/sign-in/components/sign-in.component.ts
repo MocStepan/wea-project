@@ -1,5 +1,5 @@
 import {NgIf} from '@angular/common'
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core'
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core'
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MatButton} from '@angular/material/button'
 import {MatCard, MatCardHeader, MatCardTitle} from '@angular/material/card'
@@ -13,6 +13,8 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
 import {NotificationService} from '../../../shared/notification/notification.service'
 import {AuthService} from '../../service/auth.service'
+import {SignInForm, SignInFormGroup} from '../model/sign-in.form'
+import {SignInModel} from '../model/sign-in.model'
 
 /**
  * Component for the sign-in form.
@@ -47,29 +49,22 @@ import {AuthService} from '../../service/auth.service'
     }
   ]
 })
-export class SignInComponent implements OnInit {
-  protected formGroup!: FormGroup
-
-  // Injects bookService instead of using constructor injection.
+export class SignInComponent {
   private formBuilder: FormBuilder = inject(FormBuilder)
   private authService: AuthService = inject(AuthService)
   private notificationService: NotificationService = inject(NotificationService)
   private translate: TranslateService = inject(TranslateService)
   private router: Router = inject(Router)
 
-  /**
-   * Initializes the component with the required services and sets up the form group.
-   */
-  ngOnInit(): void {
-    this.formGroup = this.buildFormGroup()
-  }
+  public formGroup: FormGroup<SignInFormGroup> = this.buildFormGroup()
 
   /**
    * Method to handle the form submission, validates the form and calls the sign-in method of the AuthService.
    */
   onSubmit() {
     if (this.formGroup.valid) {
-      this.authService.signIn(this.formGroup.value).subscribe({
+      const signInModel = SignInModel(this.formGroup.getRawValue())
+      this.authService.signIn(signInModel).subscribe({
         next: () => {
           this.translate.get('auth.loginSuccess').subscribe((res: string) => {
             this.notificationService.successNotification(res)
@@ -101,10 +96,10 @@ export class SignInComponent implements OnInit {
    *
    * @returns A form group containing the email, password, and rememberMe fields.
    */
-  private buildFormGroup() {
-    const form = {
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required]],
+  private buildFormGroup(): FormGroup {
+    const form: SignInForm = {
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
       rememberMe: [false]
     }
     return this.formBuilder.group(form)

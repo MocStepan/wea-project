@@ -84,6 +84,10 @@ module.exports = tseslint.config(
         {
           selector: 'property',
           format: ['camelCase']
+        },
+        {
+          selector: 'function',
+          format: ['camelCase', 'PascalCase']
         }
       ],
       'no-new-wrappers': 'error',
