@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core'
+import {Nullable} from 'primeng/ts-helpers'
 import {Observable} from 'rxjs'
 
 import {BASE_API_URL} from '../../../config'
 import {HttpService} from '../../shared/http/service/http.service'
-import {Nullable} from '../../shared/utils/shared-types'
 import {BookRatingModel} from '../detail/model/book-rating.model'
 import {BookRatingCreateModel} from '../detail/model/book-rating-create.model'
 

@@ -17,11 +17,11 @@ import {MatSlideToggle} from '@angular/material/slide-toggle'
 import {MatToolbar} from '@angular/material/toolbar'
 import {NavigationEnd, Router, RouterLink} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
+import {Nullable} from 'primeng/ts-helpers'
 import {filter, Subscription} from 'rxjs'
 
 import {AuthUserModel} from '../../../auth/model/auth-user.model'
 import {AuthService} from '../../../auth/service/auth.service'
-import {Nullable} from '../../utils/shared-types'
 import {LangEnum} from '../valueobject/lang.enum'
 
 @Component({

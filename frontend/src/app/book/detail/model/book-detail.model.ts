@@ -1,4 +1,5 @@
-import {Nullable} from '../../../shared/utils/shared-types'
+import {Nullable} from 'primeng/ts-helpers'
+
 import {BookAuthorDetailModel} from './book-author-detail.model'
 import {BookCategoryDetailModel} from './book-category-detail.model'
 import {BookCommentDetailModel} from './book-coment-detail.model'

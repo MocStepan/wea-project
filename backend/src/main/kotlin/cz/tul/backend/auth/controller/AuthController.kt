@@ -53,9 +53,9 @@ class AuthController(
   fun logout(
     request: HttpServletRequest,
     response: HttpServletResponse,
-    authentication: Authentication
+    authentication: Authentication?
   ): ResponseEntity<Any> {
-    val principal = authentication.principal as AuthJwtClaims
+    val principal = authentication?.principal as AuthJwtClaims?
     authPasswordService.logout(request, response, principal)
     return ResponseEntity(HttpStatus.OK)
   }
