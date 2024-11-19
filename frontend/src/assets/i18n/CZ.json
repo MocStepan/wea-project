@@ -64,5 +64,27 @@
     "removeError": "Kniha nebyla odebrána z oblíbených"
   },
   "DISABLED_BOOK": "Kniha je zakázána, takže ji nemůžete přidat do oblíbených, komentovat nebo hodnotit",
-  "UNKNOWN_TEXT": "Neznámý"
+  "UNKNOWN_TEXT": "Neznámý",
+  "personal_information": "Osobní údaje",
+  "gender": "Pohlaví",
+  "select_gender": "Vyberte pohlaví",
+  "gender_male": "Muž",
+  "gender_female": "Žena",
+  "gender_other": "Jiné",
+  "birth_date": "Datum narození",
+  "favorite_category": "Oblíbená kategorie",
+  "reference_source": "Reference zdroj",
+  "processing_consent": "Souhlasím se zpracováním",
+  "billing_address": "Fakturační adresa",
+  "personal_address": "Osobní adresa",
+  "country": "Země",
+  "city": "Město",
+  "street": "Ulice",
+  "house_number": "Číslo domu",
+  "zip_code": "PSČ",
+  "same_as_personal": "Je fakturačční adresa stejná jako osobní?",
+  "save": "Uložit",
+  "INFO_POSTED": "Udáje byly aktualizovány",
+  "INFO_ERROR": "Nepodařilo se aktualizovat údaje",
+  "PROFILE": "Profil"
 }

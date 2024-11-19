@@ -64,5 +64,27 @@
     "removeError": "Book has not been removed from favorites"
   },
   "DISABLED_BOOK": "Book is disabled so you can't add it to favorites, comment or rate it",
-  "UNKNOWN_TEXT": "Unknown"
+  "UNKNOWN_TEXT": "Unknown",
+  "personal_information": "Personal Information",
+  "gender": "Gender",
+  "select_gender": "Select Gender",
+  "gender_male": "Male",
+  "gender_female": "Female",
+  "gender_other": "Other",
+  "birth_date": "Birth Date",
+  "favorite_category": "Favorite Category",
+  "reference_source": "Reference Source",
+  "processing_consent": "I consent to processing",
+  "billing_address": "Billing Address",
+  "personal_address": "Personal Address",
+  "country": "Country",
+  "city": "City",
+  "street": "Street",
+  "house_number": "House Number",
+  "zip_code": "ZIP Code",
+  "same_as_personal": "Is billing address the same as personal address?",
+  "save": "Uložit",
+  "INFO_POSTED": "Personal info updated!",
+  "INFO_ERROR": "Failed to update personal data",
+  "PROFILE": "Profile"
 }

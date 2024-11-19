@@ -1,6 +1,7 @@
 package cz.tul.backend.audit.service
 
 import cz.tul.backend.audit.entity.BookStockAudit
+import cz.tul.backend.audit.entity.BookStockAudit_.creator
 import cz.tul.backend.audit.repository.BookStockAuditRepository
 import cz.tul.backend.audit.valueobject.AuditType
 import cz.tul.backend.auth.base.api.AuthJwtClaims
@@ -22,11 +23,16 @@ class BookStockAuditService(
    * Save audit log for given audit type and [AuthJwtClaims].
    *
    * @param auditType audit type
-   * @param creator creator of the audit log [AuthJwtClaims]
+   * @param claims creator of the audit log [AuthJwtClaims]
    * @param description description of the audit log
    */
-  fun saveAuditLog(auditType: AuditType, creator: AuthJwtClaims, description: String? = null) {
-    authUserService.getReferenceIfExists(creator.authUserId).let {
+  fun saveAuditLog(auditType: AuditType, claims: AuthJwtClaims?, description: String? = null) {
+    if (claims == null) {
+      auditType.saveLog("Unknown", description)
+      return
+    }
+
+    authUserService.getReferenceIfExists(claims.authUserId).let {
       auditType.saveLog(it?.email?.value ?: "Unknown", description)
     }
   }

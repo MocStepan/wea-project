@@ -84,7 +84,7 @@ class AuthPasswordService(
     return ServiceResult.Success(true)
   }
 
-  fun logout(request: HttpServletRequest, response: HttpServletResponse, claims: AuthJwtClaims) {
+  fun logout(request: HttpServletRequest, response: HttpServletResponse, claims: AuthJwtClaims?) {
     bookStockAuditService.saveAuditLog(AuditType.SIGN_OUT, claims)
     authCookieService.clearCookies(request, response)
   }

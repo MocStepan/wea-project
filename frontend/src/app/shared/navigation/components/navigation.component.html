@@ -11,6 +11,12 @@
     </li>
   </a>
 
+  <a *ngIf="isUserSignedIn()" [routerLink]="'/person-info'">
+    <li [class.selected]="isSelected('/person-info')" class="page-body-text">
+      <span>{{'PROFILE' | translate}}</span>
+    </li>
+  </a>
+
   <span class="fill-space"></span>
 
   <span>{{authUser()?.firstName}} {{authUser()?.lastName}}</span>

@@ -1,0 +1,115 @@
+<form class="form-group" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <mat-card>
+    <mat-card-title>{{ 'personal_information' | translate }}</mat-card-title>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'gender' | translate }}</mat-label>
+        <mat-select [formControl]="formGroup.controls.gender">
+          <mat-option value="MALE">{{ 'gender_male' | translate }}</mat-option>
+          <mat-option value="FEMALE">{{ 'gender_female' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'birth_date' | translate }}</mat-label>
+        <input matInput [formControl]="formGroup.controls.birthDate" [matDatepicker]="birthDatePicker">
+        <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #birthDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'favorite_category' | translate }}</mat-label>
+        <input [formControl]="formGroup.controls.favoriteCategory" matInput type="text">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'reference_source' | translate }}</mat-label>
+        <input [formControl]="formGroup.controls.referenceSource" matInput type="text">
+      </mat-form-field>
+
+      <mat-checkbox [formControl]="formGroup.controls.processingConsent">
+        {{ 'processing_consent' | translate }}
+      </mat-checkbox>
+
+      <mat-card>
+        <mat-card-actions>
+          <button mat-raised-button class="submit-button" color="primary" type="submit">
+            {{ 'save' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+
+  <form [formGroup]="personalAddressFormGroup">
+    <mat-card>
+      <mat-card-title>{{ 'personal_address' | translate }}</mat-card-title>
+      <mat-card-content>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'country' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="personalAddressFormGroup.controls.country">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'city' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="personalAddressFormGroup.controls.city">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'street' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="personalAddressFormGroup.controls.street">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'house_number' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="personalAddressFormGroup.controls.houseNumber">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'zip_code' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="personalAddressFormGroup.controls.zipCode">
+        </mat-form-field>
+
+        <mat-checkbox [checked]="isBillingSameAsPersonal()" (change)="syncAddresses()">
+          {{ 'same_as_personal' | translate }}
+        </mat-checkbox>
+      </mat-card-content>
+    </mat-card>
+  </form>
+
+
+  <form [formGroup]="billingAddressFormGroup" *ngIf="!isBillingSameAsPersonal()">
+    <mat-card>
+      <mat-card-title>{{ 'billing_address' | translate }}</mat-card-title>
+      <mat-card-content>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'country' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="billingAddressFormGroup.controls.country">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'city' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="billingAddressFormGroup.controls.city">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'street' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="billingAddressFormGroup.controls.street">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'house_number' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="billingAddressFormGroup.controls.houseNumber">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'zip_code' | translate }}</mat-label>
+          <input matInput type="text" [formControl]="billingAddressFormGroup.controls.zipCode">
+        </mat-form-field>
+
+      </mat-card-content>
+    </mat-card>
+  </form>
+</form>
