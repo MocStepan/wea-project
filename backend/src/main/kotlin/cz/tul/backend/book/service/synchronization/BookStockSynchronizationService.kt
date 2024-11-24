@@ -50,6 +50,9 @@ class BookStockSynchronizationService(
 
     importedBooks.chunked(chunkSize).forEach { bookChunk ->
       bookChunkProcessor.deactivateExistingBooks(bookChunk)
+    }
+
+    importedBooks.chunked(chunkSize).forEach { bookChunk ->
       bookChunkProcessor.processBookChunk(bookChunk)
     }
   }

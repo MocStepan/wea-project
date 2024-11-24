@@ -17,9 +17,12 @@
         <mat-datepicker #birthDatePicker></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'favorite_category' | translate }}</mat-label>
-        <input [formControl]="formGroup.controls.favoriteCategory" matInput type="text">
+      <mat-form-field>
+        <mat-select [formControl]="formGroup.controls.favoriteCategories" multiple placeholder="{{ 'favorite_category' | translate }}">
+          <mat-option *ngFor="let value of bookCategories" [value]="value.name">
+            {{ value.name }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">

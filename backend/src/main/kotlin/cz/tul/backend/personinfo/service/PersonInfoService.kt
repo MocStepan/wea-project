@@ -1,14 +1,13 @@
 package cz.tul.backend.personinfo.service
 
 import cz.tul.backend.auth.base.api.AuthJwtClaims
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.personinfo.dto.PersonInfoAddressDTO
 import cz.tul.backend.personinfo.dto.PersonInfoDTO
 import cz.tul.backend.personinfo.entity.PersonInfo
 import cz.tul.backend.personinfo.repository.PersonInfoRepository
 import cz.tul.backend.personinfo.valueobject.AddressType
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,11 +18,12 @@ private val log = KotlinLogging.logger {}
 class PersonInfoService(
   private val personInfoRepository: PersonInfoRepository,
   private val personInfoAddressService: PersonInfoAddressService,
-  private val authUserRepository: AuthUserRepository
+  private val authUserService: AuthUserService,
+  private val personInfoCategoryService: PersonInfoCategoryService
 ) {
 
   fun createPersonInfo(personInfoDTO: PersonInfoDTO, claims: AuthJwtClaims): Boolean {
-    val authUser = authUserRepository.findByIdOrNull(claims.authUserId)
+    val authUser = authUserService.getReferenceIfExists(claims.authUserId)
     if (authUser == null) {
       log.warn { "AuthUser not found for user ${claims.authUserId}" }
       return false
@@ -38,6 +38,8 @@ class PersonInfoService(
     val personInfo = PersonInfo.from(personInfoDTO, authUser).let {
       personInfoRepository.save(it)
     }
+
+    personInfoCategoryService.saveCategory(personInfo, personInfoDTO.favoriteCategories)
     personInfoDTO.personalAddress?.saveAddress(personInfo, AddressType.PERSONAL)
     personInfoDTO.billingAddress?.saveAddress(personInfo, AddressType.BILLING)
     return true
@@ -50,7 +52,8 @@ class PersonInfoService(
       return null
     }
 
-    return PersonInfoDTO.from(personInfo)
+    val categories = personInfoCategoryService.getCategory(personInfo.id)
+    return PersonInfoDTO.from(personInfo, categories)
   }
 
   fun updatePersonInfo(personInfoDTO: PersonInfoDTO, claims: AuthJwtClaims): Boolean {
@@ -62,6 +65,8 @@ class PersonInfoService(
 
     personInfo.update(personInfoDTO)
     personInfoRepository.save(personInfo)
+
+    personInfoCategoryService.saveCategory(personInfo, personInfoDTO.favoriteCategories)
     personInfoDTO.personalAddress?.updateAddress(personInfo, AddressType.PERSONAL)
     personInfoDTO.billingAddress?.updateAddress(personInfo, AddressType.BILLING)
     return true

@@ -215,7 +215,6 @@ fun createPersonInfo(
   authUser: AuthUser = mockk(),
   gender: Gender? = null,
   birthDate: LocalDate? = null,
-  favoriteCategory: String? = null,
   referenceSource: String? = null,
   processingConsent: Boolean = false,
   personInfoAddresses: Set<PersonInfoAddress> = emptySet()
@@ -225,7 +224,6 @@ fun createPersonInfo(
     authUser = authUser,
     gender = gender,
     birthDate = birthDate,
-    favoriteCategory = favoriteCategory,
     referenceSource = referenceSource,
     processingConsent = processingConsent,
     personInfoAddress = personInfoAddresses

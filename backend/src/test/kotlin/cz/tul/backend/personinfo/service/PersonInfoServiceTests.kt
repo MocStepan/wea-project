@@ -1,7 +1,8 @@
 package cz.tul.backend.personinfo.service
 
-import cz.tul.backend.auth.repository.AuthUserRepository
+import cz.tul.backend.auth.service.AuthUserService
 import cz.tul.backend.personinfo.dto.PersonInfoAddressDTO
+import cz.tul.backend.personinfo.dto.PersonInfoCategoryDTO
 import cz.tul.backend.personinfo.dto.PersonInfoDTO
 import cz.tul.backend.personinfo.entity.PersonInfo
 import cz.tul.backend.personinfo.repository.PersonInfoRepository
@@ -18,7 +19,6 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
-import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDate
 
 class PersonInfoServiceTests : FeatureSpec({
@@ -29,16 +29,18 @@ class PersonInfoServiceTests : FeatureSpec({
 
       val personInfoAddressDTO = PersonInfoAddressDTO()
       val personInfoDTO = PersonInfoDTO(
-        billingAddress = personInfoAddressDTO
+        billingAddress = personInfoAddressDTO,
+        favoriteCategories = setOf(PersonInfoCategoryDTO("test"))
       )
       val authUser = createAuthUser()
       val claims = createUserClaims(authUser)
 
       val personInfoSlot = slot<PersonInfo>()
 
-      every { spec.authUserRepository.findByIdOrNull(claims.authUserId) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(claims.authUserId) } returns authUser
       every { spec.personInfoRepository.existsByAuthUser_Id(claims.authUserId) } returns false
       every { spec.personInfoRepository.save(capture(personInfoSlot)) } answers { firstArg() }
+      every { spec.personInfoCategoryService.saveCategory(any(), setOf(PersonInfoCategoryDTO("test"))) } just runs
       every { spec.personInfoAddressService.saveAddress(personInfoAddressDTO, any(), AddressType.BILLING) } just runs
 
       val response = spec.personInfoService.createPersonInfo(personInfoDTO, claims)
@@ -47,7 +49,6 @@ class PersonInfoServiceTests : FeatureSpec({
       personInfoSlot.captured.authUser shouldBe authUser
       personInfoSlot.captured.gender shouldBe null
       personInfoSlot.captured.birthDate shouldBe null
-      personInfoSlot.captured.favoriteCategory shouldBe null
       personInfoSlot.captured.referenceSource shouldBe null
       personInfoSlot.captured.processingConsent shouldBe false
     }
@@ -55,10 +56,12 @@ class PersonInfoServiceTests : FeatureSpec({
     scenario("auth user not found") {
       val spec = getSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf(PersonInfoCategoryDTO("test"))
+      )
       val claims = createUserClaims()
 
-      every { spec.authUserRepository.findByIdOrNull(claims.authUserId) } returns null
+      every { spec.authUserService.getReferenceIfExists(claims.authUserId) } returns null
 
       val response = spec.personInfoService.createPersonInfo(personInfoDTO, claims)
 
@@ -68,11 +71,13 @@ class PersonInfoServiceTests : FeatureSpec({
     scenario("person info already exists") {
       val spec = getSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf(PersonInfoCategoryDTO("test"))
+      )
       val authUser = createAuthUser()
       val claims = createUserClaims(authUser)
 
-      every { spec.authUserRepository.findByIdOrNull(claims.authUserId) } returns authUser
+      every { spec.authUserService.getReferenceIfExists(claims.authUserId) } returns authUser
       every { spec.personInfoRepository.existsByAuthUser_Id(claims.authUserId) } returns true
 
       val response = spec.personInfoService.createPersonInfo(personInfoDTO, claims)
@@ -92,7 +97,6 @@ class PersonInfoServiceTests : FeatureSpec({
         authUser = authUser,
         gender = Gender.MALE,
         birthDate = LocalDate.now(),
-        favoriteCategory = "Fantasy",
         referenceSource = "Friend",
         processingConsent = true,
         personInfoAddresses = setOf(personalAddress, billingAddress)
@@ -100,12 +104,12 @@ class PersonInfoServiceTests : FeatureSpec({
       val claims = createUserClaims(authUser)
 
       every { spec.personInfoRepository.findByAuthUser_Id(claims.authUserId) } returns personInfo
+      every { spec.personInfoCategoryService.getCategory(personInfo.id) } returns setOf(PersonInfoCategoryDTO("test"))
 
       val response = spec.personInfoService.getPersonInfo(claims)!!
 
       response.gender shouldBe personInfo.gender
       response.birthDate shouldBe personInfo.birthDate
-      response.favoriteCategory shouldBe personInfo.favoriteCategory
       response.referenceSource shouldBe personInfo.referenceSource
       response.processingConsent shouldBe personInfo.processingConsent
 
@@ -122,6 +126,10 @@ class PersonInfoServiceTests : FeatureSpec({
       address2.street shouldBe billingAddress.street
       address2.houseNumber shouldBe billingAddress.houseNumber
       address2.zipCode shouldBe billingAddress.zipCode
+
+      val categories = response.favoriteCategories
+      categories.size shouldBe 1
+      categories.first().name shouldBe "test"
     }
 
     scenario("person info not found") {
@@ -143,7 +151,8 @@ class PersonInfoServiceTests : FeatureSpec({
 
       val personInfoAddressDTO = PersonInfoAddressDTO()
       val personInfoDTO = PersonInfoDTO(
-        personalAddress = personInfoAddressDTO
+        personalAddress = personInfoAddressDTO,
+        favoriteCategories = setOf(PersonInfoCategoryDTO("test"))
       )
       val authUser = createAuthUser()
       val personInfo = createPersonInfo(authUser = authUser)
@@ -158,6 +167,7 @@ class PersonInfoServiceTests : FeatureSpec({
           AddressType.PERSONAL
         )
       } just runs
+      every { spec.personInfoCategoryService.saveCategory(personInfo, setOf(PersonInfoCategoryDTO("test"))) } just runs
 
       val response = spec.personInfoService.updatePersonInfo(personInfoDTO, claims)
 
@@ -167,7 +177,9 @@ class PersonInfoServiceTests : FeatureSpec({
     scenario("person info not found") {
       val spec = getSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf(PersonInfoCategoryDTO("test"))
+      )
       val claims = createUserClaims()
 
       every { spec.personInfoRepository.findByAuthUser_Id(claims.authUserId) } returns null
@@ -182,9 +194,15 @@ class PersonInfoServiceTests : FeatureSpec({
 private class PersonInfoServiceSpecWrapper(
   val personInfoRepository: PersonInfoRepository,
   val personInfoAddressService: PersonInfoAddressService,
-  val authUserRepository: AuthUserRepository
+  val authUserService: AuthUserService,
+  val personInfoCategoryService: PersonInfoCategoryService
 ) {
-  val personInfoService = PersonInfoService(personInfoRepository, personInfoAddressService, authUserRepository)
+  val personInfoService = PersonInfoService(
+    personInfoRepository,
+    personInfoAddressService,
+    authUserService,
+    personInfoCategoryService
+  )
 }
 
-private fun getSpec() = PersonInfoServiceSpecWrapper(mockk(), mockk(), mockk())
+private fun getSpec() = PersonInfoServiceSpecWrapper(mockk(), mockk(), mockk(), mockk())

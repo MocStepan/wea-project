@@ -51,20 +51,17 @@ class AuthCookieService(
     request: HttpServletRequest,
     response: HttpServletResponse
   ): Boolean {
-    return try {
-      val (authUser, refreshCookie) = authRefreshTokenService.authenticate(request) ?: throw IllegalArgumentException(
-        "Invalid refresh token"
-      )
-
-      val accessCookie = authAccessTokenService.authenticate(authUser)
-      response.addCookie(accessCookie)
-      response.addCookie(refreshCookie)
-      true
-    } catch (e: Exception) {
-      log.warn(e) { "Failed to authenticate with refresh token" }
+    val authentication = authRefreshTokenService.authenticate(request)
+    if (authentication == null) {
+      log.warn { "Failed to authenticate with refresh token" }
       clearCookies(request, response)
-      false
+      return false
     }
+
+    val accessCookie = authAccessTokenService.authenticate(authentication.first)
+    response.addCookie(accessCookie)
+    response.addCookie(authentication.second)
+    return true
   }
 
   /**

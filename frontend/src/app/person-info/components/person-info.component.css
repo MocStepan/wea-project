@@ -23,6 +23,12 @@
   width: 100%;
 }
 
-.form-group mat-form-field {
-  margin: 0.5rem;
+.mat-mdc-card-title {
+  color: white;
+  margin: 1rem;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  padding: 0;
 }

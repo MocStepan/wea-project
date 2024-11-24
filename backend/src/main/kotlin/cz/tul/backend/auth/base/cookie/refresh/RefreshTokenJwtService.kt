@@ -21,7 +21,5 @@ class RefreshTokenJwtService(
    * @param value Refresh token.
    * @return Refresh token claims.
    */
-  override fun createClaims(value: RefreshToken): RefreshTokenClaims {
-    return RefreshTokenClaims(value)
-  }
+  override fun createClaims(value: RefreshToken) = RefreshTokenClaims(value)
 }
