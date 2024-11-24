@@ -7,6 +7,7 @@ import cz.tul.backend.utils.objectMapper
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import java.time.LocalDateTime
 
 class RefreshTokenJwtServiceTests : FeatureSpec({
 
@@ -21,7 +22,8 @@ class RefreshTokenJwtServiceTests : FeatureSpec({
   feature("jwt claims and cookie service") {
     scenario("create token and extract claims") {
       val claims = RefreshTokenClaims(
-        refreshTokenId = 1L
+        refreshTokenId = 1L,
+        createdDateTime = LocalDateTime.now()
       )
 
       val token = refreshTokenJwtService.createCookie(claims)

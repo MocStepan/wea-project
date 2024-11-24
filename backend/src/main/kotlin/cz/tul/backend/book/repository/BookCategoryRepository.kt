@@ -8,4 +8,6 @@ interface BookCategoryRepository : JpaRepository<BookCategory, Long> {
   fun findByName(name: String): BookCategory?
 
   fun findByBookCategoryLink_Book_Id(id: Long): Set<BookCategory>
+
+  fun findByPersonInfoCategory_PersonInfo_Id(id: Long): Set<BookCategory>
 }

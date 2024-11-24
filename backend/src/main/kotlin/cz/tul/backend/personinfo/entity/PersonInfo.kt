@@ -24,11 +24,12 @@ class PersonInfo(
   @Enumerated(EnumType.STRING)
   var gender: Gender? = null,
   var birthDate: LocalDate? = null,
-  var favoriteCategory: String? = null,
   var referenceSource: String? = null,
   var processingConsent: Boolean = false,
   @OneToMany(mappedBy = "personInfo", orphanRemoval = true)
   val personInfoAddress: Set<PersonInfoAddress> = mutableSetOf(),
+  @OneToMany(mappedBy = "personInfo", orphanRemoval = true)
+  val personInfoCategories: Set<PersonInfoCategory> = mutableSetOf(),
 
   private var updatedDateTime: LocalDateTime? = null,
   val createdDateTime: LocalDateTime = LocalDateTime.now()
@@ -40,7 +41,6 @@ class PersonInfo(
         authUser = authUser,
         gender = personInfoDTO.gender,
         birthDate = personInfoDTO.birthDate,
-        favoriteCategory = personInfoDTO.favoriteCategory,
         referenceSource = personInfoDTO.referenceSource,
         processingConsent = personInfoDTO.processingConsent
       )
@@ -50,7 +50,6 @@ class PersonInfo(
   fun update(personInfoDTO: PersonInfoDTO) {
     this.gender = personInfoDTO.gender
     this.birthDate = personInfoDTO.birthDate
-    this.favoriteCategory = personInfoDTO.favoriteCategory
     this.referenceSource = personInfoDTO.referenceSource
     this.processingConsent = personInfoDTO.processingConsent
     this.updatedDateTime = LocalDateTime.now()

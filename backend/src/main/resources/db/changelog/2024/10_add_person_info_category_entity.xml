@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+  <changeSet id="1732050023501-1" author="stepan.moc">
+    <createTable tableName="person_info_category">
+        <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_personinfocategory"/>
+        </column>
+        <column name="person_info_id" type="BIGINT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="book_category_id" type="BIGINT">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="book_category_id" baseTableName="person_info_category"
+                             constraintName="FK_PERSONINFOCATEGORY_ON_BOOKCATEGORY" referencedColumnNames="id"
+                             referencedTableName="book_category" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="person_info_id" baseTableName="person_info_category"
+                             constraintName="FK_PERSONINFOCATEGORY_ON_PERSONINFO" referencedColumnNames="id"
+                             referencedTableName="person_info" onDelete="CASCADE"/>
+
+    <sql>
+        INSERT INTO person_info_category (person_info_id, book_category_id)
+        SELECT PI.id AS person_info_id, BC.id AS book_category_id
+        FROM person_info AS PI
+        JOIN book_category AS BC ON PI.favorite_category = BC.name
+        WHERE PI.favorite_category IS NOT NULL;
+    </sql>
+
+    <dropColumn tableName="person_info" columnName="favorite_category"/>
+  </changeSet>
+</databaseChangeLog>

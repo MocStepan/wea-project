@@ -12,6 +12,8 @@ import {MatInputModule} from '@angular/material/input'
 import {MatSelectModule} from '@angular/material/select'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
+import {BookService} from '../../book/service/book.service'
+import {OptionViewModel} from '../../shared/filter/model/option-view.model'
 import {NotificationService} from '../../shared/notification/notification.service'
 import {PersonInfoForm, PersonInfoFormGroup, PersonInfoFormValue} from '../model/person-info.form'
 import {PersonInfoModel} from '../model/person-info.model'
@@ -56,6 +58,7 @@ import {PersonInfoService} from '../service/person-info.service'
 export class PersonInfoComponent implements OnInit {
   private translateService = inject(TranslateService)
   private personInfoService = inject(PersonInfoService)
+  private bookService = inject(BookService)
   private notificationService = inject(NotificationService)
   private formBuilder: FormBuilder = inject(FormBuilder)
 
@@ -64,12 +67,18 @@ export class PersonInfoComponent implements OnInit {
   protected personalAddressFormGroup: FormGroup<PersonInfoAddressFormGroup> = this.buildAddressFormGroup()
   protected billingAddressFormGroup: FormGroup<PersonInfoAddressFormGroup> = this.buildAddressFormGroup()
   protected formGroup: FormGroup<PersonInfoFormGroup> = this.buildFormGroup()
-  protected isBillingSameAsPersonal: WritableSignal<boolean> = signal(false)
+  protected isBillingSameAsPersonal: WritableSignal<boolean> = signal(true)
+  protected bookCategories: OptionViewModel[] = []
 
   /**
    * Initializes the component. If the user info is already created, it will be loaded and displayed.
    */
   ngOnInit(): void {
+    this.getPersonInfo()
+    this.getBookCategories()
+  }
+
+  private getPersonInfo() {
     this.personInfoService.getUserInfo().subscribe({
       next: (response) => {
         const formValue = PersonInfoFormValue(response)
@@ -79,7 +88,14 @@ export class PersonInfoComponent implements OnInit {
       },
       error: () => {
         this.created = false
+        this.isBillingSameAsPersonal.set(false)
       }
+    })
+  }
+
+  private getBookCategories() {
+    this.bookService.getBookCategoriesOptionViews().subscribe((response) => {
+      this.bookCategories = response
     })
   }
 
@@ -146,13 +162,11 @@ export class PersonInfoComponent implements OnInit {
   private updatePersonInfo(personInfoModel: PersonInfoModel) {
     this.personInfoService.updateUserInfo(personInfoModel).subscribe({
       next: () => {
-        this.created = true
         this.translateService.get('INFO_POSTED').subscribe((res: string) => {
           this.notificationService.successNotification(res)
         })
       },
       error: () => {
-        this.created = false
         this.translateService.get('INFO_ERROR').subscribe((res: string) => {
           this.notificationService.errorNotification(res)
         })
@@ -168,11 +182,11 @@ export class PersonInfoComponent implements OnInit {
     const group: PersonInfoForm = {
       gender: null,
       birthDate: null,
-      favoriteCategory: null,
       referenceSource: null,
       processingConsent: null,
       personalAddress: this.personalAddressFormGroup,
-      billingAddress: this.billingAddressFormGroup
+      billingAddress: this.billingAddressFormGroup,
+      favoriteCategories: []
     }
 
     return this.formBuilder.group(group)

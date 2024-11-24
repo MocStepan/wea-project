@@ -16,7 +16,9 @@ class PersonInfoControllerTests : FeatureSpec({
     scenario("success") {
       val spec = createSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf()
+      )
       val claims = createUserClaims()
       val authentication = mockk<Authentication>()
 
@@ -32,7 +34,9 @@ class PersonInfoControllerTests : FeatureSpec({
     scenario("failure") {
       val spec = createSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf()
+      )
       val claims = createUserClaims()
       val authentication = mockk<Authentication>()
 
@@ -52,14 +56,19 @@ class PersonInfoControllerTests : FeatureSpec({
 
       val claims = createUserClaims()
       val authentication = mockk<Authentication>()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf()
+      )
 
       every { authentication.principal } returns claims
-      every { spec.personInfoService.getPersonInfo(claims) } returns PersonInfoDTO()
+      every { spec.personInfoService.getPersonInfo(claims) } returns personInfoDTO
 
       val response = spec.personInfoController.getPersonInfo(authentication)
 
       response.statusCode shouldBe HttpStatus.OK
-      response.body shouldBe PersonInfoDTO()
+      response.body shouldBe PersonInfoDTO(
+        favoriteCategories = setOf()
+      )
     }
 
     scenario("failure") {
@@ -82,7 +91,9 @@ class PersonInfoControllerTests : FeatureSpec({
     scenario("success") {
       val spec = createSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf()
+      )
       val claims = createUserClaims()
       val authentication = mockk<Authentication>()
 
@@ -98,7 +109,9 @@ class PersonInfoControllerTests : FeatureSpec({
     scenario("failure") {
       val spec = createSpec()
 
-      val personInfoDTO = PersonInfoDTO()
+      val personInfoDTO = PersonInfoDTO(
+        favoriteCategories = setOf()
+      )
       val claims = createUserClaims()
       val authentication = mockk<Authentication>()
 

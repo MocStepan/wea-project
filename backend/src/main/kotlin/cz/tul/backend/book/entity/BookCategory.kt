@@ -1,5 +1,6 @@
 package cz.tul.backend.book.entity
 
+import cz.tul.backend.personinfo.entity.PersonInfoCategory
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -13,5 +14,7 @@ class BookCategory(
   val id: Long = 0L,
   val name: String,
   @OneToMany(mappedBy = "category", orphanRemoval = true)
-  val bookCategoryLink: Set<BookCategoryLink> = mutableSetOf()
+  val bookCategoryLink: Set<BookCategoryLink> = mutableSetOf(),
+  @OneToMany(mappedBy = "bookCategory", orphanRemoval = true)
+  val personInfoCategory: Set<PersonInfoCategory> = mutableSetOf()
 )
