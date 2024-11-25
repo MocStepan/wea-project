@@ -1,7 +1,7 @@
 import {CommonModule, NgOptimizedImage} from '@angular/common'
 import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {MatIconButton} from '@angular/material/button'
+import {MatButton, MatIconButton} from '@angular/material/button'
 import {MatCard} from '@angular/material/card'
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field'
 import {MatIcon} from '@angular/material/icon'
@@ -14,6 +14,7 @@ import {RatingModule} from 'primeng/rating'
 import {Nullable} from 'primeng/ts-helpers'
 
 import {AuthService} from '../../../auth/service/auth.service'
+import {CartSessionService} from '../../../cart/service/cart-session.service'
 import {NotificationService} from '../../../shared/notification/notification.service'
 import {BookService} from '../../service/book.service'
 import {BookFavoriteService} from '../../service/book-favorite.service'
@@ -28,7 +29,23 @@ import {BookRatingCreateModel} from '../model/book-rating-create.model'
 @Component({
   selector: 'app-book-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatLabel, MatFormField, MatCard, NgOptimizedImage, TranslateModule, MatInput, RatingModule, MatIcon, MatTooltip, MatIconButton, MatError],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatLabel,
+    MatFormField,
+    MatCard,
+    NgOptimizedImage,
+    TranslateModule,
+    MatInput,
+    RatingModule,
+    MatIcon,
+    MatTooltip,
+    MatIconButton,
+    MatError,
+    MatButton
+  ],
   providers: [],
   templateUrl: './book-detail.component.html',
   styleUrls: ['./book-detail.component.css']
@@ -38,6 +55,7 @@ export class BookDetailComponent implements OnInit {
   commentInput: WritableSignal<string> = signal('')
   ratingInput: WritableSignal<number> = signal(0)
   isBookFavorite: WritableSignal<boolean> = signal(false)
+  protected quantityDetail: WritableSignal<number> = signal(1)
 
   protected readonly moment = moment
   private bookId: Nullable<number> = null
@@ -51,6 +69,7 @@ export class BookDetailComponent implements OnInit {
   private bookRatingService = inject(BookRatingService)
   private notificationService = inject(NotificationService)
   private bookFavoriteService = inject(BookFavoriteService)
+  private cartSessionService = inject(CartSessionService)
 
   /**
    * Initializes the component. Fetches the book detail based on the book id.
@@ -280,5 +299,17 @@ export class BookDetailComponent implements OnInit {
         })
       }
     })
+  }
+
+  plusOne() {
+    this.quantityDetail.set(this.quantityDetail() + 1)
+  }
+
+  minusOne() {
+    this.quantityDetail.set(this.quantityDetail() - 1)
+  }
+
+  addToCart() {
+    this.cartSessionService.addBookToCart(this.bookId!, this.quantityDetail())
   }
 }

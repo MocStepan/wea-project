@@ -23,6 +23,7 @@ import {ActivatedRoute, Router} from '@angular/router'
 import {TranslateModule} from '@ngx-translate/core'
 import {combineLatestWith} from 'rxjs'
 
+import {CartSessionService} from '../../../cart/service/cart-session.service'
 import {FilterComponent} from '../../../shared/filter/component/filter.component'
 import {ColumnDefModel} from '../../../shared/filter/model/column-def.model'
 import {EnumColumnTypeModel} from '../../../shared/filter/model/enum-column-type.model'
@@ -79,12 +80,14 @@ export class BookListComponent implements OnInit {
   protected books: WritableSignal<PageResponseModel<BookTableModel> | null> = signal(null)
   protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter(CONFIG_NAME)
   protected columns: WritableSignal<ColumnDefModel[]> = signal([])
+
   private favorite = false
 
   // Injected services instead of using the constructor
   private router: Router = inject(Router)
   private bookService: BookService = inject(BookService)
   private route: ActivatedRoute = inject(ActivatedRoute)
+  private cartSessionService = inject(CartSessionService)
 
   /**
    * Initializes the component by fetching authors and categories options and setting up the column definitions.
@@ -154,6 +157,10 @@ export class BookListComponent implements OnInit {
    */
   goToBookDetail(bookId: number) {
     this.router.navigate([`/book-list/${bookId}`])
+  }
+
+  addToCart(id: number) {
+    this.cartSessionService.addBookToCart(id, 1)
   }
 }
 

@@ -86,5 +86,8 @@
   "save": "Uložit",
   "INFO_POSTED": "Personal info updated!",
   "INFO_ERROR": "Failed to update personal data",
-  "PROFILE": "Profile"
+  "PROFILE": "Profile",
+  "PRICE": "Price",
+  "ADD_TO_CART": "Add to cart",
+  "CART": "Cart"
 }

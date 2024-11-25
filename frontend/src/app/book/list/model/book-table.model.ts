@@ -6,4 +6,5 @@ export interface BookTableModel {
   categories: string[];
   thumbnail: string;
   description: string;
+  price: number;
 }

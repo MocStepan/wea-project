@@ -86,5 +86,8 @@
   "save": "Uložit",
   "INFO_POSTED": "Udáje byly aktualizovány",
   "INFO_ERROR": "Nepodařilo se aktualizovat údaje",
-  "PROFILE": "Profil"
+  "PROFILE": "Profil",
+  "PRICE": "Cena",
+  "ADD_TO_CART": "Přidat do košíku",
+  "CART": "Košík"
 }

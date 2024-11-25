@@ -20,4 +20,5 @@ export interface BookDetailModel {
   bookComments: BookCommentDetailModel[];
   disabled: boolean;
   favorite: boolean;
+  price: number;
 }
