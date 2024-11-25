@@ -54,6 +54,10 @@
       <span *ngIf="book.averageRating; else unknownDescription">{{ book.description }}</span>
       <ng-template #unknownDescription>{{ 'UNKNOWN_TEXT' | translate }}</ng-template>
     </p>
+
+    <p><strong>{{ 'PRICE' | translate }}: </strong>
+      <span>{{ book.price }}</span>
+    </p>
   </div>
 
   <div *ngIf="isSignedIn()">
@@ -65,13 +69,31 @@
     </button>
 
     <form (ngSubmit)="onSubmitBookRating()" class="rating">
-      <div class="flex-column">
-        <button class="btn submit-btn" type="submit">{{ 'SUBMIT_RATING' | translate }}</button>
-        <button (click)="deleteBookRating()" class="btn submit-btn" type="button">
+      <div>
+        <button class="submit-button" type="submit">{{ 'SUBMIT_RATING' | translate }}</button>
+        <button (click)="deleteBookRating()" class="submit-button" type="button">
           {{ 'DELETE_RATING' | translate }}
         </button>
       </div>
     </form>
+  </div>
+
+  <div class="cart-section">
+    <div class="add-cart">
+      <button class="submit-button" (click)="addToCart()">
+        <mat-icon>add_shopping_cart</mat-icon>
+        {{"ADD_TO_CART" | translate}}
+      </button>
+      <input matInput min="1" class="cart-number" [ngModel]="quantityDetail()">
+      <div class="arrows">
+        <button class="arrow" (click)="plusOne()">
+          <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+        <button class="arrow" (click)="minusOne()">
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="book.bookComments?.length || book.disabled" class="comment-section">
@@ -103,8 +125,10 @@
           required>
         </textarea>
       </mat-form-field>
-      <button [disabled]="!commentForm.valid || book?.disabled === true" class="submit-button"
+      <div class="detail-buttons">
+        <button [disabled]="!commentForm.valid || book?.disabled === true" class="submit-button"
               type="submit">{{ 'SUBMIT_COMMENT' | translate }}</button>
+      </div>
     </form>
   </div>
 </div>

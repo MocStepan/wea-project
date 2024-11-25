@@ -110,7 +110,8 @@ fun createBook(
   averageRating: Double? = null,
   numPages: Int? = null,
   ratingsCount: Int? = null,
-  disabled: Boolean = false
+  disabled: Boolean = false,
+  price: Double = 0.0
 ): Book {
   return Book(
     id = id,
@@ -124,7 +125,8 @@ fun createBook(
     averageRating = averageRating,
     numPages = numPages,
     ratingsCount = ratingsCount,
-    disabled = disabled
+    disabled = disabled,
+    price = price
   )
 }
 
@@ -141,7 +143,7 @@ fun createBookImportDTO(
   averageRating: Double? = 4.5,
   numPages: Int? = 48,
   ratingsCount: Int? = 3,
-  price: Double? = null
+  price: Double = 0.0
 ): BookImportDTO {
   return BookImportDTO(
     isbn13 = isbn13,

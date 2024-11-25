@@ -33,7 +33,7 @@ class Book(
   val bookRatings: Set<BookRating> = mutableSetOf(),
   @OneToMany(mappedBy = "book", orphanRemoval = true)
   val favorites: Set<BookFavorite> = mutableSetOf(),
-  var price: Double? = null
+  var price: Double
 ) {
 
   companion object {

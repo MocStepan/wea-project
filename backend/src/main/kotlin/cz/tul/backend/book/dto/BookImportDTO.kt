@@ -13,5 +13,5 @@ data class BookImportDTO(
   val averageRating: Double?,
   val numPages: Int?,
   val ratingsCount: Int?,
-  val price: Double?
+  val price: Double
 )
