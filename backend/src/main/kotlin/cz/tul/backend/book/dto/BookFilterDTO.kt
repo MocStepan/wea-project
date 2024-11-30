@@ -15,6 +15,7 @@ import cz.tul.backend.common.filter.dto.FilterDTO
 data class BookFilterDTO(
   override val size: Int = 20,
   override val page: Int = 0,
+  val id: FilterCriteriaDTO? = null,
   val isbn13: FilterCriteriaDTO? = null,
   val isbn10: FilterCriteriaDTO? = null,
   val title: FilterCriteriaDTO? = null,
@@ -29,6 +30,10 @@ data class BookFilterDTO(
    */
   override fun toFilterCriteria(): MutableList<FilterCriteria<Any>> {
     val list = mutableListOf<FilterCriteria<Any>>()
+
+    id?.let {
+      list.add(FilterCriteria.convertAndBuild(it, Book_.ID))
+    }
 
     isbn13?.let {
       list.add(FilterCriteria.convertAndBuild(it, Book_.ISBN13))

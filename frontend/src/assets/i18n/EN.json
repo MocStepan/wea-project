@@ -89,5 +89,6 @@
   "PROFILE": "Profile",
   "PRICE": "Price",
   "ADD_TO_CART": "Add to cart",
-  "CART": "Cart"
+  "CART": "Cart",
+  "INVALID_DATA": "Invalid data"
 }

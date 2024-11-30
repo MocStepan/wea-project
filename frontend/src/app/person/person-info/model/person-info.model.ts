@@ -1,8 +1,8 @@
 import {Nullable} from 'primeng/ts-helpers'
 
 import {PersonInfoFormValue} from './person-info.form'
-import {PersonInfoAddressModel} from './person-info-address.model'
 import {PersonInfoCategoryModel} from './person-info-category.model'
+import {PersonInfoAddressModel} from '../../person-info-address/model/person-info-address.model'
 
 export interface PersonInfoModel {
   gender: Nullable<string>

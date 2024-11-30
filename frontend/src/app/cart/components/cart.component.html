@@ -1,1 +1,22 @@
-<p>Work in progress</p>
+<mat-stepper linear #stepper>
+
+  <!-- Zavolat si filter knih kde bude filterCriteria.IN a pole id. Vrací stejný objekt jak v book listu -->
+  <mat-step>
+    <ng-template matStepLabel>Košík</ng-template>
+
+  </mat-step>
+
+  <!-- Přidat formulář pro údaje o uživateli vše je povinné (kromě asi favoriteCategories)-->
+  <mat-step>
+    <ng-template matStepLabel>Údaje</ng-template>
+    <app-person-info [useValidators]="true"></app-person-info>
+  </mat-step>
+
+
+  <!-- Přidat přehled asi deatail košíku a detail uživatele -->
+  <mat-step>
+    <ng-template matStepLabel>Potvrzení objednávky</ng-template>
+
+  </mat-step>
+
+</mat-stepper>

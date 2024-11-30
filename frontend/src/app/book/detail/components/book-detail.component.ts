@@ -55,7 +55,7 @@ export class BookDetailComponent implements OnInit {
   commentInput: WritableSignal<string> = signal('')
   ratingInput: WritableSignal<number> = signal(0)
   isBookFavorite: WritableSignal<boolean> = signal(false)
-  protected quantityDetail: WritableSignal<number> = signal(1)
+  protected bookQuantity = 1
 
   protected readonly moment = moment
   private bookId: Nullable<number> = null
@@ -302,14 +302,14 @@ export class BookDetailComponent implements OnInit {
   }
 
   plusOne() {
-    this.quantityDetail.set(this.quantityDetail() + 1)
+    this.bookQuantity = this.bookQuantity + 1
   }
 
   minusOne() {
-    this.quantityDetail.set(this.quantityDetail() - 1)
+    this.bookQuantity = this.bookQuantity - 1
   }
 
   addToCart() {
-    this.cartSessionService.addBookToCart(this.bookId!, this.quantityDetail())
+    this.cartSessionService.addBookToCart(this.bookId!, this.bookQuantity)
   }
 }
