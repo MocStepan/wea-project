@@ -3,7 +3,7 @@ import {Observable} from 'rxjs'
 
 import {BASE_API_URL} from '../../../config'
 import {HttpService} from '../../shared/http/service/http.service'
-import {PersonInfoModel} from '../model/person-info.model'
+import {PersonInfoModel} from '../person-info/model/person-info.model'
 
 @Injectable({providedIn: 'root'})
 export class PersonInfoService {

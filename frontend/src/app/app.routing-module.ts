@@ -6,7 +6,7 @@ import {SignUpComponent} from './auth/sing-up/components/sign-up.component'
 import {BookDetailComponent} from './book/detail/components/book-detail.component'
 import {BookListComponent} from './book/list/components/book-list.component'
 import {CartComponent} from './cart/components/cart.component'
-import {PersonInfoComponent} from './person-info/components/person-info.component'
+import {PersonInfoComponent} from './person/person-info/components/person-info.component'
 
 const routes: Routes = [
   {path: '', component: BookListComponent, data: {favorite: false}},

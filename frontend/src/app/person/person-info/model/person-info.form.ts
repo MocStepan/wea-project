@@ -2,7 +2,10 @@ import {FormControl, FormGroup} from '@angular/forms'
 import {Nullable} from 'primeng/ts-helpers'
 
 import {PersonInfoModel} from './person-info.model'
-import {PersonInfoAddressFormGroup, PersonInfoAddressFormValue} from './person-info-address.form'
+import {
+  PersonInfoAddressFormGroup,
+  PersonInfoAddressFormValue
+} from '../../person-info-address/model/person-info-address.form'
 
 export interface PersonInfoForm {
   gender: unknown

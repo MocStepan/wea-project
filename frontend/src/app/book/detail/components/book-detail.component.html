@@ -84,12 +84,12 @@
         <mat-icon>add_shopping_cart</mat-icon>
         {{"ADD_TO_CART" | translate}}
       </button>
-      <input matInput min="1" class="cart-number" [ngModel]="quantityDetail()">
+      <input matInput class="cart-number" [ngModel]="bookQuantity" [readonly]="true">
       <div class="arrows">
         <button class="arrow" (click)="plusOne()">
           <mat-icon>keyboard_arrow_up</mat-icon>
         </button>
-        <button class="arrow" (click)="minusOne()">
+        <button class="arrow" (click)="minusOne()" [disabled]="bookQuantity === 1">
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
       </div>
