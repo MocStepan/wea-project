@@ -1,10 +1,11 @@
 import {NgForOf, NgIf} from '@angular/common'
 import {ChangeDetectionStrategy, Component, inject, OnInit, signal, WritableSignal} from '@angular/core'
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MatOption} from '@angular/material/autocomplete'
 import {MatButton} from '@angular/material/button'
 import {
-  MatCard, MatCardActions,
+  MatCard,
+  MatCardActions,
   MatCardContent,
   MatCardHeader,
   MatCardImage,
@@ -19,7 +20,8 @@ import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
 import {MatList, MatListItem} from '@angular/material/list'
 import {MatSelect} from '@angular/material/select'
-import {MatStep, MatStepLabel, MatStepper} from '@angular/material/stepper'
+import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper'
+import {Router} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
 import {BookListComponent} from '../../book/list/components/book-list.component'
@@ -31,12 +33,12 @@ import {FilterCriteriaModel} from '../../shared/filter/model/filter-criteria.mod
 import {PageResponseModel} from '../../shared/filter/model/page-response.model'
 import {FilterOperatorEnum} from '../../shared/filter/valueobject/filter-operator.enum'
 import {NotificationService} from '../../shared/notification/notification.service'
+import {CartForm, CartFormGroup} from '../model/cart.form'
 import {CartCreateModel} from '../model/cart-create.model'
 import {CartItemCreateModel} from '../model/cart-item-create.model'
-import {CartPaymentFormGroup} from '../model/cart-payment.model'
 import {CartService} from '../service/cart.service'
 import {CartSessionService} from '../service/cart-session.service'
-import {PaymentMethodEnum} from '../valueobject/payment-method.enum'
+import {addPaymentMethodToPrice, PaymentMethodEnum} from '../valueobject/payment-method.enum'
 
 const CONFIG_NAME = 'book-list'
 
@@ -79,7 +81,9 @@ const CONFIG_NAME = 'book-list'
     ReactiveFormsModule,
     MatList,
     MatListItem,
-    NgIf
+    NgIf,
+    MatStepperNext,
+    MatStepperPrevious
   ],
   providers: [BookListComponent, PersonInfoComponent, FormBuilder],
   templateUrl: './cart.component.html',
@@ -92,73 +96,66 @@ export class CartComponent implements OnInit {
   private translateService = inject(TranslateService)
   private notificationService = inject(NotificationService)
   private formBuilder: FormBuilder = inject(FormBuilder)
-  bookComponent = inject(BookListComponent)
+  private router = inject(Router)
 
-  protected fee = 0
-  cart = new Map<number, number>()
-  protected formGroup!: FormGroup<CartPaymentFormGroup>
+  protected booksTotalPrice = 0
+  protected booksPrice = 0
+  protected cart = new Map<number, number>()
+  protected formGroup: FormGroup<CartFormGroup> = this.buildFormGroup()
   protected bookFilter: BookFilterModel = BookFilterModel.createDefaultFilter(CONFIG_NAME)
   protected books: WritableSignal<PageResponseModel<BookTableModel> | null> = signal(null)
+
+  protected readonly paymentMethodEnum = PaymentMethodEnum
 
   public ngOnInit(): void {
     this.cart = this.cartSessionService.getCart()
     this.cart = new Map(Object.entries(this.cartSessionService.getCart()).map(([key, value]) => [Number(key), value]))
-    this.formGroup = this.buildFormGroup()
-    this.bookFilter.size = this.cart.size
-    this.bookFilter.id = new FilterCriteriaModel(FilterOperatorEnum.IN, Array.from(this.cart.keys()))
+
     this.filterBooks()
+    this.recalculatePrices()
   }
-  filterBooks() {
-    this.bookService.filterBooks(this.bookFilter, false).subscribe((response) => {
-      this.books.set(response)
-    })
-  }
+
   removeBookFromCart(id: number) {
     this.cartSessionService.removeBookFromCart(id)
+    this.cart.delete(id)
     this.books()!.content = this.books()!.content.filter(book => book.id !== id)
-    this.filterBooks()
   }
 
   goToBookDetail(id: number) {
-    this.bookComponent.goToBookDetail(id)
+    this.router.navigate([`/book-list/${id}`])
   }
 
   onSubmit() {
-    this.cartService.postCart(new CartCreateModel(this.formGroup.value.paymentMethod!, this.createCartList())).subscribe({
-      next: () => {
-        this.translateService.get('PAYMENT_SUCCESS').subscribe((res: string) => {
-          this.notificationService.successNotification(res)
-        })
-        this.cartSessionService.clearCart()
-      },
-      error: () => {
-        this.translateService.get('PAYMENT_ERROR').subscribe((res: string) => {
-          this.notificationService.errorNotification(res)
-        })
-      }
-    })
+    if (this.formGroup.invalid) {
+      this.translateService.get('INVALID_DATA').subscribe((res: string) => {
+        this.notificationService.errorNotification(res)
+      })
+      return
+    }
+
+    if (this.cart.size === 0) {
+      this.translateService.get('CART_CANNOT_BE_EMPTY').subscribe((res: string) => {
+        this.notificationService.errorNotification(res)
+      })
+      return
+    }
+
+    this.createCartCreateModel()
   }
 
-  private buildFormGroup(): FormGroup<CartPaymentFormGroup> {
-    const validator = [Validators.required]
-    return this.formBuilder.group<CartPaymentFormGroup>({
-      email: new FormControl<string | null>(null, validator),
-      paymentMethod: new FormControl<PaymentMethodEnum | null>(null, validator),
-    })
-  }
-
-  private createCartList() {
-    return Array.from(this.cart.entries()).map(([bookId, quantity]) => new CartItemCreateModel(bookId, quantity))
-  }
-
-
-  getTotalPrice() {
-    const total = Array.from(this.cart.entries()).reduce((acc, [bookId, quantity]) => {
-      const book = this.books()!.content.find(cost => cost.id === bookId)
+  recalculatePrices() {
+    this.booksPrice = Array.from(this.cart.entries()).reduce((acc, [bookId, quantity]) => {
+      const book = this.books()!.content.find(model => model.id === bookId)
       return acc + (book ? book.price * quantity : 0)
     }, 0)
-    return total + this.fee
+
+    if (!this.formGroup.value.paymentMethod) {
+      this.booksTotalPrice = this.booksPrice
+    } else {
+      this.booksTotalPrice = addPaymentMethodToPrice(this.booksPrice, this.formGroup.value.paymentMethod)
+    }
   }
+
   getEntries() {
     const ids = Array.from(this.cart.entries())
     return ids.map(([bookId, quantity]) => {
@@ -167,28 +164,50 @@ export class CartComponent implements OnInit {
         bookId,
         quantity,
         title: entry?.title,
-        cost: entry?.price,
+        cost: entry?.price
       }
     })
   }
 
-  getFee() {
-    if (this.formGroup.value.paymentMethod === PaymentMethodEnum.CARD) {
-      const entries = this.getEntries()
-      if (entries.length === 0) {
-        return 0
-      }
-      this.fee = entries.reduce((acc, entry) => acc + (entry.quantity * entry.cost! * 0.01), 0)
+  private buildFormGroup(): FormGroup {
+    const group: CartForm = {
+      email: [null, [Validators.required, Validators.email]],
+      paymentMethod: [null, [Validators.required]]
     }
-    else if (this.formGroup.value.paymentMethod === PaymentMethodEnum.CASH) {
-      this.fee = 50
-    }
-    else {
-      this.fee = 0
-    }
-    return this.fee
+
+    return this.formBuilder.group(group)
   }
 
-  protected readonly PaymentMethodEnum = PaymentMethodEnum
+  private filterBooks() {
+    this.bookFilter.size = this.cart.size
+    this.bookFilter.id = new FilterCriteriaModel(FilterOperatorEnum.IN, Array.from(this.cart.keys()))
+    if (this.cart.size === 0) {
+      this.books.set(null)
+      return
+    }
+
+    this.bookService.filterBooks(this.bookFilter, false).subscribe((response) => {
+      this.books.set(response)
+    })
+  }
+
+  private createCartCreateModel() {
+    const cartItems = Array.from(this.cart.entries()).map(([bookId, quantity]) => new CartItemCreateModel(bookId, quantity))
+
+    this.cartService.createCart(new CartCreateModel(this.formGroup.value.paymentMethod!, cartItems)).subscribe({
+      next: () => {
+        this.translateService.get('PAYMENT_SUCCESS').subscribe((res: string) => {
+          this.notificationService.successNotification(res)
+        })
+        this.cartSessionService.clearCart()
+        this.router.navigate(['/'])
+      },
+      error: () => {
+        this.translateService.get('PAYMENT_ERROR').subscribe((res: string) => {
+          this.notificationService.errorNotification(res)
+        })
+      }
+    })
+  }
 }
 

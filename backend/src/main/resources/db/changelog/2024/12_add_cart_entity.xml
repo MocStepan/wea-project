@@ -31,7 +31,7 @@
       <column name="house_number" type="VARCHAR(255)">
         <constraints nullable="false"/>
       </column>
-      <column name="zip_code" type="VARCHAR(10)">
+      <column name="zip_code" type="VARCHAR(50)">
         <constraints nullable="false"/>
       </column>
       <column name="created_date_time" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP">

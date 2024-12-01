@@ -104,5 +104,9 @@
   "QUANTITY": "Quantity",
   "TOTAL_PRICE": "Total Price",
   "PAYMENT_CONFIRMATION": "Payment Confirmation",
-  "FEE": "Fee"
+  "FEE": "Fee",
+  "CART_CANNOT_BE_EMPTY": "Cart cannot be empty",
+  "CART_SUBMIT_TITLE": "Order Confirmation",
+  "NEXT": "Next",
+  "PREVIOUS": "Previous"
 }
