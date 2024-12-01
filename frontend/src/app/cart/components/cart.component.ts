@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core'
 
 import {CartSessionService} from '../service/cart-session.service'
 import {MatStep, MatStepLabel, MatStepper} from '@angular/material/stepper'
-import {PersonInfoComponent} from '../../person/person-info/components/person-info.component'
+import {PersonInfoComponent} from '../../person-info/components/person-info.component'
 
 /**
  * Component for the cart.

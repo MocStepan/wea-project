@@ -9,14 +9,13 @@
   <!-- Přidat formulář pro údaje o uživateli vše je povinné (kromě asi favoriteCategories)-->
   <mat-step>
     <ng-template matStepLabel>Údaje</ng-template>
-    <app-person-info [useValidators]="true"></app-person-info>
+    <app-person-info [useValidators]="true" (dataSubmittedEvent)="stepper.next()"></app-person-info>
   </mat-step>
 
 
   <!-- Přidat přehled asi deatail košíku a detail uživatele -->
-  <mat-step>
+  <mat-step [editable]="false">
     <ng-template matStepLabel>Potvrzení objednávky</ng-template>
-
   </mat-step>
 
 </mat-stepper>

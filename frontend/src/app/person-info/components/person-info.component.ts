@@ -1,5 +1,15 @@
 import {CommonModule} from '@angular/common'
-import {ChangeDetectionStrategy, Component, inject, Input, OnInit, signal, WritableSignal} from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+  WritableSignal
+} from '@angular/core'
 import {
   FormBuilder,
   FormGroup,
@@ -22,15 +32,11 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
 import {PersonInfoForm, PersonInfoFormGroup, PersonInfoFormValue} from '../model/person-info.form'
 import {PersonInfoModel} from '../model/person-info.model'
-import {BookService} from '../../../book/service/book.service'
-import {PersonInfoService} from '../../service/person-info.service'
-import {NotificationService} from '../../../shared/notification/notification.service'
-import {
-  isPersonAddressEqual,
-  PersonInfoAddressForm,
-  PersonInfoAddressFormGroup
-} from '../../person-info-address/model/person-info-address.form'
-import {OptionViewModel} from '../../../shared/filter/model/option-view.model'
+import {isPersonAddressEqual, PersonInfoAddressFormGroup} from '../model/person-info-address.form'
+import {PersonInfoService} from '../service/person-info.service'
+import {BookService} from '../../book/service/book.service'
+import {NotificationService} from '../../shared/notification/notification.service'
+import {OptionViewModel} from '../../shared/filter/model/option-view.model'
 
 
 @Component({
@@ -70,6 +76,7 @@ import {OptionViewModel} from '../../../shared/filter/model/option-view.model'
 })
 export class PersonInfoComponent implements OnInit {
   @Input({required: true}) useValidators: boolean = false
+  @Output() dataSubmittedEvent: EventEmitter<boolean> = new EventEmitter<boolean>()
   private translateService = inject(TranslateService)
   private personInfoService = inject(PersonInfoService)
   private bookService = inject(BookService)
@@ -141,12 +148,17 @@ export class PersonInfoComponent implements OnInit {
    * Submits the form. If the user info is already created, it will be updated, otherwise it will be created.
    */
   onSubmit(): void {
-    this.formGroup.updateValueAndValidity()
-    this.personalAddressFormGroup.updateValueAndValidity()
-    this.billingAddressFormGroup.updateValueAndValidity()
+    this.formGroup.markAllAsTouched()
 
     if (this.formGroup.invalid) {
       this.translateService.get('INVALID_DATA').subscribe((res: string) => {
+        this.notificationService.errorNotification(res)
+      })
+      return
+    }
+
+    if (this.formGroup.controls.processingConsent.value === false) {
+      this.translateService.get('CONSENT_REQUIRED').subscribe((res: string) => {
         this.notificationService.errorNotification(res)
       })
       return
@@ -171,6 +183,7 @@ export class PersonInfoComponent implements OnInit {
     this.personInfoService.createUserInfo(personInfoModel).subscribe({
       next: () => {
         this.created = true
+        this.dataSubmittedEvent.emit(true)
         this.translateService.get('INFO_POSTED').subscribe((res: string) => {
           this.notificationService.successNotification(res)
         })
@@ -192,6 +205,7 @@ export class PersonInfoComponent implements OnInit {
   private updatePersonInfo(personInfoModel: PersonInfoModel) {
     this.personInfoService.updateUserInfo(personInfoModel).subscribe({
       next: () => {
+        this.dataSubmittedEvent.emit(true)
         this.translateService.get('INFO_POSTED').subscribe((res: string) => {
           this.notificationService.successNotification(res)
         })

@@ -90,5 +90,6 @@
   "PRICE": "Price",
   "ADD_TO_CART": "Add to cart",
   "CART": "Cart",
-  "INVALID_DATA": "Invalid data"
+  "INVALID_DATA": "Invalid data",
+  "CONSENT_REQUIRED": "Consent is required"
 }
