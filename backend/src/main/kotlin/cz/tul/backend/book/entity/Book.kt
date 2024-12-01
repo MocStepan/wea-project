@@ -1,6 +1,7 @@
 package cz.tul.backend.book.entity
 
 import cz.tul.backend.book.dto.BookImportDTO
+import cz.tul.backend.cart.entity.CartItem
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -33,7 +34,9 @@ class Book(
   val bookRatings: Set<BookRating> = mutableSetOf(),
   @OneToMany(mappedBy = "book", orphanRemoval = true)
   val favorites: Set<BookFavorite> = mutableSetOf(),
-  var price: Double
+  var price: Double,
+  @OneToMany(mappedBy = "book", orphanRemoval = true)
+  val cartItem: List<CartItem> = mutableListOf()
 ) {
 
   companion object {

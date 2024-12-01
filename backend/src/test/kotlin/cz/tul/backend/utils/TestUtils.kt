@@ -16,6 +16,9 @@ import cz.tul.backend.book.dto.BookImportDTO
 import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.entity.BookComment
 import cz.tul.backend.book.entity.BookRating
+import cz.tul.backend.cart.entity.Cart
+import cz.tul.backend.cart.entity.CartDeliveryAddress
+import cz.tul.backend.cart.valueobject.PaymentMethod
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
 import cz.tul.backend.personinfo.entity.PersonInfo
@@ -236,11 +239,11 @@ fun createPersonInfoAddress(
   id: Long = 0L,
   addressType: AddressType = AddressType.PERSONAL,
   personInfo: PersonInfo = mockk(),
-  country: String = "address",
-  street: String = "country",
-  city: String = "city",
-  houseNumber: String = "1",
-  zipCode: String = "12345"
+  country: String? = "address",
+  street: String? = "country",
+  city: String? = "city",
+  houseNumber: String? = "1",
+  zipCode: String? = "12345"
 ): PersonInfoAddress {
   return PersonInfoAddress(
     id = id,
@@ -251,5 +254,21 @@ fun createPersonInfoAddress(
     street = street,
     houseNumber = houseNumber,
     zipCode = zipCode
+  )
+}
+
+fun createCart(
+  id: Long = 0L,
+  personInfo: PersonInfo = mockk(),
+  deliveryAddress: CartDeliveryAddress = mockk(),
+  paymentMethod: PaymentMethod = PaymentMethod.CARD,
+  totalPrice: Double = 0.0
+): Cart {
+  return Cart(
+    id = id,
+    personInfo = personInfo,
+    deliveryAddress = deliveryAddress,
+    paymentMethod = paymentMethod,
+    totalPrice = totalPrice
   )
 }

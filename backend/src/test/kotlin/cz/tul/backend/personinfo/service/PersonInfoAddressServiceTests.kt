@@ -91,6 +91,43 @@ class PersonInfoAddressServiceTests : FeatureSpec({
       captured.country shouldBe personInfoAddressDTO.country
     }
   }
+
+  feature("get billing address by person info id") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val personInfo = createPersonInfo()
+      val address = PersonInfoAddress.from(PersonInfoAddressDTO(), personInfo, AddressType.BILLING)
+
+      every {
+        spec.personInfoAddressRepository.findByPersonInfo_IdAndAddressType(
+          personInfo.id,
+          AddressType.BILLING
+        )
+      } returns address
+
+      val result = spec.personInfoAddressService.getRefernceIfExistsByPersonInfoId(personInfo.id)
+
+      result shouldBe address
+    }
+
+    scenario("address not found") {
+      val spec = getSpec()
+
+      val personInfo = createPersonInfo()
+
+      every {
+        spec.personInfoAddressRepository.findByPersonInfo_IdAndAddressType(
+          personInfo.id,
+          AddressType.BILLING
+        )
+      } returns null
+
+      val result = spec.personInfoAddressService.getRefernceIfExistsByPersonInfoId(personInfo.id)
+
+      result shouldBe null
+    }
+  }
 })
 
 private class PersonInfoAddressServiceSpecWrapper(
