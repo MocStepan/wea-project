@@ -1,6 +1,7 @@
 package cz.tul.backend.personinfo.entity
 
 import cz.tul.backend.auth.entity.AuthUser
+import cz.tul.backend.cart.entity.Cart
 import cz.tul.backend.personinfo.dto.PersonInfoDTO
 import cz.tul.backend.personinfo.valueobject.Gender
 import jakarta.persistence.Entity
@@ -30,6 +31,8 @@ class PersonInfo(
   val personInfoAddress: Set<PersonInfoAddress> = mutableSetOf(),
   @OneToMany(mappedBy = "personInfo", orphanRemoval = true)
   val personInfoCategories: Set<PersonInfoCategory> = mutableSetOf(),
+  @OneToMany(mappedBy = "personInfo", orphanRemoval = true)
+  val cart: List<Cart> = mutableListOf(),
 
   private var updatedDateTime: LocalDateTime? = null,
   val createdDateTime: LocalDateTime = LocalDateTime.now()

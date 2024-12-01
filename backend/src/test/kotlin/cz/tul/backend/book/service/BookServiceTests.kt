@@ -103,6 +103,30 @@ class BookServiceTests : FeatureSpec({
       result shouldBe null
     }
   }
+
+  feature("get book if exist") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val book = createBook()
+
+      every { spec.bookRepository.findByIdOrNull(0L) } returns book
+
+      val result = spec.bookService.getReferenceIfExists(0L)
+
+      result shouldBe book
+    }
+
+    scenario("book not found") {
+      val spec = getSpec()
+
+      every { spec.bookRepository.findByIdOrNull(1L) } returns null
+
+      val result = spec.bookService.getReferenceIfExists(1L)
+
+      result shouldBe null
+    }
+  }
 })
 
 private class BookServiceSpecWrapper(

@@ -189,6 +189,30 @@ class PersonInfoServiceTests : FeatureSpec({
       response shouldBe false
     }
   }
+
+  feature("get reference if exists by auth user id") {
+    scenario("success") {
+      val spec = getSpec()
+
+      val personInfo = createPersonInfo()
+
+      every { spec.personInfoRepository.findByAuthUser_Id(0L) } returns personInfo
+
+      val result = spec.personInfoService.getReferenceIfExistsByAuthUserId(0L)
+
+      result shouldBe personInfo
+    }
+
+    scenario("not found") {
+      val spec = getSpec()
+
+      every { spec.personInfoRepository.findByAuthUser_Id(0L) } returns null
+
+      val result = spec.personInfoService.getReferenceIfExistsByAuthUserId(0L)
+
+      result shouldBe null
+    }
+  }
 })
 
 private class PersonInfoServiceSpecWrapper(

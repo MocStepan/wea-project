@@ -4,6 +4,7 @@ import cz.tul.backend.auth.base.api.AuthJwtClaims
 import cz.tul.backend.book.dto.BookAuthorOptionView
 import cz.tul.backend.book.dto.BookCategoryOptionView
 import cz.tul.backend.book.dto.BookDetailDTO
+import cz.tul.backend.book.entity.Book
 import cz.tul.backend.book.favorite.repository.BookFavoriteRepository
 import cz.tul.backend.book.repository.BookAuthorRepository
 import cz.tul.backend.book.repository.BookCategoryRepository
@@ -69,5 +70,9 @@ class BookService(
     val isFavorite = claims?.let { bookFavoriteRepository.existsByAuthUser_IdAndBook_Id(it.authUserId, id) } ?: false
 
     return BookDetailDTO.from(book, categories, authors, comments, isFavorite)
+  }
+
+  fun getReferenceIfExists(id: Long): Book? {
+    return bookRepository.findByIdOrNull(id)
   }
 }

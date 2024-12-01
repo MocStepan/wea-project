@@ -29,4 +29,8 @@ class PersonInfoAddressService(
       personInfoAddressRepository.save(address)
     }
   }
+
+  fun getRefernceIfExistsByPersonInfoId(personInfoId: Long): PersonInfoAddress? {
+    return personInfoAddressRepository.findByPersonInfo_IdAndAddressType(personInfoId, AddressType.BILLING)
+  }
 }

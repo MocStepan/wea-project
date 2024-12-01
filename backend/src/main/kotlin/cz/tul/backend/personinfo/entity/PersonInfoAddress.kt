@@ -51,4 +51,8 @@ class PersonInfoAddress(
     this.houseNumber = personInfoAddressDTO.houseNumber
     this.zipCode = personInfoAddressDTO.zipCode
   }
+
+  fun isValidForSubmit(): Boolean {
+    return country != null && city != null && street != null && houseNumber != null && zipCode != null
+  }
 }

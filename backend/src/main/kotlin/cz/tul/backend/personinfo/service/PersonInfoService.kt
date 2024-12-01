@@ -79,4 +79,8 @@ class PersonInfoService(
   private fun PersonInfoAddressDTO.updateAddress(personInfo: PersonInfo, addressType: AddressType) {
     personInfoAddressService.updateAddress(this, personInfo, addressType)
   }
+
+  fun getReferenceIfExistsByAuthUserId(authUserId: Long): PersonInfo? {
+    return personInfoRepository.findByAuthUser_Id(authUserId)
+  }
 }
