@@ -15,7 +15,7 @@ export class CartService {
 
   private httpService: HttpService = inject(HttpService)
 
-  postCart(cartCreate: CartCreateModel): Observable<boolean> {
-    return this.httpService.post(`${BASE_API_URL}cart/`, {cartCreate})
+  createCart(cartCreate: CartCreateModel): Observable<boolean> {
+    return this.httpService.post(`${BASE_API_URL}cart`, cartCreate)
   }
 }

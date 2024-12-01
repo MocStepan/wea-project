@@ -2,7 +2,7 @@
 
   <!-- Zavolat si filter knih kde bude filterCriteria.IN a pole id. Vrací stejný objekt jak v book listu -->
   <mat-step>
-    <ng-template matStepLabel>Košík</ng-template>
+    <ng-template matStepLabel>{{ 'CART' | translate }}</ng-template>
     <mat-grid-list class="book-list-view" cols="8" gutterSize="16px">
       <mat-grid-tile (click)="goToBookDetail(book.id)" *ngFor="let book of books()?.content">
         <mat-card appearance="outlined" class="book-list-item card">
@@ -31,34 +31,39 @@
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
+    <div>
+      <button mat-button matStepperNext>{{'NEXT' | translate}}</button>
+    </div>
   </mat-step>
 
   <!-- Přidat formulář pro údaje o uživateli vše je povinné (kromě asi favoriteCategories)-->
   <mat-step>
-    <ng-template matStepLabel>Údaje</ng-template>
+    <ng-template matStepLabel>{{ 'personal_information' | translate }}</ng-template>
     <app-person-info [useValidators]="true" (dataSubmittedEvent)="stepper.next()"></app-person-info>
   </mat-step>
 
 
   <!-- Přidat přehled asi deatail košíku a detail uživatele -->
   <mat-step [editable]="false">
-    <ng-template matStepLabel>Potvrzení objednávky</ng-template>
+    <ng-template matStepLabel>{{ 'CART_SUBMIT_TITLE' | translate }}</ng-template>
     <form class="form-group" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
       <mat-card>
-        <mat-card-title>{{ 'PAYMENT_CONFIRMATION' | translate }}</mat-card-title>
+        <mat-card-title style="padding-bottom: 1rem">{{ 'PAYMENT_CONFIRMATION' | translate }}</mat-card-title>
 
         <mat-form-field appearance="outline">
           <mat-label>{{ 'EMAIL' | translate }}</mat-label>
           <input [formControl]="formGroup.controls.email" matInput type="text">
         </mat-form-field>
+
         <mat-form-field appearance="outline">
           <mat-label>{{ 'PAYMENT_METHOD' | translate }}</mat-label>
-          <mat-select (change)="getTotalPrice()" [formControl]="formGroup.controls.paymentMethod">
-            <mat-option value="{{PaymentMethodEnum.CARD}}">{{ 'CARD' | translate }}</mat-option>
-            <mat-option value="{{PaymentMethodEnum.BANK_TRANSFER}}">{{ 'BACK_TRANSFER' | translate }}</mat-option>
-            <mat-option value="{{PaymentMethodEnum.CASH}}">{{ 'CASH' | translate }}</mat-option>
+          <mat-select (selectionChange)="recalculatePrices()" [formControl]="formGroup.controls.paymentMethod">
+            <mat-option value="{{paymentMethodEnum.CARD}}">{{ 'CARD' | translate }}</mat-option>
+            <mat-option value="{{paymentMethodEnum.BANK_TRANSFER}}">{{ 'BACK_TRANSFER' | translate }}</mat-option>
+            <mat-option value="{{paymentMethodEnum.CASH}}">{{ 'CASH' | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
+
         <mat-list role="list">
           <mat-list-item role="listitem" *ngFor="let item of getEntries()">
             <div class="list-item-container">
@@ -70,14 +75,19 @@
             </div>
           </mat-list-item>
           <mat-card-content class="book-list-item-text">
-            <span class="fee" *ngIf="formGroup.controls.paymentMethod.value">{{'FEE' | translate}}: {{ getFee() }}Kč</span>
+            <span class="fee" *ngIf="formGroup.controls.paymentMethod.value">{{'FEE' | translate}}
+              : {{ this.booksTotalPrice - this.booksPrice }}Kč
+            </span>
           </mat-card-content>
         </mat-list>
+
         <mat-card-content class="book-list-item-text">
-          <p>{{ 'TOTAL_PRICE' | translate }}: {{getTotalPrice()}}Kč</p>
+          <p>{{ 'TOTAL_PRICE' | translate }}: {{this.booksTotalPrice }}Kč</p>
         </mat-card-content>
+
         <mat-card>
           <mat-card-actions>
+            <button mat-button matStepperPrevious>{{'PREVIOUS' | translate}}</button>
             <button mat-raised-button class="submit-button" color="primary" type="submit">
               {{ 'CONFIRM_PAYMENT' | translate }}
             </button>
@@ -85,7 +95,6 @@
         </mat-card>
       </mat-card>
     </form>
-
   </mat-step>
 
 </mat-stepper>

@@ -104,5 +104,9 @@
   "QUANTITY": "Množství",
   "TOTAL_PRICE": "Celková cena",
   "PAYMENT_CONFIRMATION": "Potvrzení platby",
-  "FEE": "Poplatek"
+  "FEE": "Poplatek",
+  "CART_CANNOT_BE_EMPTY": "Košík nemůže být prázdný",
+  "CART_SUBMIT_TITLE": "Potvrzení objednávky",
+  "NEXT": "Další",
+  "PREVIOUS": "Předchozí"
 }
