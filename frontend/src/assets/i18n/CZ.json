@@ -90,5 +90,6 @@
   "PRICE": "Cena",
   "ADD_TO_CART": "Přidat do košíku",
   "CART": "Košík",
-  "INVALID_DATA": "Neplatná data"
+  "INVALID_DATA": "Neplatná data",
+  "CONSENT_REQUIRED": "Souhlas je povinný"
 }
