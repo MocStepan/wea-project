@@ -30,4 +30,22 @@ export class CartSessionService {
   getCart(): Map<number, number> {
     return JSON.parse(sessionStorage.getItem(cartKey) || '{}')
   }
+
+  /**
+   * Remove a book from the cart session storage.
+   *
+   * @param bookId
+   */
+  removeBookFromCart(bookId: number): void {
+    const cart = JSON.parse(sessionStorage.getItem(cartKey) || '{}')
+    delete cart[bookId]
+    sessionStorage.setItem(cartKey, JSON.stringify(cart))
+  }
+
+  /**
+   * Clear the cart session storage.
+   */
+  clearCart(): void {
+    sessionStorage.removeItem(cartKey)
+  }
 }

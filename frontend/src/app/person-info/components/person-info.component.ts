@@ -30,13 +30,13 @@ import {MatInputModule} from '@angular/material/input'
 import {MatSelectModule} from '@angular/material/select'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
+import {BookService} from '../../book/service/book.service'
+import {OptionViewModel} from '../../shared/filter/model/option-view.model'
+import {NotificationService} from '../../shared/notification/notification.service'
 import {PersonInfoForm, PersonInfoFormGroup, PersonInfoFormValue} from '../model/person-info.form'
 import {PersonInfoModel} from '../model/person-info.model'
 import {isPersonAddressEqual, PersonInfoAddressFormGroup} from '../model/person-info-address.form'
 import {PersonInfoService} from '../service/person-info.service'
-import {BookService} from '../../book/service/book.service'
-import {NotificationService} from '../../shared/notification/notification.service'
-import {OptionViewModel} from '../../shared/filter/model/option-view.model'
 
 
 @Component({
@@ -75,7 +75,7 @@ import {OptionViewModel} from '../../shared/filter/model/option-view.model'
   styleUrls: ['./person-info.component.css']
 })
 export class PersonInfoComponent implements OnInit {
-  @Input({required: true}) useValidators: boolean = false
+  @Input({required: true}) useValidators = false
   @Output() dataSubmittedEvent: EventEmitter<boolean> = new EventEmitter<boolean>()
   private translateService = inject(TranslateService)
   private personInfoService = inject(PersonInfoService)

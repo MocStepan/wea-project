@@ -1,0 +1,28 @@
+mat-stepper {
+  color: white;
+}
+.book-list-view {
+  margin: 0;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+
+}
+.list-item-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.quantity, .cost {
+  margin-left: 1rem;
+}
+.fee {
+  align-self: flex-end;
+}
