@@ -1,5 +1,5 @@
-import {CartItemCreateModel} from './cart-item-create.model'
 import {PaymentMethodEnum} from '../valueobject/payment-method.enum'
+import {CartItemCreateModel} from './cart-item-create.model'
 
 export class CartCreateModel {
   paymentMethod: PaymentMethodEnum

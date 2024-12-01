@@ -91,5 +91,18 @@
   "ADD_TO_CART": "Add to cart",
   "CART": "Cart",
   "INVALID_DATA": "Invalid data",
-  "CONSENT_REQUIRED": "Consent is required"
+  "CONSENT_REQUIRED": "Consent is required",
+  "CART_EMPTY": "Cart is empty",
+  "REMOVE_FROM_CART": "Remove from cart",
+  "CARD": "Card",
+  "PAYMENT_METHOD": "Payment Method",
+  "CASH": "Cash",
+  "BACK_TRANSFER": "Bank Transfer",
+  "CONFIRM_PAYMENT": "Confirm Payment",
+  "PAYMENT_SUCCESS": "Payment successful",
+  "PAYMENT_ERROR": "Payment failed",
+  "QUANTITY": "Quantity",
+  "TOTAL_PRICE": "Total Price",
+  "PAYMENT_CONFIRMATION": "Payment Confirmation",
+  "FEE": "Fee"
 }
