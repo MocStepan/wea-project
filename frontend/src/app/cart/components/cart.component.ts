@@ -188,5 +188,7 @@ export class CartComponent implements OnInit {
     }
     return this.fee
   }
+
+  protected readonly PaymentMethodEnum = PaymentMethodEnum
 }
 

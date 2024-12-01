@@ -21,13 +21,27 @@
           <mat-card-content class="book-list-item-text">
             <p>{{ 'PRICE' | translate }}: {{book.price}}</p>
           </mat-card-content>
-
           <mat-card-content class="book-list-item-text add-cart-card" (click)="$event.stopPropagation()">
-            <div class="add-cart">
-              <button mat-raised-button color="primary" (click)="addToCart(book.id)">
-                <mat-icon>add_shopping_cart</mat-icon>
-                {{"ADD_TO_CART" | translate}}
-              </button>
+            <div class="cart-section">
+              <div class="add-cart">
+                <button mat-raised-button color="primary" (click)="addToCart(book.id)">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                  {{"ADD_TO_CART" | translate}}
+                </button>
+                <button mat-raised-button color="primary" (click)="removeFromCart(book.id)">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                  {{"REMOVE_FROM_CART" | translate}}
+                </button>
+              </div>
+              <input matInput min="1" class="cart-number" [ngModel]="quantityDetail(book.id)">
+              <div class="arrows">
+                <button class="arrow" (click)="plusOne(book.id)">
+                  <mat-icon>keyboard_arrow_up</mat-icon>
+                </button>
+                <button class="arrow" (click)="minusOne(book.id)">
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+              </div>
             </div>
           </mat-card-content>
         </div>

@@ -312,4 +312,8 @@ export class BookDetailComponent implements OnInit {
   addToCart() {
     this.cartSessionService.addBookToCart(this.bookId!, this.bookQuantity)
   }
+
+  removeFromCart() {
+    this.cartSessionService.removeBookFromCart(this.bookId!)
+  }
 }

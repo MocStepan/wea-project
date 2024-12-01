@@ -94,6 +94,12 @@
         </button>
       </div>
     </div>
+    <div class="add-cart">
+      <button class="submit-button" (click)="removeFromCart()">
+        <mat-icon>add_shopping_cart</mat-icon>
+        {{"REMOVE_FROM_CART" | translate}}
+      </button>
+    </div>
   </div>
 
   <div *ngIf="book.bookComments?.length || book.disabled" class="comment-section">

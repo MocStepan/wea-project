@@ -82,7 +82,7 @@ export class BookListComponent implements OnInit {
   protected columns: WritableSignal<ColumnDefModel[]> = signal([])
 
   private favorite = false
-
+  private quantityMap = new Map<number, number>()
   // Injected services instead of using the constructor
   private router: Router = inject(Router)
   private bookService: BookService = inject(BookService)
@@ -161,6 +161,27 @@ export class BookListComponent implements OnInit {
 
   addToCart(id: number) {
     this.cartSessionService.addBookToCart(id, 1)
+  }
+
+  plusOne(bookId: number) {
+    const quantity = this.quantityMap.get(bookId) || 0
+    this.quantityMap.set(bookId, quantity + 1)
+  }
+
+  minusOne(bookId: number) {
+    const quantity = this.quantityMap.get(bookId) || 0
+    if (quantity > 0) {
+      this.quantityMap.set(bookId, quantity - 1)
+    }
+  }
+
+  quantityDetail(bookId: number) {
+    return this.quantityMap.get(bookId)
+  }
+
+  removeFromCart(id: number) {
+    this.cartSessionService.removeBookFromCart(id)
+    this.filterBooks()
   }
 }
 
