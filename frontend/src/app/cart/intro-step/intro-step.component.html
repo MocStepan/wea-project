@@ -1,0 +1,29 @@
+<mat-grid-list cols="8" gutterSize="16px">
+  <mat-grid-tile (click)="goToBookDetail(book.id)" *ngFor="let book of books()?.content">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{book.title}}</mat-card-title>
+        <mat-card-subtitle>{{book.authors.join(", ")}}</mat-card-subtitle>
+      </mat-card-header>
+
+      <div>
+        <mat-card-content>
+          <p>{{ 'PRICE' | translate }}: {{book.price}}</p>
+        </mat-card-content>
+        <mat-card-content>
+          <p>{{ 'QUANTITY' | translate }}: {{getBookQuantity(book.id)}}</p>
+        </mat-card-content>
+
+        <mat-card-content (click)="$event.stopPropagation()">
+          <div>
+            <button (click)="removeBookFromCart(book.id)" class="info-button-without-background" mat-raised-button>
+              <mat-icon>add_shopping_cart</mat-icon>
+              {{"REMOVE_FROM_CART" | translate}}
+            </button>
+          </div>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+

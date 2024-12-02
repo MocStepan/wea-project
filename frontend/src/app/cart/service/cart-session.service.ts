@@ -1,5 +1,10 @@
 import {Injectable} from '@angular/core'
 
+import {CartSessionItem} from '../model/cart-session-item.model'
+
+/**
+ * Key for the cart session storage.
+ */
 const cartKey = 'cart-key'
 
 /**
@@ -17,9 +22,16 @@ export class CartSessionService {
    * @param quantity
    */
   addBookToCart(bookId: number, quantity: number): void {
-    const cart = JSON.parse(sessionStorage.getItem(cartKey) || '{}')
-    cart[bookId] = (cart[bookId] || 0) + quantity
-   sessionStorage.setItem(cartKey, JSON.stringify(cart))
+    const cart: CartSessionItem[] = JSON.parse(sessionStorage.getItem(cartKey) || '[]')
+    const existingItem = cart.find(item => item.bookId === bookId)
+
+    if (existingItem) {
+      existingItem.quantity += quantity
+    } else {
+      cart.push({bookId, quantity})
+    }
+
+    sessionStorage.setItem(cartKey, JSON.stringify(cart))
   }
 
   /**
@@ -27,8 +39,18 @@ export class CartSessionService {
    *
    * @returns the cart as a map
    */
-  getCart(): Map<number, number> {
-    return JSON.parse(sessionStorage.getItem(cartKey) || '{}')
+  getCart(): CartSessionItem[] {
+    return JSON.parse(sessionStorage.getItem(cartKey) || '[]')
+  }
+
+  /**
+   * Get a specific cart item from the cart session storage.
+   *
+   * @param bookId
+   * @returns the book or undefined
+   */
+  getItemFromCart(bookId: number): CartSessionItem | undefined {
+    return this.getCart().find(item => item.bookId === bookId)
   }
 
   /**
@@ -37,8 +59,9 @@ export class CartSessionService {
    * @param bookId
    */
   removeBookFromCart(bookId: number): void {
-    const cart = JSON.parse(sessionStorage.getItem(cartKey) || '{}')
-    delete cart[bookId]
+    let cart: CartSessionItem[] = JSON.parse(sessionStorage.getItem(cartKey) || '[]')
+    cart = cart.filter(item => item.bookId !== bookId)
+
     sessionStorage.setItem(cartKey, JSON.stringify(cart))
   }
 

@@ -1,12 +1,12 @@
 .page-body-text {
   font-size: 1rem;
   padding: 0.5rem 0.5rem 0.5rem 1rem;
-  color: white;
+  color: var(--primary-color-light);
 }
 
 .page-body-text.selected {
   font-weight: bolder;
-  color: #3f51b5;
+  color: var(--info-color-light);
 }
 
 li {
@@ -17,7 +17,7 @@ li {
 
 a {
   text-decoration: none;
-  color: white;
+  color: var(--primary-color-light);
 }
 
 .fill-space {

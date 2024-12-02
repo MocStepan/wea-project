@@ -1,21 +1,30 @@
-import {CommonModule, NgOptimizedImage} from '@angular/common'
+import {CdkTextareaAutosize} from '@angular/cdk/text-field'
+import {NgClass, NgForOf, NgIf} from '@angular/common'
 import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core'
-import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import {FormsModule} from '@angular/forms'
 import {MatButton, MatIconButton} from '@angular/material/button'
-import {MatCard} from '@angular/material/card'
-import {MatError, MatFormField, MatLabel} from '@angular/material/form-field'
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+  MatCardTitleGroup,
+  MatCardXlImage
+} from '@angular/material/card'
+import {MatFormField} from '@angular/material/form-field'
 import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
-import {MatTooltip} from '@angular/material/tooltip'
 import {ActivatedRoute} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import moment from 'moment'
-import {RatingModule} from 'primeng/rating'
 import {Nullable} from 'primeng/ts-helpers'
 
 import {AuthService} from '../../../auth/service/auth.service'
 import {CartSessionService} from '../../../cart/service/cart-session.service'
 import {NotificationService} from '../../../shared/notification/notification.service'
+import {OrderByPipe} from '../../../shared/pipe/order-by.pipe'
 import {BookService} from '../../service/book.service'
 import {BookFavoriteService} from '../../service/book-favorite.service'
 import {BookRatingService} from '../../service/book-rating.service'
@@ -30,46 +39,51 @@ import {BookRatingCreateModel} from '../model/book-rating-create.model'
   selector: 'app-book-detail',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatLabel,
-    MatFormField,
-    MatCard,
-    NgOptimizedImage,
-    TranslateModule,
-    MatInput,
-    RatingModule,
+    NgIf,
+    MatCardTitle,
     MatIcon,
-    MatTooltip,
     MatIconButton,
-    MatError,
-    MatButton
+    MatCardSubtitle,
+    NgForOf,
+    TranslateModule,
+    MatCardContent,
+    MatCardActions,
+    MatButton,
+    MatFormField,
+    FormsModule,
+    MatInput,
+    CdkTextareaAutosize,
+    MatCard,
+    OrderByPipe,
+    MatCardTitleGroup,
+    MatCardHeader,
+    NgClass,
+    MatCardXlImage
   ],
   providers: [],
   templateUrl: './book-detail.component.html',
   styleUrls: ['./book-detail.component.css']
 })
 export class BookDetailComponent implements OnInit {
-  book: WritableSignal<Nullable<BookDetailModel>> = signal(null)
-  commentInput: WritableSignal<string> = signal('')
-  ratingInput: WritableSignal<number> = signal(0)
-  isBookFavorite: WritableSignal<boolean> = signal(false)
-  protected bookQuantity = 1
-
-  protected readonly moment = moment
-  private bookId: Nullable<number> = null
-  private ratingExists = false
-
   // Injects bookService instead of using constructor injection.
   private route = inject(ActivatedRoute)
   private authService = inject(AuthService)
-  private bookService: BookService = inject(BookService)
+  private bookService = inject(BookService)
   private translateService = inject(TranslateService)
   private bookRatingService = inject(BookRatingService)
   private notificationService = inject(NotificationService)
   private bookFavoriteService = inject(BookFavoriteService)
   private cartSessionService = inject(CartSessionService)
+
+  protected book: WritableSignal<Nullable<BookDetailModel>> = signal(null)
+  protected commentInput: WritableSignal<string> = signal('')
+  protected ratingInput: WritableSignal<number> = signal(0)
+  protected isBookFavorite: WritableSignal<boolean> = signal(false)
+  protected bookQuantity = 1
+
+  protected readonly moment = moment
+  private bookId: Nullable<number> = null
+  private ratingExists = false
 
   /**
    * Initializes the component. Fetches the book detail based on the book id.
@@ -80,8 +94,9 @@ export class BookDetailComponent implements OnInit {
       if (bookId) {
         this.bookId = bookId
         this.getBookDetail()
+        this.bookQuantity = this.cartSessionService.getItemFromCart(bookId)?.quantity ?? 0
 
-        if (this.isSignedIn()) {
+        if (this.isUserSignedIn()) {
           this.getUserBookRating()
         }
       }
@@ -101,18 +116,9 @@ export class BookDetailComponent implements OnInit {
   }
 
   /**
-   * Checks if the user is signed in.
-   *
-   * @returns {boolean} True if the user is signed in, false otherwise.
-   */
-  isSignedIn() {
-    return this.authService.isSignedIn()
-  }
-
-  /**
    * Submits a comment for the book.
    */
-  submitComment() {
+  onSubmitComment() {
     if (this.book()?.disabled) {
       this.translateService.get('DISABLED_BOOK').subscribe((res: string) => {
         this.notificationService.errorNotification(res)
@@ -138,7 +144,7 @@ export class BookDetailComponent implements OnInit {
   /**
    * Deletes the rating for the book.
    */
-  deleteBookRating() {
+  onDeleteBookRating() {
     this.bookRatingService.deleteRating(this.bookId!).subscribe({
       next: () => {
         this.translateService.get('RATING_DELETED').subscribe((res: string) => {
@@ -162,7 +168,7 @@ export class BookDetailComponent implements OnInit {
    * If the rating exists, it will update the existing rating.
    * If the rating does not exist, it will create a new rating.
    */
-  onSubmitBookRating(): void {
+  onAddBookRating(): void {
     if (!this.ratingExists) {
       this.createNewBookRating()
     } else {
@@ -182,6 +188,35 @@ export class BookDetailComponent implements OnInit {
     } else {
       this.addBookToFavorite()
     }
+  }
+
+  /**
+   * Checks if the user is signed in.
+   */
+  isUserSignedIn(): boolean {
+    return this.authService.isSignedIn()
+  }
+
+  /**
+   * Adds a book to the cart.
+   *
+   * @param event - The click event.
+   */
+  onAddBookToCart(event: MouseEvent) {
+    event.stopPropagation()
+    this.cartSessionService.addBookToCart(this.bookId!, 1)
+    this.bookQuantity = this.cartSessionService.getItemFromCart(this.bookId!)?.quantity ?? 0
+  }
+
+  /**
+   * Removes a book from the cart.
+   *
+   * @param event - The click event.
+   */
+  onRemoveBookFromCart(event: MouseEvent) {
+    event.stopPropagation()
+    this.cartSessionService.removeBookFromCart(this.bookId!)
+    this.bookQuantity = this.cartSessionService.getItemFromCart(this.bookId!)?.quantity ?? 0
   }
 
   /**
@@ -299,21 +334,5 @@ export class BookDetailComponent implements OnInit {
         })
       }
     })
-  }
-
-  plusOne() {
-    this.bookQuantity = this.bookQuantity + 1
-  }
-
-  minusOne() {
-    this.bookQuantity = this.bookQuantity - 1
-  }
-
-  addToCart() {
-    this.cartSessionService.addBookToCart(this.bookId!, this.bookQuantity)
-  }
-
-  removeFromCart() {
-    this.cartSessionService.removeBookFromCart(this.bookId!)
   }
 }

@@ -1,13 +1,11 @@
-import {NgIf} from '@angular/common'
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core'
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MatButton} from '@angular/material/button'
-import {MatCard, MatCardHeader, MatCardTitle} from '@angular/material/card'
+import {MatCard} from '@angular/material/card'
 import {MatCheckbox} from '@angular/material/checkbox'
-import {MatFormField, MatPrefix} from '@angular/material/form-field'
+import {MatFormField} from '@angular/material/form-field'
 import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
-import {MatToolbar} from '@angular/material/toolbar'
 import {Router} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
@@ -24,17 +22,12 @@ import {SignInModel} from '../model/sign-in.model'
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatFormField,
+    ReactiveFormsModule,
     MatCard,
-    MatToolbar,
+    MatFormField,
     MatIcon,
     MatInput,
     MatButton,
-    NgIf,
-    ReactiveFormsModule,
-    MatPrefix,
-    MatCardHeader,
-    MatCardTitle,
     MatCheckbox,
     TranslateModule
   ],

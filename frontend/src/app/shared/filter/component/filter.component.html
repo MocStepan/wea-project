@@ -1,23 +1,31 @@
-<div class="flex-row filter-wrapper">
+<div class="filter-wrapper">
+  <div class="filter-row">
+    <div *ngFor="let column of columns">
+      <div *ngIf="column.type === 'string'" class="filter-item">
+        <mat-form-field>
+          <input [(ngModel)]="column.filterCriteria.value" matInput placeholder="{{column.placeholder | translate}}">
+        </mat-form-field>
+      </div>
 
-  <div *ngFor="let column of columns">
-    <div *ngIf="column.type === 'string'" class="filter-item">
-      <mat-form-field>
-        <input [(ngModel)]="column.filterCriteria.value" matInput placeholder="{{column.placeholder | translate}}">
-      </mat-form-field>
+      <div *ngIf="isEnumColumnType(column.type)" class="filter-item">
+        <mat-form-field>
+          <mat-select [(ngModel)]="column.filterCriteria.value" multiple
+                      placeholder="{{column.placeholder | translate}}">
+            <mat-option *ngFor="let key of column.type.keys" [value]="key">
+              {{ column.type.values[column.type.keys.indexOf(key)] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div *ngIf="isEnumColumnType(column.type)" class="filter-item">
-      <mat-form-field>
-        <mat-select [(ngModel)]="column.filterCriteria.value" multiple placeholder="{{column.placeholder | translate}}">
-          <mat-option *ngFor="let key of column.type.keys" [value]="key">
-            {{ column.type.values[column.type.keys.indexOf(key)] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="button-row">
+      <button (click)="applyFilters()" class="info-button" mat-raised-button>
+        {{"APPLY_FILTER" | translate}}
+      </button>
+      <button (click)="clearFilters()" class="warn-button" mat-raised-button>
+        {{"CLEAR_FILTER" | translate}}
+      </button>
     </div>
   </div>
-
-  <button (click)="applyFilters()" mat-raised-button>{{"APPLY_FILTER" | translate}}</button>
-  <button (click)="clearFilters()" mat-raised-button>{{"CLEAR_FILTER" | translate}}</button>
 </div>

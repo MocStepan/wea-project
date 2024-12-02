@@ -39,6 +39,11 @@ class CartService(
     val personInfo = getPersonInfo(claims.authUserId) ?: return false
     val billingAddress = getBillingAddress(personInfo.id) ?: return false
 
+    if (createDTO.cartItems.isEmpty()) {
+      log.warn { "Cart items are empty for user ${claims.authUserId}" }
+      return false
+    }
+
     val cart = Cart.from(personInfo, CartDeliveryAddress.from(billingAddress), createDTO.paymentMethod, 0.0)
     val savedCart = cartRepository.save(cart)
 
