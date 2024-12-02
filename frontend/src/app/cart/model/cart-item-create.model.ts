@@ -1,10 +1,13 @@
+import {CartSessionItem} from './cart-session-item.model'
 
-export class CartItemCreateModel {
+export interface CartItemCreateModel {
   bookId: number
   quantity: number
+}
 
-  constructor(bookId: number, quantity: number) {
-    this.bookId = bookId
-    this.quantity = quantity
-  }
+export function CartItemCreateModel(items: CartSessionItem[]): CartItemCreateModel[] {
+  return items.map(item => ({
+    bookId: item.bookId,
+    quantity: item.quantity
+  }))
 }

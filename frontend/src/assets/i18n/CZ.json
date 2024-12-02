@@ -48,6 +48,7 @@
   "RETURN_LIST_VIEW": "Zpět na seznam",
   "SUBMIT_COMMENT": "Odeslat komentář",
   "COMMENT": "Komentář",
+  "TITLE": "Název",
   "SUBTITLE": "Podnázev",
   "AUTHORS": "Autoři",
   "CATEGORIES": "Kategorie",
@@ -108,5 +109,6 @@
   "CART_CANNOT_BE_EMPTY": "Košík nemůže být prázdný",
   "CART_SUBMIT_TITLE": "Potvrzení objednávky",
   "NEXT": "Další",
-  "PREVIOUS": "Předchozí"
+  "PREVIOUS": "Předchozí",
+  "COUNT_IN_CART": "Počet v košíku"
 }

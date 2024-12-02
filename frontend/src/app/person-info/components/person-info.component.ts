@@ -33,11 +33,11 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core'
 import {BookService} from '../../book/service/book.service'
 import {OptionViewModel} from '../../shared/filter/model/option-view.model'
 import {NotificationService} from '../../shared/notification/notification.service'
+import {convertEmptyStringToNull} from '../../shared/util/shared-util'
 import {PersonInfoForm, PersonInfoFormGroup, PersonInfoFormValue} from '../model/person-info.form'
 import {PersonInfoModel} from '../model/person-info.model'
 import {isPersonAddressEqual, PersonInfoAddressFormGroup} from '../model/person-info-address.form'
 import {PersonInfoService} from '../service/person-info.service'
-
 
 @Component({
   selector: 'app-person-info',
@@ -148,6 +148,7 @@ export class PersonInfoComponent implements OnInit {
    * Submits the form. If the user info is already created, it will be updated, otherwise it will be created.
    */
   onSubmit(): void {
+    this.changeBillingAddress()
     this.formGroup.markAllAsTouched()
 
     if (this.formGroup.invalid) {
@@ -164,9 +165,7 @@ export class PersonInfoComponent implements OnInit {
       return
     }
 
-
-    this.changeBillingAddress()
-    const personInfoModel = PersonInfoModel(this.formGroup.getRawValue())
+    const personInfoModel = convertEmptyStringToNull(PersonInfoModel(this.formGroup.getRawValue()))
     if (this.created) {
       this.updatePersonInfo(personInfoModel)
     } else {

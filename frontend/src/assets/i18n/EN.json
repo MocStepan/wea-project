@@ -48,6 +48,7 @@
   "RETURN_LIST_VIEW": "Return to List",
   "SUBMIT_COMMENT": "Submit Comment",
   "COMMENT": "Comment",
+  "TITLE": "Title",
   "SUBTITLE": "Subtitle",
   "AUTHORS": "Authors",
   "CATEGORIES": "Categories",
@@ -108,5 +109,6 @@
   "CART_CANNOT_BE_EMPTY": "Cart cannot be empty",
   "CART_SUBMIT_TITLE": "Order Confirmation",
   "NEXT": "Next",
-  "PREVIOUS": "Previous"
+  "PREVIOUS": "Previous",
+  "COUNT_IN_CART": "Count in cart"
 }

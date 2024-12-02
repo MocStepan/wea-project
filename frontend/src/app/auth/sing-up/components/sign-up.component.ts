@@ -2,11 +2,10 @@ import {NgIf} from '@angular/common'
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core'
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MatButton} from '@angular/material/button'
-import {MatCard, MatCardTitle} from '@angular/material/card'
-import {MatError, MatFormField, MatLabel, MatPrefix} from '@angular/material/form-field'
+import {MatCard} from '@angular/material/card'
+import {MatError, MatFormField, MatLabel} from '@angular/material/form-field'
 import {MatIcon} from '@angular/material/icon'
 import {MatInput} from '@angular/material/input'
-import {MatToolbar} from '@angular/material/toolbar'
 import {Router} from '@angular/router'
 import {TranslateModule, TranslateService} from '@ngx-translate/core'
 
@@ -23,19 +22,16 @@ import {SignUpModel} from '../model/sign-up.model'
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatButton,
+    ReactiveFormsModule,
     MatCard,
     MatFormField,
-    MatIcon,
-    MatInput,
-    MatToolbar,
-    NgIf,
-    ReactiveFormsModule,
-    MatPrefix,
-    MatCardTitle,
-    MatError,
     MatLabel,
-    TranslateModule
+    NgIf,
+    MatError,
+    TranslateModule,
+    MatInput,
+    MatIcon,
+    MatButton
   ],
   templateUrl: 'sign-up.component.html',
   styleUrl: '../../style/auth.component.css',

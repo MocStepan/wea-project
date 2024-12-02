@@ -1,14 +1,20 @@
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 4rem;
+}
+
+.auth-wrapper {
+  width: 40%;
+}
+
 .signup_div {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-form {
-  width: 40vw;
-  margin-left: 30vw;
-  margin-right: 30vw;
-  margin-top: 5vh;
 }
 
 mat-card {

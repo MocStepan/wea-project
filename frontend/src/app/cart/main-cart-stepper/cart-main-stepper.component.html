@@ -1,0 +1,34 @@
+<mat-stepper #stepper class="cart-main-stepper" linear>
+
+  <!-- Zavolat si filter knih kde bude filterCriteria.IN a pole id. Vrací stejný objekt jak v book listu -->
+  <mat-step>
+    <ng-template matStepLabel>{{ 'CART' | translate }}</ng-template>
+    <app-cart-intro-step [books]="books" [cartSessionItems]="cartSessionItems">
+    </app-cart-intro-step>
+    <button class="info-button-without-background" mat-button matStepperNext>
+      {{'NEXT' | translate}}
+    </button>
+  </mat-step>
+
+  <!-- Přidat formulář pro údaje o uživateli vše je povinné (kromě asi favoriteCategories)-->
+  <mat-step>
+    <ng-template matStepLabel>{{ 'personal_information' | translate }}</ng-template>
+    <app-person-info (dataSubmittedEvent)="stepper.next()" [useValidators]="true"></app-person-info>
+    <button class="info-button-without-background" mat-button matStepperPrevious>
+      {{'PREVIOUS' | translate}}
+    </button>
+    <button class="info-button-without-background" mat-button matStepperNext>
+      {{'NEXT' | translate}}
+    </button>
+  </mat-step>
+
+  <!-- Přidat přehled asi deatail košíku a detail uživatele -->
+  <mat-step [editable]="false">
+    <ng-template matStepLabel>{{ 'CART_SUBMIT_TITLE' | translate }}</ng-template>
+    <app-cart-confirmation-step [books]="books" [cartSessionItems]="cartSessionItems"></app-cart-confirmation-step>
+    <button class="info-button-without-background" mat-button matStepperPrevious>
+      {{'PREVIOUS' | translate}}
+    </button>
+  </mat-step>
+
+</mat-stepper>

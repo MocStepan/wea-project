@@ -17,6 +17,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
+import io.mockk.verify
 
 class CartServiceTests : FeatureSpec({
 
@@ -111,6 +112,8 @@ class CartServiceTests : FeatureSpec({
       val result = spec.cartService.createCart(createDTO, claims)
 
       result shouldBe false
+
+      verify(exactly = 0) { spec.cartRepository.save(any()) }
     }
 
     scenario("billing address not found") {
@@ -126,6 +129,8 @@ class CartServiceTests : FeatureSpec({
       val result = spec.cartService.createCart(createDTO, claims)
 
       result shouldBe false
+
+      verify(exactly = 0) { spec.cartRepository.save(any()) }
     }
 
     scenario("billing address is not valid") {
@@ -142,6 +147,8 @@ class CartServiceTests : FeatureSpec({
       val result = spec.cartService.createCart(createDTO, claims)
 
       result shouldBe false
+
+      verify(exactly = 0) { spec.cartRepository.save(any()) }
     }
 
     scenario("cart items not created") {
@@ -161,6 +168,24 @@ class CartServiceTests : FeatureSpec({
       val result = spec.cartService.createCart(createDTO, claims)
 
       result shouldBe false
+    }
+
+    scenario("cart items are empty") {
+      val spec = getSpec()
+
+      val createDTO = CartCreateDTO(PaymentMethod.BANK_TRANSFER, listOf())
+      val claims = createUserClaims()
+      val personInfo = createPersonInfo()
+      val billingAddress = createPersonInfoAddress()
+
+      every { spec.personInfoService.getReferenceIfExistsByAuthUserId(claims.authUserId) } returns personInfo
+      every { spec.personInfoAddressService.getRefernceIfExistsByPersonInfoId(personInfo.id) } returns billingAddress
+
+      val result = spec.cartService.createCart(createDTO, claims)
+
+      result shouldBe false
+
+      verify(exactly = 0) { spec.cartRepository.save(any()) }
     }
   }
 })
