@@ -41,6 +41,10 @@ body {
   color: var(--info-color-light);
 }
 
+.info-button-without-background:hover * {
+  color: var(--primary-color-light);
+}
+
 .warn-button-without-background * {
   color: var(--warn-color-light);
 }

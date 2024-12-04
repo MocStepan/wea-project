@@ -18,14 +18,17 @@ export class CartSessionService {
   /**
    * Add a book to the cart session storage. Store the book id and quantity.
    *
-   * @param bookId
-   * @param quantity
+   * @param bookId the book id to add
+   * @param quantity the quantity to add
+   * @param update if true, the quantity will be replaced by the new quantity
    */
-  addBookToCart(bookId: number, quantity: number): void {
+  createOrUpdateBookInCart(bookId: number, quantity: number, update = false): void {
     const cart: CartSessionItem[] = JSON.parse(sessionStorage.getItem(cartKey) || '[]')
     const existingItem = cart.find(item => item.bookId === bookId)
 
-    if (existingItem) {
+    if (existingItem && update) {
+      existingItem.quantity = quantity
+    } else if (existingItem && !update) {
       existingItem.quantity += quantity
     } else {
       cart.push({bookId, quantity})

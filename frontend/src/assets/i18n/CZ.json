@@ -96,7 +96,7 @@
   "CARD": "Online kartou",
   "PAYMENT_METHOD": "Způsob platby",
   "CASH": "Dobírka",
-  "BACK_TRANSFER": "Bankovní převod",
+  "BANK_TRANSFER": "Bankovní převod",
   "CONFIRM_PAYMENT": "Potvrdit platbu",
   "PAYMENT_SUCCESS": "Platba byla úspěšná",
   "PAYMENT_ERROR": "Platba se nezdařila",

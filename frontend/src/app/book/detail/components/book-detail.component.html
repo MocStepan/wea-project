@@ -65,13 +65,13 @@
 
         <button (click)="onAddBookRating()" [disabled]="book?.disabled === true" class="info-button-without-background"
                 mat-button>
-          <mat-icon>add_shopping_cart</mat-icon>
+          <mat-icon>add_icon</mat-icon>
           {{ 'SUBMIT_RATING' | translate }}
         </button>
         <button (click)="onDeleteBookRating()" [disabled]="book?.disabled === true"
                 class="info-button-without-background"
                 mat-button>
-          <mat-icon>add_shopping_cart</mat-icon>
+          <mat-icon>remove_icon</mat-icon>
           {{ 'DELETE_RATING' | translate }}
         </button>
       </mat-card-actions>
@@ -89,7 +89,7 @@
           {{"ADD_TO_CART" | translate}}
         </button>
         <button (click)="onRemoveBookFromCart($event)" class="info-button-without-background" mat-button>
-          <mat-icon>add_shopping_cart</mat-icon>
+          <mat-icon>remove_shopping_cart</mat-icon>
           {{"REMOVE_FROM_CART" | translate}}
         </button>
       </mat-card-actions>
