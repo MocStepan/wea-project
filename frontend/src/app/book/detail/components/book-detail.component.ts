@@ -92,9 +92,9 @@ export class BookDetailComponent implements OnInit {
     this.route.params.subscribe(params => {
       const bookId = params['id']
       if (bookId) {
-        this.bookId = bookId
+        this.bookId = Number(bookId)
         this.getBookDetail()
-        this.bookQuantity = this.cartSessionService.getItemFromCart(bookId)?.quantity ?? 0
+        this.bookQuantity = this.cartSessionService.getItemFromCart(this.bookId)?.quantity ?? 0
 
         if (this.isUserSignedIn()) {
           this.getUserBookRating()
@@ -204,7 +204,7 @@ export class BookDetailComponent implements OnInit {
    */
   onAddBookToCart(event: MouseEvent) {
     event.stopPropagation()
-    this.cartSessionService.addBookToCart(this.bookId!, 1)
+    this.cartSessionService.createOrUpdateBookInCart(this.bookId!, 1)
     this.bookQuantity = this.cartSessionService.getItemFromCart(this.bookId!)?.quantity ?? 0
   }
 

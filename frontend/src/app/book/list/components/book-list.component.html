@@ -29,12 +29,13 @@
         </mat-card-content>
 
         <mat-card-actions *ngIf="isUserSignedIn()">
-          <button (click)="onAddBookToCart($event, book.id)" mat-button>
+          <button (click)="onAddBookToCart($event, book.id)" class="info-button-without-background" mat-raised-button>
             <mat-icon>add_shopping_cart</mat-icon>
             {{"ADD_TO_CART" | translate}}
           </button>
-          <button (click)="onRemoveBookFromCart($event, book.id)" mat-button>
-            <mat-icon>add_shopping_cart</mat-icon>
+          <button (click)="onRemoveBookFromCart($event, book.id)" class="info-button-without-background"
+                  mat-raised-button>
+            <mat-icon>remove_shopping_cart</mat-icon>
             {{"REMOVE_FROM_CART" | translate}}
           </button>
         </mat-card-actions>

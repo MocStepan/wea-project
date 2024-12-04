@@ -11,7 +11,7 @@ export function addPaymentMethodToPrice(price: number, paymentMethod: PaymentMet
     case PaymentMethodEnum.BANK_TRANSFER:
       return price
     case PaymentMethodEnum.CARD:
-      return price * 1.1
+      return Math.round(price * 1.1)
     default:
       return price
   }

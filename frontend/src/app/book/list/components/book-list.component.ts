@@ -60,13 +60,13 @@ const CONFIG_NAME = 'book-list'
     TranslateModule,
     MatCardLgImage,
     MatCardContent,
-    MatButton,
     MatCardActions,
     MatIcon,
     MatPaginator,
     MatGridTile,
     MatCard,
-    NgIf
+    NgIf,
+    MatButton
   ],
   providers: [],
   templateUrl: './book-list.component.html',
@@ -156,7 +156,7 @@ export class BookListComponent implements OnInit {
    */
   onAddBookToCart(event: MouseEvent, bookId: number) {
     event.stopPropagation()
-    this.cartSessionService.addBookToCart(bookId, 1)
+    this.cartSessionService.createOrUpdateBookInCart(bookId, 1)
     this.getNewCartSessionItems()
   }
 

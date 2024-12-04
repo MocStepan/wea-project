@@ -12,3 +12,7 @@ export function convertEmptyStringToNull(data: any) {
   }
   return data
 }
+
+export function isNullOrUndefined(value: unknown): boolean {
+  return value === null || value === undefined
+}
