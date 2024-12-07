@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Configuration
 @EnableEntityViews(
   basePackages = [
     "cz.tul.backend.book.dto",
-    "cz.tul.backend.audit.dto"
+    "cz.tul.backend.audit.dto",
+    "cz.tul.backend.cart.dto"
   ]
 )
 @Configuration
