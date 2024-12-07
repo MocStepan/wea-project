@@ -4,6 +4,7 @@ import cz.tul.backend.cart.dto.CartCreateDTO
 import cz.tul.backend.cart.dto.CartItemCreateDTO
 import cz.tul.backend.cart.entity.Cart
 import cz.tul.backend.cart.repository.CartRepository
+import cz.tul.backend.cart.valueobject.CartStatus
 import cz.tul.backend.cart.valueobject.PaymentMethod
 import cz.tul.backend.personinfo.service.PersonInfoAddressService
 import cz.tul.backend.personinfo.service.PersonInfoService
@@ -46,6 +47,7 @@ class CartServiceTests : FeatureSpec({
       captured.personInfo shouldBe personInfo
       captured.totalPrice shouldBe 150.0
       captured.paymentMethod shouldBe createDTO.paymentMethod
+      captured.status shouldBe CartStatus.PROCESSED
 
       val deliveryAddress = captured.deliveryAddress
       deliveryAddress.country shouldBe billingAddress.country

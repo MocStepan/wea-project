@@ -1,5 +1,6 @@
 package cz.tul.backend.cart.entity
 
+import cz.tul.backend.cart.valueobject.CartStatus
 import cz.tul.backend.cart.valueobject.PaymentMethod
 import cz.tul.backend.personinfo.entity.PersonInfo
 import cz.tul.backend.personinfo.entity.PersonInfoAddress
@@ -29,6 +30,8 @@ class Cart(
   @Enumerated(EnumType.STRING)
   val paymentMethod: PaymentMethod,
   var totalPrice: Double,
+  @Enumerated(EnumType.STRING)
+  val status: CartStatus = CartStatus.PROCESSED,
   val createdDateTime: LocalDateTime = LocalDateTime.now()
 ) {
   companion object {

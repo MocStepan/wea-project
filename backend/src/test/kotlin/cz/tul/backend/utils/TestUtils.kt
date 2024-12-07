@@ -18,6 +18,7 @@ import cz.tul.backend.book.entity.BookComment
 import cz.tul.backend.book.entity.BookRating
 import cz.tul.backend.cart.entity.Cart
 import cz.tul.backend.cart.entity.CartDeliveryAddress
+import cz.tul.backend.cart.entity.CartItem
 import cz.tul.backend.cart.valueobject.PaymentMethod
 import cz.tul.backend.common.filter.dto.PageResponseDTO
 import cz.tul.backend.common.jackson.TrimmingStringDeserializer
@@ -33,6 +34,7 @@ import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.support.TransactionTemplate
 import java.time.Duration
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.function.Consumer
 
 val objectMapper: ObjectMapper = jacksonObjectMapper()
@@ -262,13 +264,47 @@ fun createCart(
   personInfo: PersonInfo = mockk(),
   deliveryAddress: CartDeliveryAddress = mockk(),
   paymentMethod: PaymentMethod = PaymentMethod.CARD,
-  totalPrice: Double = 0.0
+  totalPrice: Double = 0.0,
+  createdDateTime: LocalDateTime = LocalDateTime.now()
 ): Cart {
   return Cart(
     id = id,
     personInfo = personInfo,
     deliveryAddress = deliveryAddress,
     paymentMethod = paymentMethod,
-    totalPrice = totalPrice
+    totalPrice = totalPrice,
+    createdDateTime = createdDateTime
+  )
+}
+
+fun createCartDeliveryAddress(
+  country: String = "country",
+  city: String = "city",
+  street: String = "street",
+  houseNumber: String = "1",
+  zipCode: String = "12345"
+): CartDeliveryAddress {
+  return CartDeliveryAddress(
+    country = country,
+    city = city,
+    street = street,
+    houseNumber = houseNumber,
+    zipCode = zipCode
+  )
+}
+
+fun createCartItem(
+  id: Long = 0L,
+  cart: Cart = mockk(),
+  book: Book = mockk(),
+  quantity: Int = 1,
+  price: Double = 0.0
+): CartItem {
+  return CartItem(
+    id = id,
+    cart = cart,
+    book = book,
+    quantity = quantity,
+    price = price
   )
 }
