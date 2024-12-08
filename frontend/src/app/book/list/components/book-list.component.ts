@@ -39,7 +39,6 @@ import {FilterOperatorEnum} from '../../../shared/filter/valueobject/filter-oper
 import {BookService} from '../../service/book.service'
 import {BookFilterModel} from '../model/book-filter.model'
 import {BookTableModel} from '../model/book-table.model'
-import {toSignal} from '@angular/core/rxjs-interop'
 
 const CONFIG_NAME = 'book-list'
 

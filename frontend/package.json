@@ -10,7 +10,9 @@
     "test:coverage": "jest --coverage",
     "build:prod": "ng build --configuration=production",
     "lint:check": "npx eslint .",
-    "lint:fix": "npx eslint . --fix"
+    "lint:fix": "npx eslint . --fix",
+    "lint:output": "npx eslint . --stats",
+    "eslint": "npx eslint -f summary ."
   },
   "private": true,
   "dependencies": {
