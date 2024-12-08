@@ -15,8 +15,4 @@ export class EnumColumnTypeModel {
     const values = optionViews.map((optionView) => optionView.name)
     return new EnumColumnTypeModel(values, values, multi)
   }
-
-  static fromEnumValue(values: string[], multi = true): EnumColumnTypeModel {
-    return new EnumColumnTypeModel(values, values, multi)
-  }
 }

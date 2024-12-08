@@ -1,5 +1,7 @@
 package cz.tul.backend.common.filter.dto
 
+import com.fasterxml.jackson.databind.ObjectMapper
+
 interface FilterDTO {
   val size: Int
   val page: Int
@@ -14,5 +16,5 @@ interface FilterDTO {
   /**
    * Extracts the filter criteria from the filter DTO.
    */
-  fun toFilterCriteria(): MutableList<FilterCriteria<Any>>
+  fun toFilterCriteria(objectMapper: ObjectMapper): MutableList<FilterCriteria<Any>>
 }

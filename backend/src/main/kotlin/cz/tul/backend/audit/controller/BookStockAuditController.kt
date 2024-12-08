@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,7 +22,7 @@ class BookStockAuditController(
 
   @Operation(summary = "Filter book stock audit", description = "Filter book stock audit by given filter")
   @ApiResponse(responseCode = "200", description = "Book stock audit filtered successfully")
-  @PreAuthorize("@authComponent.isAdmin(authentication.principal)")
+  /*@PreAuthorize("@authComponent.isAdmin(authentication.principal)")*/
   @PostMapping("/v1/audit/book-stock/filter")
   fun filterBookStockAudit(
     @RequestBody filterDTO: BookStockAuditFilterDTO

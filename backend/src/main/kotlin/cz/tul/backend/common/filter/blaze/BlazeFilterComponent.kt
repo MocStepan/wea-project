@@ -4,6 +4,7 @@ import com.blazebit.persistence.CriteriaBuilderFactory
 import com.blazebit.persistence.PaginatedCriteriaBuilder
 import com.blazebit.persistence.view.EntityViewManager
 import com.blazebit.persistence.view.EntityViewSetting
+import com.fasterxml.jackson.databind.ObjectMapper
 import cz.tul.backend.common.filter.dto.FilterCriteria
 import cz.tul.backend.common.filter.dto.FilterDTO
 import cz.tul.backend.common.filter.dto.PageResponseDTO
@@ -21,7 +22,8 @@ class BlazeFilterComponent(
   private val cbf: CriteriaBuilderFactory,
   private val entityViewManager: EntityViewManager,
   private val operatorCriteriaBuilder: BlazeOperatorCriteriaBuilder,
-  private val sortCriteriaBuilder: BlazeSortCriteriaBuilder
+  private val sortCriteriaBuilder: BlazeSortCriteriaBuilder,
+  private val objectMapper: ObjectMapper
 ) : EntityViewFilterComponent {
 
   /**
@@ -42,7 +44,7 @@ class BlazeFilterComponent(
     orderCriteria: FilterCriteria<Any>,
     additionCriteria: FilterCriteria<Any>?
   ): PageResponseDTO<T> {
-    val filterCriteria = filterDTO.toFilterCriteria()
+    val filterCriteria = filterDTO.toFilterCriteria(objectMapper)
     filterCriteria.add(orderCriteria)
     additionCriteria?.let { filterCriteria.add(it) }
 

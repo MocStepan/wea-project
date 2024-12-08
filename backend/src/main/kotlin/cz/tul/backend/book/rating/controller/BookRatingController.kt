@@ -39,7 +39,7 @@ class BookRatingController(
   ): ResponseEntity<BookRatingDTO?> {
     val claims = authentication.principal as AuthJwtClaims
     val response = bookRatingService.getBookRating(id, claims)
-    val status = if (response != null) HttpStatus.OK else HttpStatus.BAD_REQUEST
+    val status = if (response != null) HttpStatus.OK else HttpStatus.NO_CONTENT
     return ResponseEntity(response, status)
   }
 

@@ -1,15 +1,5 @@
-.book-list-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 94.4vh;
-}
-
 .book-grid-list {
   margin: 0 1rem;
-}
-
-.paginator-body {
-  margin-top: auto;
 }
 
 .book-list-card-wrapper {
@@ -28,4 +18,11 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.paginator-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
 }

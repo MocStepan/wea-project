@@ -19,15 +19,13 @@ import {
 import {TranslateModule} from '@ngx-translate/core'
 import moment from 'moment/moment'
 
-import {PaymentMethodEnum} from '../../cart/valueobject/payment-method.enum'
 import {FilterComponent} from '../../shared/filter/component/filter.component'
 import {ColumnDefModel} from '../../shared/filter/model/column-def.model'
-import {EnumColumnTypeModel} from '../../shared/filter/model/enum-column-type.model'
 import {FilterCriteriaModel} from '../../shared/filter/model/filter-criteria.model'
 import {PageResponseModel} from '../../shared/filter/model/page-response.model'
 import {FilterOperatorEnum} from '../../shared/filter/valueobject/filter-operator.enum'
-import {OrderFilterModel} from '../model/order.filter.model'
-import {OrderModel} from '../model/order.model'
+import {CartFilterModel} from '../model/cart-filter.model'
+import {CartTableModel} from '../model/cart-table.model'
 import {OrderService} from '../service/order.service'
 
 const CONFIG_NAME = 'order-list'
@@ -70,10 +68,10 @@ const CONFIG_NAME = 'order-list'
 })
 export class OrderComponent implements OnInit {
   private orderService = inject(OrderService)
-  protected orderFilter = OrderFilterModel.createDefaultFilter(CONFIG_NAME)
-  protected orders: WritableSignal<PageResponseModel<OrderModel> | null> = signal(null)
+  protected orderFilter = CartFilterModel.createDefaultFilter(CONFIG_NAME)
+  protected orders: WritableSignal<PageResponseModel<CartTableModel> | null> = signal(null)
   protected columns: WritableSignal<ColumnDefModel[]> = signal([])
-  protected expandedElement: OrderModel | null = null
+  protected expandedElement: CartTableModel | null = null
 
   protected readonly moment = moment
   protected readonly orderItemColumnsToDisplay = ['bookName', 'quantity', 'price']
@@ -81,9 +79,8 @@ export class OrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.columns.set([
-      new ColumnDefModel('SEARCH_PAYMENT_METHOD', 'paymentMethod',
-        EnumColumnTypeModel.fromEnumValue(Object.keys(PaymentMethodEnum), false),
-        new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.orderFilter.paymentMethod?.value)),
+      /*      new ColumnDefModel('SEARCH_PAYMENT_METHOD', 'paymentMethod', paymentMethods,
+       new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.orderFilter.paymentMethod?.value)),*/
       new ColumnDefModel('SEARCH_TOTAL_PRICE', 'totalPrice', 'string',
         new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.orderFilter.totalPrice?.value))
     ])

@@ -1,6 +1,9 @@
 package cz.tul.backend.cart.dto
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import cz.tul.backend.cart.entity.Cart_
+import cz.tul.backend.cart.valueobject.PaymentMethod
+import cz.tul.backend.common.addNotNull
 import cz.tul.backend.common.filter.dto.FilterCriteria
 import cz.tul.backend.common.filter.dto.FilterCriteriaDTO
 import cz.tul.backend.common.filter.dto.FilterDTO
@@ -18,10 +21,18 @@ data class CartFilterDTO(
    *
    * @return list of filter criteria
    */
-  override fun toFilterCriteria(): MutableList<FilterCriteria<Any>> {
+  override fun toFilterCriteria(objectMapper: ObjectMapper): MutableList<FilterCriteria<Any>> {
     val list = mutableListOf<FilterCriteria<Any>>()
 
     paymentMethod?.let {
+      list.addNotNull(
+        FilterCriteria.convertAndBuild(
+          it,
+          Cart_.PAYMENT_METHOD,
+          objectMapper,
+          PaymentMethod::class.java
+        )
+      )
       list.add(FilterCriteria.convertAndBuild(it, Cart_.PAYMENT_METHOD))
     }
 
