@@ -114,7 +114,7 @@
         </textarea>
       </mat-form-field>
 
-      <button (click)="onSubmitComment()" [disabled]="commentInput().length <=5 || book?.disabled === true"
+      <button (click)="onSubmitComment()" [disabled]="commentInput().length <=0 || book?.disabled === true"
               class="info-button-without-background"
               mat-button type="submit">
         {{ 'SUBMIT_COMMENT' | translate }}

@@ -1,11 +1,10 @@
 .book-list-container {
   display: flex;
   flex-direction: column;
-  min-height: 94vh;
+  min-height: 94.4vh;
 }
 
 .book-grid-list {
-  flex: 1;
   margin: 0 1rem;
 }
 

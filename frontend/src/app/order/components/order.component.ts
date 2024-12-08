@@ -83,7 +83,7 @@ export class OrderComponent implements OnInit {
     this.columns.set([
       new ColumnDefModel('SEARCH_PAYMENT_METHOD', 'paymentMethod',
         EnumColumnTypeModel.fromEnumValue(Object.keys(PaymentMethodEnum), false),
-        new FilterCriteriaModel(FilterOperatorEnum.IN, this.orderFilter.paymentMethod?.value)),
+        new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.orderFilter.paymentMethod?.value)),
       new ColumnDefModel('SEARCH_TOTAL_PRICE', 'totalPrice', 'string',
         new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.orderFilter.totalPrice?.value))
     ])
