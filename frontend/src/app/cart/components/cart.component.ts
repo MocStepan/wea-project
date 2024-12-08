@@ -212,10 +212,10 @@ export class CartComponent implements OnInit, OnDestroy {
    * @protected
    */
   protected calculateTotalPrice() {
-    this.booksPrice = this.cartSessionItemViews().reduce((acc, item, index) => {
-      const itemTotal = (item.price ?? 0) * item.quantity;
-      return acc + itemTotal;
-    }, 0);
+    this.booksPrice = this.cartSessionItemViews().reduce((acc, item) => {
+      const itemTotal = (item.price ?? 0) * item.quantity
+      return acc + itemTotal
+    }, 0)
 
     if (isNullOrUndefined(this.formGroup.value.paymentMethod)) {
       this.booksTotalPrice = this.booksPrice

@@ -1,7 +1,7 @@
 import {EnumColumnTypeModel} from './enum-column-type.model'
 import {FilterCriteriaModel} from './filter-criteria.model'
 
-export type ColumnType = 'string' | EnumColumnTypeModel
+export type ColumnType = 'string' | EnumColumnTypeModel | 'date'
 export type FilterConfig = Record<string, number | FilterCriteriaModel | null>
 
 /**
