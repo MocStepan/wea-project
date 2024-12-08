@@ -1,4 +1,4 @@
-import {CartSessionItem, CartSessionItemView} from './cart-session-item.model'
+import {CartSessionItemView} from './cart-session-item.model'
 
 export interface CartItemCreateModel {
   bookId: number

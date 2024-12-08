@@ -110,5 +110,12 @@
   "CART_SUBMIT_TITLE": "Potvrzení objednávky",
   "NEXT": "Další",
   "PREVIOUS": "Předchozí",
-  "COUNT_IN_CART": "Počet v košíku"
+  "COUNT_IN_CART": "Počet v košíku",
+  "ORDERS": "Objednávky",
+  "SEARCH_PAYMENT_METHOD": "Hledat způsob platby",
+  "SEARCH_TOTAL_PRICE": "Hledat celkovou cenu",
+  "SEARCH_CREATED_DATE_TIME": "Hledat datum vytvoření",
+  "ORDER_NUMBER": "Číslo objednávky",
+  "ORDER_DATE": "Datum objednávky",
+  "ORDER_LIST": "Seznam objednávky"
 }

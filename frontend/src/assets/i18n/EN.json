@@ -98,7 +98,7 @@
   "CARD": "Card",
   "PAYMENT_METHOD": "Payment Method",
   "CASH": "Cash",
-  "BACK_TRANSFER": "Bank Transfer",
+  "BANK_TRANSFER": "Bank Transfer",
   "CONFIRM_PAYMENT": "Confirm Payment",
   "PAYMENT_SUCCESS": "Payment successful",
   "PAYMENT_ERROR": "Payment failed",
@@ -110,5 +110,12 @@
   "CART_SUBMIT_TITLE": "Order Confirmation",
   "NEXT": "Next",
   "PREVIOUS": "Previous",
-  "COUNT_IN_CART": "Count in cart"
+  "COUNT_IN_CART": "Count in cart",
+  "ORDERS": "Orders",
+  "SEARCH_PAYMENT_METHOD": "Search payment method",
+  "SEARCH_TOTAL_PRICE": "Search total price",
+  "SEARCH_CREATED_DATE_TIME": "Search created date",
+  "ORDER_NUMBER": "Order number",
+  "ORDER_DATE": "Order date",
+  "ORDER_LIST": "Order list"
 }
