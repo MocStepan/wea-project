@@ -101,9 +101,9 @@ export class BookListComponent implements OnInit {
     ).subscribe(([authors, categories]) => {
       this.columns.set([
         new ColumnDefModel('SEARCH_ISBN13', 'isbn13', 'string',
-          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.isbn13?.value)),
+          new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.bookFilter.isbn13?.value)),
         new ColumnDefModel('SEARCH_ISBN10', 'isbn10', 'string',
-          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.isbn10?.value)),
+          new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.bookFilter.isbn10?.value)),
         new ColumnDefModel('SEARCH_TITLE', 'title', 'string',
           new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.title?.value)),
         new ColumnDefModel('SEARCH_AUTHORS', 'authors', EnumColumnTypeModel.fromOptionViews(authors),
