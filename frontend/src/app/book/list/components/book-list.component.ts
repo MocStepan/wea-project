@@ -39,6 +39,7 @@ import {FilterOperatorEnum} from '../../../shared/filter/valueobject/filter-oper
 import {BookService} from '../../service/book.service'
 import {BookFilterModel} from '../model/book-filter.model'
 import {BookTableModel} from '../model/book-table.model'
+import {toSignal} from '@angular/core/rxjs-interop'
 
 const CONFIG_NAME = 'book-list'
 
@@ -101,9 +102,9 @@ export class BookListComponent implements OnInit {
     ).subscribe(([authors, categories]) => {
       this.columns.set([
         new ColumnDefModel('SEARCH_ISBN13', 'isbn13', 'string',
-          new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.bookFilter.isbn13?.value)),
+          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.isbn13?.value)),
         new ColumnDefModel('SEARCH_ISBN10', 'isbn10', 'string',
-          new FilterCriteriaModel(FilterOperatorEnum.EQUAL, this.bookFilter.isbn10?.value)),
+          new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.isbn10?.value)),
         new ColumnDefModel('SEARCH_TITLE', 'title', 'string',
           new FilterCriteriaModel(FilterOperatorEnum.ILIKE, this.bookFilter.title?.value)),
         new ColumnDefModel('SEARCH_AUTHORS', 'authors', EnumColumnTypeModel.fromOptionViews(authors),
@@ -216,6 +217,7 @@ export class BookListComponent implements OnInit {
     sessionStorage.setItem(CONFIG_NAME, JSON.stringify(this.bookFilter))
     this.bookService.filterBooks(this.bookFilter, this.favorite).subscribe((response) => {
       this.books.set(response)
+      this.onBoxResize()
     })
   }
 }

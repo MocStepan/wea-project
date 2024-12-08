@@ -7,4 +7,6 @@ export interface BookTableModel {
   thumbnail: string;
   description: string;
   price: number;
+  isbn13: string;
+  disabled: boolean;
 }

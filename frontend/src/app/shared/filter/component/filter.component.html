@@ -31,8 +31,8 @@
         <mat-form-field>
           <mat-select [(ngModel)]="column.filterCriteria.value"
                       placeholder="{{column.placeholder | translate}}">
-            <mat-option *ngFor="let key of column.type.keys" [value]="key">
-              {{ column.type.values[column.type.keys.indexOf(key)] | translate }}
+            <mat-option *ngFor="let key of column.type.keys; let i = index" [value]="key">
+              {{ column.type.values[i] | translate }}
             </mat-option>
           </mat-select>
         </mat-form-field>

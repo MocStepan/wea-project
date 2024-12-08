@@ -41,7 +41,7 @@ class BookRatingControllerTests : FeatureSpec({
 
       val response = spec.bookRatingController.getBookRating(1L, authentication)
 
-      response.statusCode shouldBe HttpStatus.BAD_REQUEST
+      response.statusCode shouldBe HttpStatus.NO_CONTENT
       response.body shouldBe null
     }
   }

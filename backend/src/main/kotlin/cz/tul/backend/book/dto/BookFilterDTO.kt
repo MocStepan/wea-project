@@ -1,5 +1,6 @@
 package cz.tul.backend.book.dto
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import cz.tul.backend.book.entity.BookAuthorLink_
 import cz.tul.backend.book.entity.BookAuthor_
 import cz.tul.backend.book.entity.BookCategoryLink_
@@ -28,7 +29,7 @@ data class BookFilterDTO(
    *
    * @return list of filter criteria
    */
-  override fun toFilterCriteria(): MutableList<FilterCriteria<Any>> {
+  override fun toFilterCriteria(objectMapper: ObjectMapper): MutableList<FilterCriteria<Any>> {
     val list = mutableListOf<FilterCriteria<Any>>()
 
     id?.let {

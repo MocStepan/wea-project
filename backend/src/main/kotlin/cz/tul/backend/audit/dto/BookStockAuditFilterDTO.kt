@@ -1,5 +1,6 @@
 package cz.tul.backend.audit.dto
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import cz.tul.backend.audit.entity.BookStockAudit_
 import cz.tul.backend.common.filter.dto.FilterCriteria
 import cz.tul.backend.common.filter.dto.FilterCriteriaDTO
@@ -21,7 +22,7 @@ data class BookStockAuditFilterDTO(
    *
    * @return list of filter criteria
    */
-  override fun toFilterCriteria(): MutableList<FilterCriteria<Any>> {
+  override fun toFilterCriteria(objectMapper: ObjectMapper): MutableList<FilterCriteria<Any>> {
     val list = mutableListOf<FilterCriteria<Any>>()
 
     creator?.let {

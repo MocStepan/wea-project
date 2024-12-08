@@ -1,4 +1,4 @@
-export interface OrderItemModel {
+export interface CartItemTableModel {
   id: number
   quantity: number
   price: number

@@ -1,17 +1,10 @@
 package cz.tul.backend.common.filter.utils
 
-fun convertPossibleStringList(value: String?): Any? {
-  return if (isList(value)) {
-    parseList(value!!)
-  } else {
-    value
+import com.fasterxml.jackson.databind.ObjectMapper
+
+fun <T> convertValue(value: Any?, objectMapper: ObjectMapper, clazz: Class<T>): Any? {
+  if (value == null) {
+    return null
   }
-}
-
-private fun parseList(value: String): List<String> {
-  return value.substring(1, value.length - 1).split(",")
-}
-
-private fun isList(value: String?): Boolean {
-  return value != null && value.startsWith('[') && value.endsWith(']')
+  return objectMapper.convertValue(value, clazz)!!
 }

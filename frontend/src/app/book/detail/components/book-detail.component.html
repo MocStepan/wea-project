@@ -78,7 +78,7 @@
     </div>
 
     <!--Add book to cart -->
-    <div *ngIf="isUserSignedIn()">
+    <div *ngIf="isUserSignedIn() && book?.disabled !== true">
       <mat-card-content>
         <p>{{"COUNT_IN_CART" | translate}}: {{this.bookQuantity}}</p>
       </mat-card-content>
@@ -102,7 +102,7 @@
 
     <mat-card-title>{{ 'COMMENTS' | translate }}</mat-card-title>
 
-    <mat-card-content *ngIf="isUserSignedIn()" class="book-card-gap comment-wrapper">
+    <mat-card-content *ngIf="isUserSignedIn() && book?.disabled !== true" class="book-card-gap comment-wrapper">
       <mat-form-field [style.fontSize]="14">
         <textarea [(ngModel)]="commentInput"
                   cdkAutosizeMaxRows="5"

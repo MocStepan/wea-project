@@ -1,6 +1,6 @@
 import {FilterCriteriaModel} from '../../shared/filter/model/filter-criteria.model'
 
-export class OrderFilterModel {
+export class CartFilterModel {
   size: number
   page: number
   paymentMethod: FilterCriteriaModel | null
@@ -17,10 +17,10 @@ export class OrderFilterModel {
     this.createdDateTime = createdDateTime
   }
 
-  static createDefaultFilter(key: string): OrderFilterModel {
+  static createDefaultFilter(key: string): CartFilterModel {
     if (sessionStorage.getItem(key)) {
       const config = JSON.parse(sessionStorage.getItem(key) as string)
-      return new OrderFilterModel(
+      return new CartFilterModel(
         config.size,
         config.page,
         config.paymentMethod,
@@ -28,6 +28,6 @@ export class OrderFilterModel {
         config.createdDateTime
       )
     }
-    return new OrderFilterModel(9, 0)
+    return new CartFilterModel(9, 0)
   }
 }
