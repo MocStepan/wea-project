@@ -14,9 +14,9 @@ auth:
     frontendUrl: "localhost:4200"
   jwt:
     access:
-      secret: "e3a62749cb3f1923567611b91b73f7e92996ff82bdabb05150d015f894f356c3"
+      secret: ""
     refresh:
-      secret: "1e631403b1c7cf24924927c2f2f7aa135ac984513cfd5dd2d5c88676e9a103dc"
+      secret: ""
 synchronization:
   book:
     import:
